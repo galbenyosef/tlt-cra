@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid} from '@material-ui/core';
+import { Grid, CircularProgress} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { setGlobalState, useGlobalState } from '../../globalState';
@@ -11,7 +11,7 @@ const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
 export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlternative}) => {
 
-    const handleClick = val => {setGlobalState('selectedProperty',val)}
+    const [selectedProperty,handleClick] = useGlobalState('selectedProperty')
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
     const setLeadModal = val => setGlobalState('newLeadModal',val)
 
@@ -20,9 +20,11 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
       project
     } = property.attributes
 
-    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-    d.setUTCSeconds(property.created);
+    var created = new Date(property.created * 1000); // The 0 there is the key, which sets the date to the epoch
+    created.setDate(created.getDate() + 7);
 
+    const isNew = Date.now() < created
+    console.log(isNew)
     console.log('card render')
 
     const PropertyViewComponent = () => 
@@ -44,22 +46,26 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
             backgroundSize:property.thumb_file  ? 'cover' : window.innerWidth < 600 ? '300px' : '200px',
             position:'relative',
           }}>
-            {
-              <p style={{position:'absolute',top: 30,
-              width: 150,
-              textAlign: 'center',
-              right: -35,
-              fontSize:22,
-              backgroundColor: 'rgb(112, 146, 191)',
-              transform: 'rotate(45deg)',color:'white',fontWeight:'bolder',zIndex:1}}>{`${'חדש !'}`}</p>
-            }
-            {
-              isFavourite ?
-              <FaHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
-              :
-              <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
-            }
-         <div style={{textAlign:'right',display:'flex',flexDirection:'column',backgroundImage:'linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6))',justifyContent:'flex-end',alignItems:'flex-start'}}>
+          {
+            
+          }
+          {
+            isNew &&
+            <p style={{position:'absolute',top: 30,
+            width: 150,
+            textAlign: 'center',
+            right: -35,
+            fontSize:22,
+            backgroundColor: 'rgb(112, 146, 191)',
+            transform: 'rotate(45deg)',color:'white',fontWeight:'bolder',zIndex:1}}>{`${'חדש !'}`}</p>
+          }
+          {
+            isFavourite ?
+            <FaHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+            :
+            <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+          }
+          <div style={{textAlign:'right',display:'flex',flexDirection:'column',backgroundImage:'linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6))',justifyContent:'flex-end',alignItems:'flex-start'}}>
             <div style={{padding:'0px 10px',fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:22}}>
                 <p>
                   {`שכונת ${property.attributes.neighborhood_name}, רחוב ${property.attributes.street_name}`}

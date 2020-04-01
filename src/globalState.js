@@ -83,7 +83,7 @@ const initialState = {
     allMediaModal:false,
     singleMediaModal:false,
     addresses: [],
-    addressesMap: [],
+    neighborhoods: [],
     sideFiltersVisible: false,
     listRef: null,
     loading: false,

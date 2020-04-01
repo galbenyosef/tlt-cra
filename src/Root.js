@@ -63,7 +63,7 @@ const Root = props => {
     const setIsLoading = (val) => setGlobalState('loading',val)
     const setProperties = (val) => setGlobalState('properties',val)
     const setAddresses = (val) => setGlobalState('addresses',val)
-    const setAddressesMap = (val) => setGlobalState('addressesMap',val)
+    const setAddressesMap = (val) => setGlobalState('neighborhoods',val)
     const setDevice = (val) => setGlobalState('device',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
     const [rootRef] = useGlobalState('rootRef')
@@ -72,9 +72,9 @@ const Root = props => {
 
         setIsLoading(true)
         const data = await getProperties()
-        const _properites = data.payload
-    
-        
+
+        const _properites = data.payload.sort((a,b) => b.created - a.created)
+
         let addressesMap = {}
         
         for (let i=0; i<_properites.length;i++){
@@ -86,17 +86,17 @@ const Root = props => {
             if (!addressesMap[attributes.neighborhood_name].includes(attributes.street_name))
                 addressesMap[attributes.neighborhood_name].push(attributes.street_name)
         }
-    
+        
         let addresses = []
-        let neighborhoods = Object.keys(addressesMap)
+        let neighborhoods = Object.keys(addressesMap).sort()
         for (let i=0; i<neighborhoods.length;i++){
             addresses.push(neighborhoods[i])
-            for (let j=0;j<addressesMap[neighborhoods[i]].length;j++){
+            for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
                 addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
             }
         }
     
-        setAddressesMap(addressesMap)
+        setAddressesMap(neighborhoods)
         setAddresses(addresses)
         let favouritesString = localStorage.getItem('favourites')
         let favourites = JSON.parse(favouritesString) || []

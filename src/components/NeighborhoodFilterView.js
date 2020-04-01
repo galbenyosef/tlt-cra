@@ -8,7 +8,7 @@ import { Checkbox } from '@material-ui/core';
 
 export const NeighborhoodsFilterView = ({neighborhoodSelected,setNeighborhoodSelected}) => {
 
-    const [addressesMap, setAddressesMap] = useGlobalState('addressesMap');
+    const [addressesMap, setAddressesMap] = useGlobalState('neighborhoods');
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
     const filters = getGlobalState('filters')
 
@@ -20,12 +20,12 @@ export const NeighborhoodsFilterView = ({neighborhoodSelected,setNeighborhoodSel
 
     let data = []
 
-    let neighborhoodsExists = Object.keys(addressesMap).filter(neighborhood => neighborhood.match(addressSearch)).length
+    let neighborhoodsExists = addressesMap.filter(neighborhood => neighborhood.match(addressSearch)).length
 
     if (neighborhoodsExists)
-        data = Object.keys(addressesMap).filter(neighborhood => neighborhood.match(addressSearch))
+        data = addressesMap.filter(neighborhood => neighborhood.match(addressSearch))
     else 
-        data = Object.keys(addressesMap)
+        data = addressesMap
 
     return (
         <div style={{display:'flex',flexDirection:'column',width:'100%',overflow:'auto',flexWrap:'wrap',height:'150px'}}>

@@ -62,7 +62,7 @@ export const PropertyModal = () => {
                 street_name,
                 neighborhood_name,
                 price,
-                rooms
+                rooms,
             } = _data.payload.attributes
 
             const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
@@ -80,14 +80,15 @@ export const PropertyModal = () => {
                 .filter(p => 
                     p.attributes.neighborhood_name == neighborhood_name &&
                     (p.attributes.price <= price*1.10 || price >= p.attributes.price*.9) &&
-                    p.attributes.rooms == rooms
+                    p.attributes.rooms == rooms &&
+                    p.id != _data.payload.id
                 )
-            console.log('all: '+alternativeProperties)
+
             setAlternatives(alternativeProperties)
 
             //agent exists
-            if (_data.payload.attributes.agent_member_id){
-                const agentId = _data.payload.attributes.agent_member_id
+            if (_data.payload.attributes.agent_id){
+                const agentId = _data.payload.attributes.agent_id
                 const agentData = await getUser(agentId)
 
                 const {
@@ -135,9 +136,6 @@ export const PropertyModal = () => {
     //if not pressed on property
     if (!selectedProperty)
         return null
-
-    if (loading)
-        return <PropertyModalLoading/>
 
     if (!data)
         return null
@@ -200,7 +198,7 @@ export const PropertyModal = () => {
     }
     
     console.log(property)
-
+    console.log(agentName)
     return (
         <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty('')}>
             <Grid container style={{
