@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react'
-import { useGlobalState, setGlobalState } from '../globalState';
+import { useGlobalState, setGlobalState, getGlobalState } from '../globalState';
 import { CircularProgress,Grid } from '@material-ui/core';
 import {PropertyView} from './PropertyView'
 import {PropertyListLoading} from './PropertyListLoading'
@@ -9,8 +9,9 @@ import {PropertyListLoading} from './PropertyListLoading'
 
 export const PropertyList = props => {
 
+    const [favourites, setFavourites] = useGlobalState('favourites');
     const [propertiesData, setPropertiesData] = useGlobalState('properties');
-    const [favouriteProperties, setFavouriteProperties] = useGlobalState('favouriteProperties');
+
     const listRef = React.useRef(null)
 
     useEffect(() => {
@@ -21,20 +22,21 @@ export const PropertyList = props => {
 
 
     const toggleFavourite = React.useCallback(id => {
-        let newFavProps = [...favouriteProperties]
-        if (favouriteProperties.includes(id)){
-            newFavProps.splice(favouriteProperties.indexOf(id),1)
+        let newFavProps = [...favourites]
+        if (favourites.includes(id)){
+            newFavProps.splice(favourites.indexOf(id),1)
         }
         else{
             newFavProps.push(id)
         }
-        setFavouriteProperties(newFavProps)
+        setFavourites(newFavProps)
     },[])
-    
+
     if (!propertiesData.data.length)
         return null
 
     console.log('property List rendered')
+    
     const {data:properties} = propertiesData
 
     const handleScroll = () => {
@@ -53,7 +55,7 @@ export const PropertyList = props => {
             <Grid ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',margin:0,overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
             {
                 properties.length > 0 && properties.splice(0,50).map(prop => 
-                    <PropertyView key={prop.id} property={prop} isFavourite={favouriteProperties.includes(prop.id)} toggleFavourite={toggleFavourite}/>
+                    <PropertyView key={prop.id} property={prop} toggleFavourite={toggleFavourite}/>
                 )
             }
             </Grid>

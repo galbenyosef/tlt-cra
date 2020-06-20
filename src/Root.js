@@ -4,6 +4,7 @@ import {useGlobalState,getGlobalState,setGlobalState} from './globalState'
 import { getProperties } from './dataHandler'
 import TopBar from './components/TopBar';
 import { PropertyList } from './components/PropertyList';
+import { PropertyModal } from './components/PropertyModal';
 
 
 const Root = props => {
@@ -21,7 +22,7 @@ const Root = props => {
  */        const data = await getProperties(options)
         const _properites = data.payload
     
-    
+        
         let addressesMap = {}
         
         for (let i=0; i<_properites.length;i++){
@@ -58,17 +59,12 @@ const Root = props => {
 
         <Layout>
             <TopBar/>
-       {/*      <div style={{fontWeight:'bolder',}}>
-                {
-                    `מציג ${currentListCount} מתוך ${totalListCount} נכסים בסה"כ`
-                }
-            </div> */}
             <PropertyList/>
             <div style={{fontWeight:'bolder',height:'50px',display:'flex',flexDirection:'column',flex:1,width:'100%',position:'absolute',bottom:0,zIndex:1,backgroundColor:'lightgray',justifyContent:'center',alignItems:'center'}}>
                 <p>TLT - תיווך ללא תיווך נכסים והשקעות בע"מ - כל הזכויות שמורות</p>
             </div>
+            <PropertyModal/>
         </Layout>
-
 
     )
 }

@@ -3,14 +3,19 @@ import { Grid} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { setGlobalState, useGlobalState } from '../globalState';
 
 
-export const PropertyView = React.memo(({property,amount,isFavourite,toggleFavourite}) => {
+export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
+
+    const [favourites, setFavourites] = useGlobalState('favourites');
+    const handleClick = val => {setGlobalState('selectedProperty',val)}
+    const isFavourite = favourites.includes(property.id)
 
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid onClick={() => {console.log(property)}} item xs={6} sm={4} style={{padding:'0px 20px 20px 20px',height:amount == 4 ? '33%':'50%'}}>
+      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} sm={4} style={{padding:'0px 20px 20px 20px',height:amount == 4 ? '33%':'50%'}}>
         <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'10px 10px 10px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
           <div style={{position:'relative',height:'55%',flex:1}}>
             <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>

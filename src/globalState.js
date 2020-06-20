@@ -26,11 +26,12 @@ const initialState = {
         furniture: []
     },
     properties: {
-        data:[],
+        data: [],
         currentCount: 0,
         totalCount: 0,
     },
-    favouriteProperties: [],
+    favourites:[],
+    selectedProperty: null,
     addresses: [],
     addressesMap: [],
     sideBarVisible: false,

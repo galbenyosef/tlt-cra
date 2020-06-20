@@ -1,6 +1,22 @@
 
-const BaseUrl = 
-    `/kala/v1/page?select[]=id&select[]=site_id&select[]=title&select[]=slug&select[]=active&select[]=attributes&select[]=thumb_file&offset=0&type_id=2933&active=1&page_attributes[__operators][status]==&page_attributes[status]=במאגר`
+const getAllUrl = 
+    `/kala/v1/page?
+    select[]=id&
+    select[]=site_id&
+    select[]=title&
+    select[]=slug&
+    select[]=active&
+    select[]=attributes&
+    select[]=thumb_file&
+    offset=0&
+    type_id=2933&
+    active=1&
+    page_attributes[__operators][status]==&
+    page_attributes[status]=במאגר`
+
+const getSingleUrl = id => `/kala/v1/page/${id}?get_page_assets_urls=true`
+
+
 
 const getUrl = (options = {}) => {
 
@@ -33,8 +49,8 @@ const getUrl = (options = {}) => {
         }).join('&')
     }
 
-    console.log(BaseUrl+'&'+optionsEncoded)
-    return BaseUrl+'&'+optionsEncoded
+    console.log(getAllUrl+'&'+optionsEncoded)
+    return getAllUrl+'&'+optionsEncoded
 }
 
 export const getProperties = async (options) => {
@@ -46,10 +62,29 @@ export const getProperties = async (options) => {
       }
     })
 
+
     if (response && response.ok){
       let responseJson = await response.json()
       return responseJson
     }
     throw(response)
 
+}
+
+export const getProperty = async id => {
+
+    console.log(getSingleUrl(id))
+    let response = await fetch(getSingleUrl(id),{
+        method: 'GET',
+        headers: {
+          "x-kala-key":"kdcG983ujtltGHtgzd"
+        }
+    })
+
+    if (response && response.ok){
+        let responseJson = await response.json()
+        return responseJson
+    }
+    throw(response)
+  
 }
