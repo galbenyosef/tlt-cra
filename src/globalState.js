@@ -31,7 +31,7 @@ const initialState = {
         totalCount: 0,
     },
     favourites:[],
-    selectedProperty: null,
+    selectedProperty: 65156,
     addresses: [],
     addressesMap: [],
     sideBarVisible: false,

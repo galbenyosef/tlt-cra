@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Modal,Grid } from '@material-ui/core'
+import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
 import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
 import { getProperty } from '../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
@@ -30,7 +31,7 @@ export const PropertyModal = () => {
     const [tabSelected,setTabSelected] = React.useState(Tabs.Info)
     const [data,setData] = useState(null)
     const [loading,setLoading] = useState(true)
-
+    const [currentImageIndex,setCurrentImageIndex] = useState(0)
     
     const fetchProperty = async (id) => {
 
@@ -41,6 +42,7 @@ export const PropertyModal = () => {
             console.log('setting data')
 
             setData(data)
+
         }
         catch(e){
 
@@ -90,6 +92,7 @@ export const PropertyModal = () => {
         committee,
         tax,
         requirements,
+        video__url,
     } = property
 
 
@@ -155,41 +158,97 @@ export const PropertyModal = () => {
                             </Grid>
                         </Grid>
                         {/* left */}
-                        <Grid item xs={8} style={{height:'100%',width:'70%'}}>
+                        <Grid item xs={8}>
                             <Grid container>
-                                <Grid item xs={12}>
+                                <Grid item  xs={12}>
                                     <Grid container>
-                                        <Grid item xs={9}>
-                                            <div style={{position:'relative'}}>
-                                                <div style={{height:30,width:30}}></div>
-                                                <LazyLoadImage
-                                                    style={{maxWidth:'100%',width:'100%',height:'100%'}}
-                                                    src={`${imageUrl}${property.thumb_file.sm}`} // use normal <img> attributes as props
-                                                />
-                                            </div>
+                                        <Grid item md={9} xs={12} style={{
+                                            backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex]})`,
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize:'cover',
+                                            position:'relative',
+                                            maxHeight:'360px',
+                                            minHeight:'220px'
+                                        }}>
+                                        <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
+                                            <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} />
+                                        </div>
+
+                                        <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',right:0}}>
+                                            <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} />
+                                        </div> 
                                         </Grid>
-                                        <Grid item xs={3}>
-                                            <Grid container>
-                                                <Grid item xs={12}>
-                                                    כל התמונות
+                                        <Grid item md={3} xs={12}>
+                                            <Grid container style={{height:'100%'}}>
+                                                <Grid item xs={6} md={12} style={{
+                                                    height:'50%',
+                                                    position:'relative',
+                                                    backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex+1]})`,
+                                                    backgroundPosition: 'center',
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundSize:'cover',
+                                                    position:'relative',
+                                                    maxHeight:'360px',
+                                                    minHeight:'220px'
+                                                }}>
+                                                    <p style={{
+                                                        position: 'absolute',
+                                                        top: '45%',
+                                                        right: 0,
+                                                        left: 0,
+                                                        textAlign: 'center',
+                                                        fontWeight:'bolder',
+                                                        fontSize:20,
+                                                        color:'white',
+                                                        WebkitTextStrokeWidth: '2px',
+                                                        WebkitTextStrokeColor: 'black'
+                                                    }}>{`לכל ${propertyImages.length} התמונות`}</p>
                                                 </Grid>
-                                                <Grid item xs={12}>
-                                                    סיור בנכס
+                                                <Grid item xs={6} md={12} style={{
+                                                    height:'50%',
+                                                    position:'relative',
+                                                    backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex+1]})`,
+                                                    backgroundPosition: 'center',
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundSize:'cover',
+                                                    position:'relative',
+                                                    maxHeight:'360px',
+                                                    minHeight:'220px'
+                                                }}>
+                                                    <div style={{
+                                                            position: 'absolute',
+                                                            top: '40%',
+                                                            right: 0,
+                                                            left: 0,
+                                                            textAlign: 'center',
+                                                            fontWeight:'bolder',
+                                                            fontSize:20,
+                                                            color:'white',
+                                                            WebkitTextStrokeWidth: '2px',
+                                                            WebkitTextStrokeColor: 'black',
+                                                            cursor:'pointer'
+                                                        }}>
+                                                        <PlayCircleOutlineOutlined size={40}/>
+                                                        <p>{`סיור בנכס`}</p>
+                                                    </div>
+                                                    <p>{`לכל ${propertyImages.length} התמונות`}</p>
                                                 </Grid>
+                                
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={9} style={{backgroundColor:'lightgrey'}}>
                                     <Grid container>
-                                        <Grid item xs={3}>
-                                            פרטי הנכס
+                                        <Grid item xs={4} onClick={() => setTabSelected(Tabs.Info)}>
+                                            <p style={{textAlign:'center',cursor:'pointer',border:'1px solid black'}}>פרטי הנכס</p>  
                                         </Grid>
-                                        <Grid item xs={3}>
-                                            תכנית הנכס
+                                        <Grid item xs={4} onClick={() => setTabSelected(Tabs.Plan)}>
+                                            <p style={{textAlign:'center',cursor:'pointer',border:'1px solid black'}}>תכנית הנכס</p>
                                         </Grid>
-                                        <Grid item xs={3}>
-                                            מיקום הנכס
+                                        <Grid item xs={4} onClick={() => setTabSelected(Tabs.Location)}>
+                                            <p style={{textAlign:'center',cursor:'pointer',border:'1px solid black'}}>מיקום הנכס</p> 
                                         </Grid>
                                     </Grid>
                                 </Grid>
