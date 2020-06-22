@@ -1,0 +1,11 @@
+{
+    "root": "build/",
+    "routes": {
+      "/**": "index.html"
+    },
+    "proxies": {
+        "/kala/": {
+          "origin": "https://tlt.kala-crm.co.il/api/"
+        }
+    }
+  }
