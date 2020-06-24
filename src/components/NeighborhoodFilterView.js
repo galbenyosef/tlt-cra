@@ -1,18 +1,23 @@
-import React from 'react'
-import {useGlobalState} from '../globalState';
+import React, { useState, useEffect } from 'react'
+import {useGlobalState, getGlobalState} from '../globalState';
 import { Checkbox } from '@material-ui/core';
 
 
 
 
 
-export const NeighborhoodsFilterView = () => {
+export const NeighborhoodsFilterView = ({neighborhoodSelected,setNeighborhoodSelected}) => {
 
     const [addressesMap, setAddressesMap] = useGlobalState('addressesMap');
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
-    const [filters, setFilters] = useGlobalState('filters');
+    const filters = getGlobalState('filters')
 
-    console.log('NeighborhoodsFilterView rendered',addressesMap)
+    useEffect(() => {
+
+        let alreadyExistsNeighborhoodsInFilters =  filters.addresses.filter(v => !v.includes(','))
+        setNeighborhoodSelected(alreadyExistsNeighborhoodsInFilters)
+    },[])
+
     let data = []
 
     let neighborhoodsExists = Object.keys(addressesMap).filter(neighborhood => neighborhood.match(addressSearch)).length
@@ -28,16 +33,13 @@ export const NeighborhoodsFilterView = () => {
             {
                 data.map(neighbor => 
                     <div key={neighbor} style={{display:'flex',flexDirection:'row',width:'45%',padding:10,alignItems:'center'}}>
-                        <Checkbox checked={filters.addresses.includes(neighbor)} onChange={() => {
-                        let newAddresses = [...filters.addresses]
-                        if (filters.addresses.includes(neighbor)){
-                            newAddresses.splice(filters.addresses.indexOf(neighbor),1)
-                            setFilters({...filters,addresses:newAddresses})
-                        }
-                        else{
-                            newAddresses.push(neighbor)
-                            setFilters({...filters,addresses:newAddresses})
-                        }
+                        <Checkbox checked={neighborhoodSelected.includes(neighbor)} onChange={() => {
+                            if (neighborhoodSelected.includes(neighbor)){
+                                setNeighborhoodSelected(_neighborhoodSelected => _neighborhoodSelected.filter(n => n !== neighbor))
+                            }
+                            else{
+                                setNeighborhoodSelected(_neighborhoodSelected => _neighborhoodSelected.concat(neighbor))
+                            }
                         }}/>
                         {
                             neighbor

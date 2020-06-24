@@ -4,7 +4,7 @@ import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { setGlobalState, useGlobalState } from '../globalState';
-
+import ScaleText from 'react-scale-text'
 
 export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
 
@@ -42,19 +42,21 @@ export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
             </div>
          </div>
          <div style={{textAlign:'right',position:'relative',padding:'10px'}}>
-            <div style={{fontSize:'1.1vw',fontFamily:'Assistant',fontWeight:'bolder',whiteSpace:'pre-line'}}>
-              {`שכונת ${property.attributes.neighborhood_name}, רחוב ${property.attributes.street_name}`}
+            <div style={{fontFamily:'Assistant',fontWeight:'bolder'}}>
+                <p>
+                  {`שכונת ${property.attributes.neighborhood_name}, רחוב ${property.attributes.street_name}`}
+                </p>
             </div>
-            <div style={{fontSize:'.8vw',fontFamily:'Assistant',fontWeight:'bold'}}>
-              {`
-              ${property.attributes.rooms ? `${property.attributes.rooms} חדרים ⋅`: ` `}
-              ${property.attributes.metres? `${property.attributes.metres} מ"ר`:` `}
-              ${property.attributes.terrace ? `+ מרפסת`:``}
-              ${property.attributes.floor != undefined ? (property.attributes.floor ? `⋅ קומה ${property.attributes.floor}`:` ⋅ קומת קרקע`): ' '}
-              `}
+            <div style={{fontFamily:'Assistant',fontWeight:'bold'}}>
+                <p style={{width:'100%'}}>
+                  {property.attributes.rooms ? `${property.attributes.rooms} חדרים ⋅`: ` `}
+                  {property.attributes.metres? `${property.attributes.metres} מ"ר`:` `}
+                  {property.attributes.terrace ? `+ מרפסת`:``}
+                  {property.attributes.floor != undefined ? (property.attributes.floor ? `⋅ קומה ${property.attributes.floor}`:` ⋅ קומת קרקע`): ' '}
+                </p>
             </div>
             <div style={{fontSize:'1.3vw',fontWeight:'bolder',fontFamily:'Assistant',textAlign:'end'}}>
-             {property.attributes.price ? `${property.attributes.price.toLocaleString('he-IL')} ₪`: ` `}
+              {property.attributes.price ? `${property.attributes.price.toLocaleString('he-IL')} ₪`: ` `}
             </div>
             <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',padding:'10px 0px',justifyContent:'space-between'}}>
               <div style={{display:'flex',width:'30%',border:'3px solid black',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.propertyNumber ? `#${property.attributes.propertyNumber}`:`-`}`}</div>

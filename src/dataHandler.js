@@ -1,4 +1,5 @@
 
+//get properties
 const getAllUrl = 
     `/kala/v1/page?
     select[]=id&
@@ -16,7 +17,9 @@ const getAllUrl =
 
 const getSingleUrl = id => `/kala/v1/page/${id}?get_page_assets_urls=true`
 
+//get users
 
+const getUserUrl = id => `/kala/v1/user/${id}`
 
 const getUrl = (options = {}) => {
 
@@ -51,6 +54,24 @@ const getUrl = (options = {}) => {
 
     console.log(getAllUrl+'&'+optionsEncoded)
     return getAllUrl+'&'+optionsEncoded
+}
+
+export const getUser = async (id) => {
+
+    let response = await fetch(getUserUrl(id),{
+        method: 'GET',
+        headers: {
+          "x-users-key":"asGgtlt6q2bgsdF"
+        }
+    })
+  
+  
+    if (response && response.ok){
+        let responseJson = await response.json()
+        return responseJson
+    }
+    throw(response)
+
 }
 
 export const getProperties = async (options) => {

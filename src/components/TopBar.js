@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
 import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorder, Sync, Weekend } from '@material-ui/icons';
 import { MySelect } from './MySelect';
@@ -9,7 +9,20 @@ import StyledMenu from './StyledMenu'
 import {Range} from 'rc-slider';
 import {constants, renovationTypes, range, furnitureTypes} from './Utilities'
 import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
+import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
+
+const customSelectStyles = {
+    option: (provided, state) => { return({
+      ...provided,
+      direction:'rtl',
+      borderBottom: '1px dotted pink',
+      color: state.isSelected ? 'red' : 'blue',
+      padding: 10,
+      fontSize: state.value?.includes(',') ? 14:18,
+      fontWeight: state.value?.includes(',') ? null:'bolder'
+    })},
+}
 
 
 const TopBar = props => {
@@ -18,22 +31,22 @@ const TopBar = props => {
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
     const [urlOptionsJson, setUrlOptionsJson] = useGlobalState('urlOptionsJson');
     const [sideBarVisible, setSideBarVisible] = useGlobalState('sideBarVisible');
-    const [isDesktop, setIsDesktop] = useGlobalState('isDesktop');
     const [filters, setFilters] = useGlobalState('filters');
-    const listRef = useGlobalState('listRef');
+    const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
+
+    const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
 
     if (!addresses.length){
         return null
     }
     
-    const {currentPressedName} = filters
-    const {currentPressedElement} = filters
+    const {currentFilterName} = currentFilter
+    const {currentFilterElement} = currentFilter
 
-    const setCurrentListCount = (val) => setGlobalState('currentListCount',val)
     const setProperties = (val) => setGlobalState('properties',val)
     const setIsLoading = (val) => setGlobalState('loading',val)
-    const setFilter = (name,element) => setGlobalState('filters',{...filters,currentPressedElement:element,currentPressedName:name})
 
+    
     const submitNewFilter = (filterName,filterValue) => {
 
         switch(filterName){
@@ -88,12 +101,12 @@ const TopBar = props => {
           case ('addresses'):{
     
             let range_array = []
-            console.log(filterValue)
-            for (let i=0;i<filterValue.length;i++){
+            console.log('setting addresses to '+filterValue)
+            for (let i=0;i<filterValue?.length;i++){
               if (filterValue[i].includes(','))
                 range_array.push({
                   name:"page_attributes[street_name][]",
-                  value:filterValue[i]
+                  value:filterValue[i].split(', ')[1]
                 })
               else
                 range_array.push({
@@ -113,7 +126,7 @@ const TopBar = props => {
             for (let i of _range){
               range_array.push({
                 name:"page_attributes[furniture][]",
-                value:furnitureTypes(i)
+                value:furnitureTypes[i]
               })
             }
     
@@ -132,20 +145,19 @@ const TopBar = props => {
         const data = await getProperties(options)
         const _properites = data.payload
 
-        setCurrentListCount(_properites.length)
-        setProperties(_properites)
+        setProperties({data:_properites,currentCount:_properites.length})
         setIsLoading(false)
 
     }
     
 
     const handleClickFilter = (event) => {
-        setFilter(event.currentTarget.id,event.currentTarget)
+        setCurrentFilter({currentFilterName:event.currentTarget.id,currentFilterElement:event.currentTarget})
     };
 
-    const handleCloseFilter = () => setFilter({...filters,currentPressedName:'',currentPressedElement:null})
+    const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
-    console.log(filters)
+    console.log(filters.addresses)
     return (
         <div
             style={{
@@ -166,7 +178,18 @@ const TopBar = props => {
 
             
             <div style={{width:'180px'}}>
-                <MySelect data={addresses}/>
+                <WindowedSelect
+                    styles={customSelectStyles}
+                    isClearable={true}
+                    isRtl={true}
+                    isMulti={true}
+                    getOptionValue={e => e}
+                    getOptionLabel={e => e}
+                    options={addresses}
+                    placeholder="חפש לפי כתובת"
+                    value={filters.addresses}
+                    onChange={e => {console.log(e);setFilters({...filters,addresses:e});submitNewFilter('addresses',e)}}
+                />
             </div>
 
             <div style={{display:'flex',justifyContent:'space-around',flexWrap:'wrap',padding:'0px 20px'}}>
@@ -179,9 +202,9 @@ const TopBar = props => {
                     {
                         urlOptionsJson.price.length > 0 &&
                         <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});fetchProperties({...urlOptionsJson,price:[]})} } 
-                        style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                        borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                        borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                     }
                 </div>
 
@@ -193,9 +216,9 @@ const TopBar = props => {
                     {
                         urlOptionsJson.rooms.length > 0 &&
                         <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});fetchProperties({...urlOptionsJson,rooms:[]})} } 
-                        style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                        borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                        borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                     }
                 </div>
 
@@ -207,9 +230,9 @@ const TopBar = props => {
                     {
                         urlOptionsJson.renovation.length > 0 &&
                         <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});fetchProperties({...urlOptionsJson,renovation:[]})} } 
-                        style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                        borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                        borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                     }
                 </div>
 
@@ -221,9 +244,9 @@ const TopBar = props => {
                     {
                         urlOptionsJson.addresses.length > 0 &&
                         <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});fetchProperties({...urlOptionsJson,addresses:[]})} } 
-                        style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                        borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                        borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                     }
                 </div>
 
@@ -235,9 +258,9 @@ const TopBar = props => {
                     {
                         urlOptionsJson.furniture.length > 0 &&
                         <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});fetchProperties({...urlOptionsJson,furniture:[]})} } 
-                        style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                        borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                        borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                     }
                 </div>
 
@@ -254,7 +277,6 @@ const TopBar = props => {
             </IconButton>
 
             {
-                isDesktop &&
                 <IconButton style={{border:'2px solid grey',borderRadius:10,padding:'6px'}} onClick={() => {}}>
                     <Sync/>
                     <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>רענן חיפוש </span>
@@ -263,142 +285,142 @@ const TopBar = props => {
 
 
             <StyledMenu
-                anchorEl={currentPressedElement}
-                open={Boolean(currentPressedElement)}
+                anchorEl={currentFilterElement}
+                open={Boolean(currentFilterElement)}
                 onClose={() => handleCloseFilter()}
             >
                 {
-                currentPressedName == 'budget' ?
+                currentFilterName == 'budget' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
-                    <div style={{padding:20}}>
-                        <Range
-                        step={50}
-                        min={1500}
-                        max={constants.MaxPrice}
-                        onChange={(newVal) => setFilters({...filters,budgetFrom:newVal[0],budgetTo:newVal[1]})}
-                        value={[filters.budgetFrom,filters.budgetTo]}
-                        reverse
-                        allowCross={false}
-                        />
-                    </div>
-                    
-                    <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',padding:'0px 20px 0px 20px'}}>
-                        <Input
-                        onChange={(event) => setFilters({...filters,budgetFrom:parseInt(event.currentTarget.value)})}
-                        margin="dense"
-                        inputProps={{
-                            step: 10,
-                            min: 1500,
-                            max: constants.MaxPrice,
-                            type: 'number',
-                        }}
-                        value={filters.budgetFrom}
-                        startAdornment={<InputAdornment position="end">מ</InputAdornment>}
-                        />
-                        <Input
-                        onChange={(event) => setFilters({...filters,budgetTo:parseInt(event.currentTarget.value)})}
-                        margin="dense"
-                        inputProps={{
-                            step: 10,
-                            min: 1500,
-                            max: constants.MaxPrice,
-                            type: 'number',
-                        }}
-                        value={filters.budgetTo}
-                        startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                        />
-                    </div>
-                    <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                        <div onClick={() => {submitNewFilter('budget',[filters.budgetFrom,filters.budgetTo]);handleCloseFilter()}} 
-                        style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                        color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
-                        <div onClick={() => handleCloseFilter() } 
-                            style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
-                    </div>
+                        <div style={{padding:20}}>
+                            <Range
+                                step={50}
+                                min={1500}
+                                max={constants.MaxPrice}
+                                onChange={(newVal) => setFilters({...filters,budgetFrom:newVal[0],budgetTo:newVal[1]})}
+                                value={[filters.budgetFrom,filters.budgetTo]}
+                                reverse
+                                allowCross={false}
+                            />
+                        </div>
+                        
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',padding:'0px 20px 0px 20px'}}>
+                            <Input
+                                onChange={(event) => setFilters({...filters,budgetFrom:parseInt(event.currentTarget.value)})}
+                                margin="dense"
+                                inputProps={{
+                                    step: 10,
+                                    min: 1500,
+                                    max: constants.MaxPrice,
+                                    type: 'number',
+                                }}
+                                value={filters.budgetFrom}
+                                startAdornment={<InputAdornment position="end">מ</InputAdornment>}
+                            />
+                            <Input
+                                onChange={(event) => setFilters({...filters,budgetTo:parseInt(event.currentTarget.value)})}
+                                margin="dense"
+                                inputProps={{
+                                    step: 10,
+                                    min: 1500,
+                                    max: constants.MaxPrice,
+                                    type: 'number',
+                                }}
+                                value={filters.budgetTo}
+                                startAdornment={<InputAdornment position="end">עד</InputAdornment>}
+                            />
+                        </div>
+                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                            <div onClick={() => {submitNewFilter('budget',[filters.budgetFrom,filters.budgetTo]);handleCloseFilter()}} 
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => handleCloseFilter() } 
+                                style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
+                        </div>
                     </div>
                 </div>:
-                currentPressedName == 'rooms' ?
+                currentFilterName == 'rooms' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
-                    <div style={{padding:20}}>
-                        <Range
-                        step={.5}
-                        min={1}
-                        max={constants.MaxRooms}
-                        onChange={(newVal) => setFilters({...filters,roomsFrom:newVal[0],roomsTo:newVal[1]})}
-                        value={[filters.roomsFrom,filters.roomsTo]}
-                        reverse
-                        allowCross={false}
-                        />
-                    </div>
-                    
-                    <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',padding:'0px 20px 0px 20px'}}>
-                        <Input
-                        onChange={(event) => setFilters({...filters,roomsFrom:parseFloat(event.currentTarget.value)})}
-                        margin="dense"
-                        inputProps={{
-                            step: .5,
-                            min: 1,
-                            max: constants.MaxRooms,
-                            type: 'number',
-                        }}
-                        value={filters.roomsFrom}
-                        startAdornment={<InputAdornment position="end">מ</InputAdornment>}
-                        />
-                        <Input
-                        onChange={(event) => setFilters({...filters,roomsTo:parseFloat(event.currentTarget.value)})}
-                        margin="dense"
-                        inputProps={{
-                            step: .5,
-                            min: 1,
-                            max: constants.MaxRooms,
-                            type: 'number',
-                        }}
-                        value={filters.roomsTo}
-                        startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                        />
-                    </div>
-                    <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                        <div onClick={() => {submitNewFilter('rooms',[filters.roomsFrom,filters.roomsTo]);handleCloseFilter()}} 
-                        style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                        color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
-                        <div onClick={() => handleCloseFilter() } 
-                            style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
-                    </div>
+                        <div style={{padding:20}}>
+                            <Range
+                                step={.5}
+                                min={1}
+                                max={constants.MaxRooms}
+                                onChange={(newVal) => setFilters({...filters,roomsFrom:newVal[0],roomsTo:newVal[1]})}
+                                value={[filters.roomsFrom,filters.roomsTo]}
+                                reverse
+                                allowCross={false}
+                            />
+                        </div>
+                        
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',padding:'0px 20px 0px 20px'}}>
+                            <Input
+                                onChange={(event) => setFilters({...filters,roomsFrom:parseFloat(event.currentTarget.value)})}
+                                margin="dense"
+                                inputProps={{
+                                    step: .5,
+                                    min: 1,
+                                    max: constants.MaxRooms,
+                                    type: 'number',
+                                }}
+                                value={filters.roomsFrom}
+                                startAdornment={<InputAdornment position="end">מ</InputAdornment>}
+                            />
+                            <Input
+                                onChange={(event) => setFilters({...filters,roomsTo:parseFloat(event.currentTarget.value)})}
+                                margin="dense"
+                                inputProps={{
+                                    step: .5,
+                                    min: 1,
+                                    max: constants.MaxRooms,
+                                    type: 'number',
+                                }}
+                                value={filters.roomsTo}
+                                startAdornment={<InputAdornment position="end">עד</InputAdornment>}
+                            />
+                        </div>
+                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                            <div onClick={() => {submitNewFilter('rooms',[filters.roomsFrom,filters.roomsTo]);handleCloseFilter()}} 
+                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => handleCloseFilter() } 
+                                style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
+                        </div>
                     </div>
                 </div>:
-                currentPressedName == "renovation" ?
+                currentFilterName == "renovation" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
-                    <div style={{padding:20}}>
-                        <Range
-                        step={1}
-                        min={1}
-                        max={constants.MaxRenovation}
-                        onChange={(newVal) => setFilters({...filters,renovationFrom:newVal[0],renovationTo:newVal[1]})}
-                        value={[filters.renovationFrom,filters.renovationTo]}
-                        reverse
-                        tipFormatter={val => val}
-                        dots={true}
-                        marks={renovationTypes}
-                        allowCross={false}
-                        />
-                    </div>
-                    
-                    <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                        <div onClick={() => {submitNewFilter('renovation',[filters.renovationFrom,filters.renovationTo]);handleCloseFilter()}} 
-                        style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                        color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
-                        <div onClick={() => handleCloseFilter() } 
-                            style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
-                    </div>
+                        <div style={{padding:20}}>
+                            <Range
+                                step={1}
+                                min={1}
+                                max={constants.MaxRenovation}
+                                onChange={(newVal) => setFilters({...filters,renovationFrom:newVal[0],renovationTo:newVal[1]})}
+                                value={[filters.renovationFrom,filters.renovationTo]}
+                                reverse
+                                tipFormatter={val => val}
+                                dots={true}
+                                marks={renovationTypes}
+                                allowCross={false}
+                            />
+                        </div>
+                        
+                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                            <div onClick={() => {submitNewFilter('renovation',[filters.renovationFrom,filters.renovationTo]);handleCloseFilter()}} 
+                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => handleCloseFilter() } 
+                                style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
+                        </div>
                     </div>
                 </div>:
-                currentPressedName == "addresses" ?
+                currentFilterName == "addresses" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap',overflow:'hidden'}}>
                     <div style={{padding:20}}>
@@ -412,50 +434,56 @@ const TopBar = props => {
                     </div>
 
                     <div style={{display:'flex',flexDirection:'column',width:'100%',overflow:'auto',flexWrap:'wrap',height:'150px'}}>
-                        <NeighborhoodsFilterView/>
+                        <NeighborhoodsFilterView neighborhoodSelected={neighborhoodSelected} setNeighborhoodSelected={setNeighborhoodSelected}/>
                     </div>
                     
                     <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                        <div onClick={() => {submitNewFilter('addresses',filters.addresses);handleCloseFilter()}} 
-                        style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                        color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
-                        <div onClick={() => handleCloseFilter() } 
-                            style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
-                    </div>
+                        <div onClick={() => {
+                            let newVal = new Set(filters.addresses.concat(neighborhoodSelected))
+
+                            setFilters({...filters,addresses: [...newVal]});
+                            submitNewFilter('addresses',filters.addresses.concat(neighborhoodSelected))
+                            handleCloseFilter()
+                        }} 
+                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => {handleCloseFilter();setNeighborhoodSelected([]) }} 
+                                style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
+                        </div>
                     </div>
                 </div>
                 :
-                currentPressedName == "furniture" ?
+                currentFilterName == "furniture" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
-                    <div style={{padding:20}}>
-                        <Range
-                        step={1}
-                        min={1}
-                        max={3}
-                        onChange={(newVal) => setFilters({...filters,furnitureFrom:newVal[0],furnitureTo:newVal[1]})}
-                        value={[filters.furnitureFrom,filters.furnitureTo]}
-                        reverse
-                        tipFormatter={val => val}
-                        dots={true}
-                        marks={{
-                            1: 'ללא ריהוט',
-                            2: 'ריהוט חלקי',
-                            3: 'ריהוט מלא',
-                        }}
-                        allowCross={true}
-                        />
-                    </div>
-                    
-                    <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                        <div onClick={() => {submitNewFilter('furniture',[filters.furnitureFrom,filters.furnitureTo]);handleCloseFilter()}} 
-                        style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                        color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
-                        <div onClick={() => handleCloseFilter() } 
-                            style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
-                    </div>
+                        <div style={{padding:20}}>
+                            <Range
+                                step={1}
+                                min={1}
+                                max={3}
+                                onChange={(newVal) => setFilters({...filters,furnitureFrom:newVal[0],furnitureTo:newVal[1]})}
+                                value={[filters.furnitureFrom,filters.furnitureTo]}
+                                reverse
+                                tipFormatter={val => val}
+                                dots={true}
+                                marks={{
+                                    1: 'ללא ריהוט',
+                                    2: 'ריהוט חלקי',
+                                    3: 'ריהוט מלא',
+                                }}
+                                allowCross={true}
+                            />
+                        </div>
+                        
+                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                            <div onClick={() => {submitNewFilter('furniture',[filters.furnitureFrom,filters.furnitureTo]);handleCloseFilter()}} 
+                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => handleCloseFilter() } 
+                                style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
+                        </div>
                     </div>
                 </div>:
                     null

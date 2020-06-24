@@ -3,12 +3,8 @@ import {constants} from './components/Utilities'
 
 const initialState = {
     filters:{
-        //what to render
-        currentPressedName:'',
-        //where to render
-        currentPressedElement:null,
         //default values
-        budgetFrom:1500,
+        budgetFrom:1000,
         budgetTo:constants.MaxPrice,
         roomsFrom:1,
         roomsTo:constants.MaxRooms,
@@ -17,6 +13,10 @@ const initialState = {
         addresses:[],
         furnitureFrom:1,
         furnitureTo:constants.MaxFurniture
+    },
+    currentFilter:{
+        currentFilterName:'',
+        currentFilterElement:'',
     },
     urlOptionsJson: {
         price: [],
@@ -31,11 +31,10 @@ const initialState = {
         totalCount: 0,
     },
     favourites:[],
-    selectedProperty: 65156,
+    selectedProperty: 65156 ,
     addresses: [],
     addressesMap: [],
     sideBarVisible: false,
-    isDesktop: true,
     listRef: null,
     loading: false,
     addressSearch: '',

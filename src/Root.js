@@ -8,7 +8,6 @@ import { PropertyModal } from './components/PropertyModal';
 
 
 const Root = props => {
-    const [isDesktop, setIsDesktop] = useGlobalState('isDesktop');
 
     const setIsLoading = (val) => setGlobalState('loading',val)
     const setProperties = (val) => setGlobalState('properties',val)
