@@ -157,7 +157,6 @@ const TopBar = props => {
 
     const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
-    console.log(filters.addresses)
     return (
         <div
             style={{

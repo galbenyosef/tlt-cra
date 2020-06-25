@@ -5,6 +5,7 @@ import { getProperties } from './dataHandler'
 import TopBar from './components/TopBar';
 import { PropertyList } from './components/PropertyList';
 import { PropertyModal } from './components/PropertyModal';
+import { devices } from './components/Utilities'
 
 
 const Root = props => {
@@ -13,6 +14,8 @@ const Root = props => {
     const setProperties = (val) => setGlobalState('properties',val)
     const setAddresses = (val) => setGlobalState('addresses',val)
     const setAddressesMap = (val) => setGlobalState('addressesMap',val)
+    const setDevice = (val) => setGlobalState('device',val)
+    const setProperty = (val) => setGlobalState('selectedProperty',val)
 
     const fetchProperties = async (options={}) => {
 
@@ -50,7 +53,21 @@ const Root = props => {
 
     useEffect(() => {
         fetchProperties()
+        window.addEventListener("resize",() => resize());
+        if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
+            console.log(window.location.pathname.split('/')[1])
+            setProperty(window.location.pathname.split('/')[1])
+        }
+            
     },[])
+
+    const resize = () => {
+        console.log('window')
+        if (window.innerWidth < 960)
+            setDevice(devices.Mobile)
+        else
+            setDevice(devices.Desktop)
+    }
 
 
     console.log('root rendered')

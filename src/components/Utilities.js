@@ -11,6 +11,11 @@ const range = (min, max , step = 1) => {
   return arr;
 }
 
+const devices = {
+  Desktop:1,
+  Mobile:2
+}
+
 const constants = {
   MaxPrice: 18000,
   MaxRooms: 10,
@@ -31,4 +36,4 @@ const furnitureTypes = {
   3: 'ריהוט מלא',
 }
 
-export {constants,renovationTypes,range,furnitureTypes}
+export {constants,renovationTypes,range,furnitureTypes,devices}

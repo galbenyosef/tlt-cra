@@ -2,17 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { Modal,Grid, TextField, makeStyles, Input, InputAdornment } from '@material-ui/core'
 import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
 import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
-import { getProperty, getUser } from '../dataHandler'
+import { getProperty, getUser, getCoordinates } from '../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
-import { renovationTypes } from './Utilities'
+import { renovationTypes, devices } from './Utilities'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { FaBed, FaBuilding, FaBath, FaToilet } from 'react-icons/fa'
-import { GiResize, GiBed, GiCrossedAirFlows } from 'react-icons/gi'
+import { FaBed, FaBuilding, FaBath, FaToilet, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
+import { GiResize, GiBed, GiCrossedAirFlows, GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
 import { BsPersonBoundingBox, BsFillPersonFill, BsPeopleCircle } from 'react-icons/bs'
-import { IoMdPhonePortrait } from 'react-icons/io'
+import { IoMdPhonePortrait, IoIosHome } from 'react-icons/io'
 import { isMobile } from 'react-device-detect'
-import { FcHome, FcWorkflow, FcGlobe } from 'react-icons/fc'
-
+import { FcHome, FcWorkflow, FcGlobe, FcSafe } from 'react-icons/fc'
+import { FiSun } from 'react-icons/fi'
+import { AiOutlineTable } from 'react-icons/ai'
+import { RiParentLine, RiLandscapeLine } from 'react-icons/ri'
+import { GrElevator } from 'react-icons/gr'
+import { LocationMap } from './Map'
 
 const Tabs = {
     Info:1,
@@ -46,7 +50,12 @@ export const PropertyModal = () => {
     const [data,setData] = useState(null)
     const [loading,setLoading] = useState(true)
     const [currentImageIndex,setCurrentImageIndex] = useState(0)
-    
+    const [mapInfo,setMapInfo] = useState({
+        lat:'',
+        lon:'',
+    })
+
+    const [device] = useGlobalState('device')
 
     const fetchProperty = async (id) => {
 
@@ -60,6 +69,22 @@ export const PropertyModal = () => {
                 const agentId = _data.payload.attributes.agent_member_id
                 const agentData = await getUser(agentId)
 
+                const {
+                    city_id,
+                    street_name,
+                    neighborhood_name
+                } = _data.payload.attributes
+
+                const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
+                console.log([street_name,neighborhood_name,city_id].join(', '))
+                if (coords.length){
+                    setMapInfo({
+                        lat:coords[0].lat,
+                        lon:coords[0].lon,
+                        boundingbox:coords[0].boundingbox
+                    })
+                }
+                console.log(coords)
                 const {
                     first_name,
                     phone
@@ -106,6 +131,8 @@ export const PropertyModal = () => {
     if (loading)
         return <PropertyModalLoading/>
 
+    if (!data)
+        return null
 
     let property = data.payload.attributes
     let propertyImages = data.payload.page_assets_urls
@@ -154,14 +181,20 @@ export const PropertyModal = () => {
 
 
     return (
-        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:'auto'}} onBackdropClick={() => setSelectedProperty(null)}>
-            <Grid container style={{padding:20}} direction='column'>
+        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty(null)}>
+            <Grid container style={{
+                right: '50%',
+                maxWidth: '90%',
+                top: '50%',
+                transform: 'translate(50%, -50%)',
+                position: 'absolute',
+               maxHeight:'100vh'}} >
                 {/* back button */}
-                <Grid xs={12} item style={{backgroundColor:'white',padding:15}}>
-                    <p>חזור</p>
+                <Grid xs={12} item style={{backgroundColor:'white',padding:15,display:'flex'}}>
+                    <p style={{cursor:'pointer'}} onClick={() => setSelectedProperty(null)}>חזור</p>
                 </Grid>
                 {/* main view */}
-                <Grid item xs={12} style={{backgroundColor:'white'}}>
+                <Grid item xs={12} style={{backgroundColor:'white',overflow:'auto',maxHeight:devices.Mobile ? 'calc(100vh - 91px)':'calc(100vh - 51px - 60px)'}}>
                     <Grid container direction='row'>
                         <Grid item md={1} xs={false}/>
                         {/* right */}
@@ -170,7 +203,7 @@ export const PropertyModal = () => {
                                 <Grid item xs={7} style={{paddingBottom:20}}>
                                     <p style={{fontSize:24,fontWeight:'bold',paddingBottom:5}}>{street_name}</p>
                                     <p style={{paddingBottom:12}}>{neighborhood_name + ', ' +city_id}</p>
-                                    <p style={{fontSize:18,fontWeight:100,paddingBottom:5}}>{propertytype + ' ' + renovationTypes[renovation]}</p>
+                                    <p style={{fontSize:18,fontWeight:100,paddingBottom:5,whiteSpace:'nowrap'}}>{propertytype + ' ' + renovationTypes[renovation]}</p>
                                 </Grid>
                                 <Grid item xs={5}>
                                     <p style={{textAlign:'end',fontSize:26,fontWeight:'bold'}}>{`${price.toLocaleString('he-IL')} ₪`}</p>
@@ -339,7 +372,11 @@ export const PropertyModal = () => {
                                 </Grid>
 
                                 {/* Tab */}
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{overflow:'auto',maxHeight:'400px',marginLeft:'-20px'}}>
+                                <div style={{display:'flex',flexDirection:'column',backgroundColor:'lightgray',width:20,zIndex:1}}>
+
+
+</div>
                                     {
                                         tabSelected == Tabs.Info ?
                                         <Grid container style={{padding:10,border:'1px dotted black'}}>
@@ -416,109 +453,127 @@ export const PropertyModal = () => {
                                                     </Grid>
                                                     {
                                                         airconditioner?.length &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaFan style={{paddingLeft:20}} size={20}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מיזוג ${airconditioner[0]}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         boiler &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FiSun size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${boiler}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         shower &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaShower size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מקלחון`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         bathtub &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaBath size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`אמבטיה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         structure &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaBuilding size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${structure}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         parking &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaParking size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${parking}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         warehouse &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaWarehouse size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מחסן`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         garden &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <GiFireFlower size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גינה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         accessibility &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FaAccessibleIcon size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גישה לנכים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         saferoom &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <FcSafe size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`ממ"ד`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         bars &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <GiWindowBars size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`סורגים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         nets &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <AiOutlineTable size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`חלונות מרושתים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         electricshutters &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <GiWindow size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`תריסים חשמליים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         parentsunit &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <RiParentLine size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`יחידת הורים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         stairs > 0 &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <GiStairs size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${stairs} מדרגות עד לפתח הדירה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         landscape &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <RiLandscapeLine size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`נוף ${landscape}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         terrace &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <IoIosHome size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מרפסת`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         elevator &&
-                                                        <Grid item xs={3}>
+                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
+                                                            <GrElevator size={20} style={{paddingLeft:20}}/>
                                                             <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מעלית`}</p>
                                                         </Grid>
                                                     }
@@ -527,6 +582,14 @@ export const PropertyModal = () => {
                                                 </Grid>
                                             </Grid>
 
+                                        </Grid>
+                                        :
+                                        tabSelected == Tabs.Location ?
+                                        <Grid container style={{padding:10,border:'1px dotted black'}}>
+                                            <div style={{width:'100%',height:'350px'}} id='leaflet-container'>
+                                                <LocationMap {...mapInfo}/>
+                                            </div>
+                                            
                                         </Grid>
                                         :
                                         null

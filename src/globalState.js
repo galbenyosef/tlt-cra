@@ -31,13 +31,14 @@ const initialState = {
         totalCount: 0,
     },
     favourites:[],
-    selectedProperty: 65156 ,
+    selectedProperty: '' ,
     addresses: [],
     addressesMap: [],
     sideBarVisible: false,
     listRef: null,
     loading: false,
     addressSearch: '',
+    device:null
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)
