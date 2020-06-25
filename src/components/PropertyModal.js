@@ -206,7 +206,10 @@ export const PropertyModal = () => {
                                     <p style={{fontSize:18,fontWeight:100,paddingBottom:5,whiteSpace:'nowrap'}}>{propertytype + ' ' + renovationTypes[renovation]}</p>
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <p style={{textAlign:'end',fontSize:26,fontWeight:'bold'}}>{`${price.toLocaleString('he-IL')} ₪`}</p>
+                                    {
+                                        price &&
+                                        <p style={{textAlign:'end',fontSize:26,fontWeight:'bold'}}>{`${price.toLocaleString('he-IL')} ₪`}</p>
+                                    }
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Grid container style={{paddingBottom:15}}>
@@ -282,6 +285,7 @@ export const PropertyModal = () => {
                         {/* left */}
                         <Grid item md={6} xs={12}>
                             <Grid container style={{paddingLeft:10,paddingRight:10}}>
+                                {/* images */}
                                 <Grid item xs={12}>
                                     <Grid container>
                                         <Grid item md={8} xs={12} style={{
@@ -294,11 +298,27 @@ export const PropertyModal = () => {
                                             minHeight:'220px'
                                         }}>
                                         <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
-                                            <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} />
+                                            <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} 
+                                                onClick={() => {
+                                                    let nextImageIndex = currentImageIndex-1
+                                                    if (nextImageIndex < 0)
+                                                        nextImageIndex = propertyImages.length-1
+                                                    setCurrentImageIndex(nextImageIndex)
+                                                }}
+                                            />
                                         </div>
-
+                                        <div style={{display:'flex',position:'absolute',bottom:'35px',direction:'ltr',left:0,right:0,justifyContent:'center',color:'white',fontWeight:'bolder'}}>
+                                            <p>{`${currentImageIndex+1}/${propertyImages.length}`}</p>
+                                        </div>
                                         <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',right:0}}>
-                                            <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} />
+                                            <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}}
+                                                onClick={() => {
+                                                    let nextImageIndex = currentImageIndex+1
+                                                    if (nextImageIndex > propertyImages.length)
+                                                        nextImageIndex = 0
+                                                    setCurrentImageIndex(nextImageIndex)
+                                                }} 
+                                            />
                                         </div> 
                                         </Grid>
                                         <Grid item md={4} xs={12} style={{minHeight:120}}>
@@ -354,6 +374,7 @@ export const PropertyModal = () => {
                                         </Grid>
                                     </Grid>
                                 </Grid>
+                                {/* tab menu */}
                                 <Grid item xs={12}>
                                     <Grid container>
                                         <Grid item xs={4} style={{color:tabSelected == Tabs.Info ? 'white':'',backgroundColor:tabSelected == Tabs.Info ? 'grey':'lightgrey',cursor:'pointer',border:'1px solid black',display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}} onClick={() => setTabSelected(Tabs.Info)}>
@@ -375,8 +396,7 @@ export const PropertyModal = () => {
                                 <Grid item xs={12} style={{overflow:'auto',maxHeight:'400px',marginLeft:'-20px'}}>
                                 <div style={{display:'flex',flexDirection:'column',backgroundColor:'lightgray',width:20,zIndex:1}}>
 
-
-</div>
+                                </div>
                                     {
                                         tabSelected == Tabs.Info ?
                                         <Grid container style={{padding:10,border:'1px dotted black'}}>
@@ -399,18 +419,28 @@ export const PropertyModal = () => {
                                                                 <FaBuilding size={20} style={{paddingLeft:10}}/>
                                                                 <p>{`${floor ? `קומה ${floor} (${elevator ? `עם מעלית`:`ללא מעלית`})`:`קומת קרקע`}`}</p>    
                                                             </Grid>
-                                                            <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={12}>
-                                                                <GiCrossedAirFlows size={20} style={{paddingLeft:10}}/>
-                                                                <p>{`${airdirections} כיווני אוויר`}</p>    
-                                                            </Grid>
-                                                            <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={6}>
-                                                                <FaBath size={20} style={{paddingLeft:10}}/>
-                                                               <p>{`${bathroomamount} חדרי רחצה`}</p>    
-                                                            </Grid>
-                                                            <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={6}>
-                                                                <FaToilet size={20} style={{paddingLeft:10}}/>
-                                                                <p>{`${toiletamount} שירותים`}</p>   
-                                                            </Grid>
+                                                            {
+                                                                airdirections &&
+                                                                <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={12}>
+                                                                    <GiCrossedAirFlows size={20} style={{paddingLeft:10}}/>
+                                                                    <p>{`${airdirections} כיווני אוויר`}</p>    
+                                                                </Grid>
+                                                            }
+                                                            {
+                                                                bathroomamount &&
+                                                                <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={6}>
+                                                                    <FaBath size={20} style={{paddingLeft:10}}/>
+                                                                    <p>{`${bathroomamount} חדרי רחצה`}</p>    
+                                                                </Grid>
+                                                            }
+                                                            {
+                                                                toiletamount &&
+                                                                <Grid style={{paddingBottom:15,display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}} item xs={6}>
+                                                                    <FaToilet size={20} style={{paddingLeft:10}}/>
+                                                                    <p>{`${toiletamount} שירותים`}</p>   
+                                                                </Grid> 
+                                                            }
+                                                            
                                                         </Grid>
                                                     </Grid>
                                                     <Grid item xs={5}>
@@ -427,12 +457,18 @@ export const PropertyModal = () => {
                                                             <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
                                                                 <p>{`${tax?.toLocaleString('he-IL')} ₪`}</p>
                                                             </Grid>
-                                                            <Grid item xs={6} style={{paddingBottom:15}}>
-                                                                <p>שכר דירה</p>
-                                                            </Grid>
-                                                            <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
-                                                                <p>{`${price.toLocaleString('he-IL')} ₪`}</p>
-                                                            </Grid>
+                                                            {
+                                                                price &&
+                                                                <>
+                                                                    <Grid item xs={6} style={{paddingBottom:15}}>
+                                                                        <p>שכר דירה</p>
+                                                                    </Grid>
+                                                                    <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
+                                                                        <p>{`${price.toLocaleString('he-IL')} ₪`}</p>
+                                                                    </Grid> 
+                                                                </>
+                                                            }
+                                                            
                                                             <Grid item xs={6} style={{paddingBottom:15}}>
                                                                 <p>דרישות בחוזה</p>
                                                             </Grid>
