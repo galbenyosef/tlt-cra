@@ -15,7 +15,7 @@ export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} sm={4} style={{padding:'0px 20px 20px 20px',height:amount == 4 ? '33%':'50%'}}>
+      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{height:amount == 4 ? '33%':'50%'}}>
         <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'10px 10px 10px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
           <div style={{position:'relative',height:'55%',flex:1}}>
             <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>
@@ -31,10 +31,10 @@ export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
                 property.thumb_file ?
                 <div>
                   <LazyLoadImage
-                    style={{maxWidth:'100%',width:'100%',height:'100%'}}
+                    style={{maxWidth:'100%',height:'100%'}}
                     src={`${imageUrl}${property.thumb_file.sm}`} // use normal <img> attributes as props
                     />
-                  <span style={{width:'100%',textAlign:'center'}}>{`התמונה נטענת...`}</span>
+                  <p style={{width:'100%',textAlign:'center'}}>{`התמונה נטענת...`}</p>
                 </div>
               : 
                 null

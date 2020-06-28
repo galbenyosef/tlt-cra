@@ -4,6 +4,7 @@ import { useGlobalState, setGlobalState, getGlobalState } from '../globalState';
 import { CircularProgress,Grid } from '@material-ui/core';
 import {PropertyView} from './PropertyView'
 import {PropertyListLoading} from './PropertyListLoading'
+import { getValueByDevice } from './Utilities';
 
 
 
@@ -11,7 +12,6 @@ export const PropertyList = props => {
 
     const [favourites, setFavourites] = useGlobalState('favourites');
     const [propertiesData, setPropertiesData] = useGlobalState('properties');
-
     const listRef = React.useRef(null)
 
     useEffect(() => {
@@ -49,16 +49,16 @@ export const PropertyList = props => {
 
 
     return (
-        <div style={{display:'flex',width:'90%',maxHeight:'75vh',justifyContent:'center'}}>
+        <div style={{display:'flex',justifyContent:'center',overflow:'hidden'}}>
             <div style={{display:'flex',width:'100%',paddingTop:'20px',margin:'0px 0px 0px -20px',position:'relative'}}>
-            <PropertyListLoading/>
-            <Grid ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',margin:0,overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
-            {
-                properties.length > 0 && properties.splice(0,20).map(prop => 
-                    <PropertyView key={prop.id} property={prop} toggleFavourite={toggleFavourite}/>
-                )
-            }
-            </Grid>
+                <PropertyListLoading/>
+                <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
+                {
+                    properties.length > 0 && properties.splice(0,20).map(prop => 
+                        <PropertyView key={prop.id} property={prop} toggleFavourite={toggleFavourite}/>
+                    )
+                }
+                </Grid>
             </div>
         </div>
     )

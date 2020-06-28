@@ -8,6 +8,7 @@ import { PropertyModal } from './components/PropertyModal';
 import { devices } from './components/Utilities'
 import { AllMediaModal } from './components/MediaModals/AllMediaModal';
 import { SingleMediaModal } from './components/MediaModals/SingleMediaModal';
+import { LeadModal } from './components/LeadModal';
 
 
 const Root = props => {
@@ -64,7 +65,7 @@ const Root = props => {
     },[])
 
     const resize = () => {
-        console.log('window')
+
         if (window.innerWidth < 960)
             setDevice(devices.Mobile)
         else
@@ -84,6 +85,7 @@ const Root = props => {
             <PropertyModal/>
             <AllMediaModal/>
             <SingleMediaModal/>
+            <LeadModal/>
         </Layout>
 
     )

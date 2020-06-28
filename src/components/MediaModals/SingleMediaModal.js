@@ -9,6 +9,7 @@ export const SingleMediaModal = () => {
 
     if (!opened)
         return null
+    console.log(opened)
     return (
         <Modal open={!!opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setOpened(false)}>
             <div style={{
@@ -21,12 +22,12 @@ export const SingleMediaModal = () => {
                height:'90vh',
             }} >
                 {
-                    opened.includes('.mp4') ?
+                    opened && opened.includes('.mp4') ?
                     <video style={{height:'100%',margin:'auto'}} autoPlay controls>
                         <source src={`https://tlt.kala-crm.co.il/${opened}`} type="video/mp4"/>
                         Your browser does not support the video tag.
                     </video>:
-                    <img style={{margin:'auto',height:'100%'}} src={`https://tlt.kala-crm.co.il/${opened}`} />
+                    <img style={{margin:'auto',height:'100%',maxWidth:'90vw'}} src={`https://tlt.kala-crm.co.il/${opened}`} />
 
                 }
 

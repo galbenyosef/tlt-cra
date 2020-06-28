@@ -62,4 +62,9 @@ export const getValueByDevice = (desktop,mobile) => {
       return desktop
 }
 
-export {constants,renovationTypes,range,furnitureTypes,devices}
+const LeadTypes = {
+  MeetingRequest:1,
+  WannaHearMore:2,
+}
+
+export {constants,renovationTypes,range,furnitureTypes,devices,LeadTypes}

@@ -7,7 +7,7 @@ import { IoIosConstruct } from 'react-icons/io';
 import { getProperties } from '../dataHandler'
 import StyledMenu from './StyledMenu'
 import {Range} from 'rc-slider';
-import {constants, renovationTypes, range, furnitureTypes} from './Utilities'
+import {constants, renovationTypes, range, furnitureTypes, devices} from './Utilities'
 import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
 import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
@@ -33,6 +33,7 @@ const TopBar = props => {
     const [sideBarVisible, setSideBarVisible] = useGlobalState('sideBarVisible');
     const [filters, setFilters] = useGlobalState('filters');
     const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
+    const [device] = useGlobalState('device')
 
     const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
 
@@ -157,6 +158,7 @@ const TopBar = props => {
 
     const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
+
     return (
         <div
             style={{
@@ -171,9 +173,12 @@ const TopBar = props => {
             }}>
 
 
-            <IconButton onClick={() => {}}>
-                <AccountCircleOutlined/>
-            </IconButton>
+            {
+                device == devices.Desktop &&
+                <IconButton onClick={() => {}}>
+                    <AccountCircleOutlined/>
+                </IconButton>
+            }
 
             
             <div style={{width:'180px'}}>
@@ -191,79 +196,83 @@ const TopBar = props => {
                 />
             </div>
 
-            <div style={{display:'flex',justifyContent:'space-around',flexWrap:'wrap',padding:'0px 20px'}}>
+            {
+                device == devices.Desktop &&
 
-                <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                    <IconButton id='budget'  onClick={e => handleClickFilter(e)}>
-                        <i className="fa fa-ils" aria-hidden="true"></i>
-                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}><span style={{fontSize:'1rem'}}>₪</span> תקציב</span>
-                    </IconButton>              
-                    {
-                        urlOptionsJson.price.length > 0 &&
-                        <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});fetchProperties({...urlOptionsJson,price:[]})} } 
-                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
-                    }
+                <div style={{display:'flex',justifyContent:'space-around',flexWrap:'wrap',padding:'0px 20px'}}>
+
+                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
+                        <IconButton id='budget'  onClick={e => handleClickFilter(e)}>
+                            <i className="fa fa-ils" aria-hidden="true"></i>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}><span style={{fontSize:'1rem'}}>₪</span> תקציב</span>
+                        </IconButton>              
+                        {
+                            urlOptionsJson.price.length > 0 &&
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});fetchProperties({...urlOptionsJson,price:[]})} } 
+                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                        }
+                    </div>
+
+                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
+                        <IconButton id='rooms'  onClick={e => handleClickFilter(e)}>
+                            <Hotel/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>חדרים </span>
+                        </IconButton>
+                        {
+                            urlOptionsJson.rooms.length > 0 &&
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});fetchProperties({...urlOptionsJson,rooms:[]})} } 
+                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                        }
+                    </div>
+
+                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
+                        <IconButton id='renovation'  onClick={e => handleClickFilter(e)}>
+                            <IoIosConstruct/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>רמת שיפוץ </span>
+                        </IconButton>
+                        {
+                            urlOptionsJson.renovation.length > 0 &&
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});fetchProperties({...urlOptionsJson,renovation:[]})} } 
+                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                        }
+                    </div>
+
+                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
+                        <IconButton id='addresses'  onClick={e => handleClickFilter(e)}>
+                            <LocationCity/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>שכונות </span>
+                        </IconButton>
+                        {
+                            urlOptionsJson.addresses.length > 0 &&
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});fetchProperties({...urlOptionsJson,addresses:[]})} } 
+                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                        }
+                    </div>
+
+                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
+                        <IconButton id='furniture'  onClick={e => handleClickFilter(e)}>
+                            <Weekend/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>ריהוט </span>
+                        </IconButton>
+                        {
+                            urlOptionsJson.furniture.length > 0 &&
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});fetchProperties({...urlOptionsJson,furniture:[]})} } 
+                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                        }
+                    </div>
+
                 </div>
-
-                <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                    <IconButton id='rooms'  onClick={e => handleClickFilter(e)}>
-                        <Hotel/>
-                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>חדרים </span>
-                    </IconButton>
-                    {
-                        urlOptionsJson.rooms.length > 0 &&
-                        <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});fetchProperties({...urlOptionsJson,rooms:[]})} } 
-                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
-                    }
-                </div>
-
-                <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                    <IconButton id='renovation'  onClick={e => handleClickFilter(e)}>
-                        <IoIosConstruct/>
-                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>רמת שיפוץ </span>
-                    </IconButton>
-                    {
-                        urlOptionsJson.renovation.length > 0 &&
-                        <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});fetchProperties({...urlOptionsJson,renovation:[]})} } 
-                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
-                    }
-                </div>
-
-                <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                    <IconButton id='addresses'  onClick={e => handleClickFilter(e)}>
-                        <LocationCity/>
-                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>שכונות </span>
-                    </IconButton>
-                    {
-                        urlOptionsJson.addresses.length > 0 &&
-                        <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});fetchProperties({...urlOptionsJson,addresses:[]})} } 
-                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
-                    }
-                </div>
-
-                <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                    <IconButton id='furniture'  onClick={e => handleClickFilter(e)}>
-                        <Weekend/>
-                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>ריהוט </span>
-                    </IconButton>
-                    {
-                        urlOptionsJson.furniture.length > 0 &&
-                        <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});fetchProperties({...urlOptionsJson,furniture:[]})} } 
-                            style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                            borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                            borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
-                    }
-                </div>
-
-            </div>
+            }
             
             <IconButton onClick={(e) => {/* setSideBarVisible(true) */}}>
                 <TuneOutlined/>

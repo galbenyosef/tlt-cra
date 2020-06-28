@@ -35,9 +35,11 @@ const initialState = {
     newLeadModal: {
         full_name: '',
         phone: '',
-        date: '',
-        time: ''
+        actually_when: '',
+        type: '',
+        comments: ''
     },
+    videoRef:null,
     allMediaModal:false,
     singleMediaModal:false,
     addresses: [],
@@ -46,7 +48,7 @@ const initialState = {
     listRef: null,
     loading: false,
     addressSearch: '',
-    device:null
+    device:null,
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

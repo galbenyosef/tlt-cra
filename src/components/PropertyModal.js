@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Modal,Grid, TextField, makeStyles, Input, InputAdornment } from '@material-ui/core'
 import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
 import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
 import { getProperty, getUser, getCoordinates, createLead } from '../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
-import { renovationTypes, devices } from './Utilities'
+import { renovationTypes, devices, LeadTypes, getScreenshot } from './Utilities'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FaBed, FaBuilding, FaBath, FaToilet, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
 import { GiResize, GiBed, GiCrossedAirFlows, GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
@@ -57,14 +57,11 @@ export const PropertyModal = () => {
         lon:'',
     })
 
-    const [person,setPerson] = useState({
-        full_name:'',
-        phone:''
-    })
-
     const setAllMediaModalOpened = val => setGlobalState('allMediaModal',val)
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
+    const [leadModalData,setLeadModalData] = useGlobalState('newLeadModal')
 
+    const videoRef = useRef(null)
 
     const fetchProperty = async (id) => {
 
@@ -106,7 +103,8 @@ export const PropertyModal = () => {
                         attributes:{
                             ..._data.payload.attributes,
                             agentName:first_name,
-                            agentPhone:phone
+                            agentPhone:phone,
+                            agentId
                         }
                     },
                     
@@ -126,33 +124,6 @@ export const PropertyModal = () => {
         setLoading(false)
     }
 
-
-    const createLeadKala = async () => {
-
-        if (!selectedProperty)
-            return
-
-        setLoading(true)
-    
-        try {
-            let body = {
-                ...person,
-                "status_id": 3077,
-                "attributes": { 
-                "type": "בקשה",
-                "kala_property_id": selectedProperty, 
-                "agent_id": data.payload.attributes.agent_member_id
-                }
-            }
-        
-            let response = await createLead(body)
-            console.log(response)
-        }
-        catch(e){
-            console.log(e)
-        }
-        setLoading(false)
-    }
 
     useEffect(() => {
 
@@ -197,6 +168,7 @@ export const PropertyModal = () => {
         tax,
         requirements,
         video__url,
+        agentId,
         agentName,
         agentPhone,
         furniture,
@@ -222,7 +194,7 @@ export const PropertyModal = () => {
     console.log(property)
 
     return (
-        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty(null)}>
+        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty('')}>
             <Grid container style={{
                 right: '50%',
                 maxWidth: '90%',
@@ -230,6 +202,11 @@ export const PropertyModal = () => {
                 transform: 'translate(50%, -50%)',
                 position: 'absolute',
                maxHeight:'100vh'}} >
+                {/* video for ref and image */}
+                <video ref={videoRef} style={{display:'none'}}>
+                    <source src={`https://tlt.kala-crm.co.il/${video__url}`} type="video/mp4"/>
+                    Your browser does not support the video tag.
+                </video>
                 {/* back button */}
                 <Grid xs={12} item style={{backgroundColor:'white',padding:15,display:'flex'}}>
                     <p style={{cursor:'pointer'}} onClick={() => setSelectedProperty(null)}>חזור</p>
@@ -287,9 +264,9 @@ export const PropertyModal = () => {
                                                 id="outlined-margin-dense"
                                                 margin="dense"
                                                 variant="outlined"
-                                                value={person.full_name}
+                                                value={leadModalData.full_name}
                                                 onChange={
-                                                    e => setPerson({...person,full_name:e.currentTarget.value})
+                                                    e => setLeadModalData({...leadModalData,full_name:e.currentTarget.value})
                                                 }
                                             />
                                         </Grid>
@@ -304,9 +281,9 @@ export const PropertyModal = () => {
                                                 id="outlined-margin-dense"
                                                 margin="dense"
                                                 variant="outlined"
-                                                value={person.phone}
+                                                value={leadModalData.phone}
                                                 onChange={
-                                                    e => setPerson({...person,phone:e.currentTarget.value})
+                                                    e => setLeadModalData({...leadModalData,phone:e.currentTarget.value})
                                                 }
                                             />
                                         </Grid>
@@ -318,16 +295,30 @@ export const PropertyModal = () => {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <p onClick={
-                                                    () => createLeadKala()
-                                                 } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'teal',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
+                                                    () => setLeadModalData({
+                                                        ...leadModalData,
+                                                        type:LeadTypes.MeetingRequest,
+                                                        attributes:{
+                                                            agent_id:agentId,
+                                                            kala_property_id:selectedProperty,
+                                                        }
+                                                    })
+                                                } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'teal',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
                                         </Grid>
                                         <Grid item xs={2} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                             <p style={{fontsize:24}}>או</p>
                                         </Grid>
                                         <Grid item xs={4}>
                                             <p onClick={
-                                                    () => createLeadKala()
-                                                 } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'limegreen',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
+                                                    () => setLeadModalData({
+                                                        ...leadModalData,
+                                                        type:LeadTypes.WannaHearMore,
+                                                        attributes:{
+                                                            agent_id:agentId,
+                                                            kala_property_id:selectedProperty,
+                                                        }
+                                                    })
+                                                } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'limegreen',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
                                         </Grid>
                                         <Grid item xs={1}>
                                         </Grid>
@@ -353,7 +344,7 @@ export const PropertyModal = () => {
                                                 minHeight:'220px'
                                             }}>
                                             <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
-                                                <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} 
+                                                <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white',cursor:'pointer'}} 
                                                     onClick={(e) => {
                                                         let nextImageIndex = currentImageIndex-1
                                                         if (nextImageIndex < 0)
@@ -367,7 +358,7 @@ export const PropertyModal = () => {
                                                 <p>{`${currentImageIndex+1}/${propertyImages.length}`}</p>
                                             </div>
                                             <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',right:0}}>
-                                                <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}}
+                                                <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white',cursor:'pointer'}}
                                                     onClick={(e) => {
                                                         let nextImageIndex = currentImageIndex+1
                                                         if (nextImageIndex > propertyImages.length-1)
@@ -382,6 +373,10 @@ export const PropertyModal = () => {
                                                 <Grid container style={{height:'100%'}}>
                                                     <Grid item xs={6} md={12} onClick={() => setAllMediaModalOpened(propertyImages)} style={{
                                                         position:'relative',
+                                                        backgroundImage:propertyImages.length > 1 ? `url(https://tlt.kala-crm.co.il/${propertyImages[1]})` : `url(https://tlt.kala-crm.co.il/${propertyImages[0]})`,
+                                                        backgroundRepeat: 'no-repeat',
+                                                        backgroundPosition: 'center',
+                                                        backgroundSize: 'cover'
                                                     }}>
                                                         <p style={{
                                                             position: 'absolute',
@@ -398,6 +393,10 @@ export const PropertyModal = () => {
                                                     </Grid>
                                                     <Grid item xs={6} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
                                                         position:'relative',
+                                                        backgroundImage:videoRef ? getScreenshot(videoRef.current,1): '',
+                                                        backgroundRepeat: 'no-repeat',
+                                                        backgroundPosition: 'center',
+                                                        backgroundSize: 'cover'
                                                     }}>
                                                         <div style={{
                                                                 position: 'absolute',
