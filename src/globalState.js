@@ -31,7 +31,15 @@ const initialState = {
         totalCount: 0,
     },
     favourites:[],
-    selectedProperty: '' ,
+    selectedProperty: 65156 ,
+    newLeadModal: {
+        full_name: '',
+        phone: '',
+        date: '',
+        time: ''
+    },
+    allMediaModal:false,
+    singleMediaModal:false,
     addresses: [],
     addressesMap: [],
     sideBarVisible: false,

@@ -6,6 +6,8 @@ import TopBar from './components/TopBar';
 import { PropertyList } from './components/PropertyList';
 import { PropertyModal } from './components/PropertyModal';
 import { devices } from './components/Utilities'
+import { AllMediaModal } from './components/MediaModals/AllMediaModal';
+import { SingleMediaModal } from './components/MediaModals/SingleMediaModal';
 
 
 const Root = props => {
@@ -80,6 +82,8 @@ const Root = props => {
                 <p>TLT - תיווך ללא תיווך נכסים והשקעות בע"מ - כל הזכויות שמורות</p>
             </div>
             <PropertyModal/>
+            <AllMediaModal/>
+            <SingleMediaModal/>
         </Layout>
 
     )

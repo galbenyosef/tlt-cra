@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal,Grid, TextField, makeStyles, Input, InputAdornment } from '@material-ui/core'
 import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
 import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
-import { getProperty, getUser, getCoordinates } from '../dataHandler'
+import { getProperty, getUser, getCoordinates, createLead } from '../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
 import { renovationTypes, devices } from './Utilities'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
+
+
 export const PropertyModal = () => {
 
     const [selectedProperty,setSelectedProperty] = useGlobalState('selectedProperty')
@@ -55,7 +57,14 @@ export const PropertyModal = () => {
         lon:'',
     })
 
-    const [device] = useGlobalState('device')
+    const [person,setPerson] = useState({
+        full_name:'',
+        phone:''
+    })
+
+    const setAllMediaModalOpened = val => setGlobalState('allMediaModal',val)
+    const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
+
 
     const fetchProperty = async (id) => {
 
@@ -117,11 +126,42 @@ export const PropertyModal = () => {
         setLoading(false)
     }
 
+
+    const createLeadKala = async () => {
+
+        if (!selectedProperty)
+            return
+
+        setLoading(true)
+    
+        try {
+            let body = {
+                ...person,
+                "status_id": 3077,
+                "attributes": { 
+                "type": "בקשה",
+                "kala_property_id": selectedProperty, 
+                "agent_id": data.payload.attributes.agent_member_id
+                }
+            }
+        
+            let response = await createLead(body)
+            console.log(response)
+        }
+        catch(e){
+            console.log(e)
+        }
+        setLoading(false)
+    }
+
     useEffect(() => {
 
         if (selectedProperty)
             fetchProperty(selectedProperty)
             
+        return () => {
+            setCurrentImageIndex(0)
+        }
     },[selectedProperty])
 
     //if not pressed on property
@@ -179,6 +219,7 @@ export const PropertyModal = () => {
         landscape
     } = property
 
+    console.log(property)
 
     return (
         <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty(null)}>
@@ -246,6 +287,10 @@ export const PropertyModal = () => {
                                                 id="outlined-margin-dense"
                                                 margin="dense"
                                                 variant="outlined"
+                                                value={person.full_name}
+                                                onChange={
+                                                    e => setPerson({...person,full_name:e.currentTarget.value})
+                                                }
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -259,6 +304,10 @@ export const PropertyModal = () => {
                                                 id="outlined-margin-dense"
                                                 margin="dense"
                                                 variant="outlined"
+                                                value={person.phone}
+                                                onChange={
+                                                    e => setPerson({...person,phone:e.currentTarget.value})
+                                                }
                                             />
                                         </Grid>
                                     </Grid>
@@ -268,13 +317,17 @@ export const PropertyModal = () => {
                                         <Grid item xs={1}>
                                         </Grid>
                                         <Grid item xs={4}>
-                                            <p style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'teal',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
+                                            <p onClick={
+                                                    () => createLeadKala()
+                                                 } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'teal',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
                                         </Grid>
                                         <Grid item xs={2} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                             <p style={{fontsize:24}}>או</p>
                                         </Grid>
                                         <Grid item xs={4}>
-                                            <p style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'limegreen',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
+                                            <p onClick={
+                                                    () => createLeadKala()
+                                                 } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'limegreen',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
                                         </Grid>
                                         <Grid item xs={1}>
                                         </Grid>
@@ -286,75 +339,53 @@ export const PropertyModal = () => {
                         <Grid item md={6} xs={12}>
                             <Grid container style={{paddingLeft:10,paddingRight:10}}>
                                 {/* images */}
-                                <Grid item xs={12}>
-                                    <Grid container>
-                                        <Grid item md={8} xs={12} style={{
-                                            backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex]})`,
-                                            backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundSize:'cover',
-                                            position:'relative',
-                                            maxHeight:'360px',
-                                            minHeight:'220px'
-                                        }}>
-                                        <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
-                                            <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} 
-                                                onClick={() => {
-                                                    let nextImageIndex = currentImageIndex-1
-                                                    if (nextImageIndex < 0)
-                                                        nextImageIndex = propertyImages.length-1
-                                                    setCurrentImageIndex(nextImageIndex)
-                                                }}
-                                            />
-                                        </div>
-                                        <div style={{display:'flex',position:'absolute',bottom:'35px',direction:'ltr',left:0,right:0,justifyContent:'center',color:'white',fontWeight:'bolder'}}>
-                                            <p>{`${currentImageIndex+1}/${propertyImages.length}`}</p>
-                                        </div>
-                                        <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',right:0}}>
-                                            <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}}
-                                                onClick={() => {
-                                                    let nextImageIndex = currentImageIndex+1
-                                                    if (nextImageIndex > propertyImages.length)
-                                                        nextImageIndex = 0
-                                                    setCurrentImageIndex(nextImageIndex)
-                                                }} 
-                                            />
-                                        </div> 
-                                        </Grid>
-                                        <Grid item md={4} xs={12} style={{minHeight:120}}>
-                                            <Grid container style={{height:'100%'}}>
-                                                <Grid item xs={6} md={12} style={{
-                                                    position:'relative',
-                                                    backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex+1]})`,
-                                                    backgroundPosition: 'center',
-                                                    backgroundRepeat: 'no-repeat',
-                                                    backgroundSize:'cover',
-                                                    position:'relative',
-                                                }}>
-                                                    <p style={{
-                                                        position: 'absolute',
-                                                        top: '45%',
-                                                        right: 0,
-                                                        left: 0,
-                                                        textAlign: 'center',
-                                                        fontWeight:'bolder',
-                                                        fontSize:20,
-                                                        color:'white',
-                                                        WebkitTextStrokeWidth: '1px',
-                                                        WebkitTextStrokeColor: 'black'
-                                                    }}>{`לכל ${propertyImages.length} התמונות`}</p>
-                                                </Grid>
-                                                <Grid item xs={6} md={12} style={{
-                                                    position:'relative',
-                                                    backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex+1]})`,
-                                                    backgroundPosition: 'center',
-                                                    backgroundRepeat: 'no-repeat',
-                                                    backgroundSize:'cover',
-                                                    position:'relative',
-                                                }}>
-                                                    <div style={{
+                                {
+                                    propertyImages.length &&
+                                    <Grid item xs={12}>
+                                        <Grid container>
+                                            <Grid onClick={() => setSingleMediaModalOpened(propertyImages[currentImageIndex])} item md={8} xs={12} style={{
+                                                backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex]})`,
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize:'cover',
+                                                position:'relative',
+                                                maxHeight:'360px',
+                                                minHeight:'220px'
+                                            }}>
+                                            <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
+                                                <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}} 
+                                                    onClick={(e) => {
+                                                        let nextImageIndex = currentImageIndex-1
+                                                        if (nextImageIndex < 0)
+                                                            nextImageIndex = propertyImages.length-1
+                                                        setCurrentImageIndex(nextImageIndex)
+                                                        e.stopPropagation()
+                                                    }}
+                                                />
+                                            </div>
+                                            <div style={{display:'flex',position:'absolute',bottom:'35px',direction:'ltr',left:0,right:0,justifyContent:'center',color:'white',fontWeight:'bolder'}}>
+                                                <p>{`${currentImageIndex+1}/${propertyImages.length}`}</p>
+                                            </div>
+                                            <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',right:0}}>
+                                                <KeyboardArrowRight style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white'}}
+                                                    onClick={(e) => {
+                                                        let nextImageIndex = currentImageIndex+1
+                                                        if (nextImageIndex > propertyImages.length-1)
+                                                            nextImageIndex = 0
+                                                        setCurrentImageIndex(nextImageIndex)
+                                                        e.stopPropagation()
+                                                    }} 
+                                                />
+                                            </div> 
+                                            </Grid>
+                                            <Grid item md={4} xs={12} style={{minHeight:120}}>
+                                                <Grid container style={{height:'100%'}}>
+                                                    <Grid item xs={6} md={12} onClick={() => setAllMediaModalOpened(propertyImages)} style={{
+                                                        position:'relative',
+                                                    }}>
+                                                        <p style={{
                                                             position: 'absolute',
-                                                            top: '40%',
+                                                            top: '45%',
                                                             right: 0,
                                                             left: 0,
                                                             textAlign: 'center',
@@ -362,18 +393,35 @@ export const PropertyModal = () => {
                                                             fontSize:20,
                                                             color:'white',
                                                             WebkitTextStrokeWidth: '1px',
-                                                            WebkitTextStrokeColor: 'black',
-                                                            cursor:'pointer'
-                                                        }}>
-                                                        <PlayCircleOutlineOutlined size={40}/>
-                                                        <p>{`סיור בנכס`}</p>
-                                                    </div>
+                                                            WebkitTextStrokeColor: 'black'
+                                                        }}>{`לכל ${propertyImages.length} התמונות`}</p>
+                                                    </Grid>
+                                                    <Grid item xs={6} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
+                                                        position:'relative',
+                                                    }}>
+                                                        <div style={{
+                                                                position: 'absolute',
+                                                                top: '40%',
+                                                                right: 0,
+                                                                left: 0,
+                                                                textAlign: 'center',
+                                                                fontWeight:'bolder',
+                                                                fontSize:20,
+                                                                color:'white',
+                                                                WebkitTextStrokeWidth: '1px',
+                                                                WebkitTextStrokeColor: 'black',
+                                                                cursor:'pointer'
+                                                            }}>
+                                                            <PlayCircleOutlineOutlined size={40}/>
+                                                            <p>{video__url ? `סיור בנכס`:`לא קיים סרטון`}</p>
+                                                        </div>
+                                                    </Grid>
+                                    
                                                 </Grid>
-                                
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                </Grid>
+                                }
                                 {/* tab menu */}
                                 <Grid item xs={12}>
                                     <Grid container>

@@ -49,21 +49,16 @@ export const PropertyList = props => {
 
 
     return (
-        <div style={{display:'flex',width:'90%',height:'85%',justifyContent:'center'}}>
+        <div style={{display:'flex',width:'90%',maxHeight:'75vh',justifyContent:'center'}}>
             <div style={{display:'flex',width:'100%',paddingTop:'20px',margin:'0px 0px 0px -20px',position:'relative'}}>
             <PropertyListLoading/>
             <Grid ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',margin:0,overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
             {
-                properties.length > 0 && properties.splice(0,50).map(prop => 
+                properties.length > 0 && properties.splice(0,20).map(prop => 
                     <PropertyView key={prop.id} property={prop} toggleFavourite={toggleFavourite}/>
                 )
             }
             </Grid>
-            </div>
-        
-            <div style={{display:'flex',flexDirection:'column',backgroundColor:'lightgray',width:20,zIndex:1}}>
-
-
             </div>
         </div>
     )

@@ -21,7 +21,11 @@ const getSingleUrl = id => `/kala/v1/page/${id}?get_page_assets_urls=true`
 
 const getUserUrl = id => `/kala/v1/user/${id}`
 
+//get coordinates
+
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
+
+const getLeadUrl = () => '/kala/v1/lead'
 
 const getUrl = (options = {}) => {
 
@@ -117,6 +121,27 @@ export const getCoordinates = async (q) => {
     console.log(getCoordinatesUrl(q))
     let response = await fetch(getCoordinatesUrl(q),{
         method: 'GET',
+    })
+
+    if (response && response.ok){
+        let responseJson = await response.json()
+        return responseJson
+    }
+    throw(response)
+  
+}
+
+export const createLead = async (body) => {
+
+
+    console.log(body)
+    let response = await fetch(getLeadUrl(),{
+        method: 'POST',
+        body:JSON.stringify(body),
+        headers: {
+            "Content-Type":"application/json",
+            "X-Leads-Key":"nGb3tltbJr4ew6k"
+        }
     })
 
     if (response && response.ok){
