@@ -61,7 +61,7 @@ const Root = props => {
             console.log(window.location.pathname.split('/')[1])
             setProperty(window.location.pathname.split('/')[1])
         }
-            
+        resize()
     },[])
 
     const resize = () => {
@@ -79,7 +79,7 @@ const Root = props => {
         <Layout>
             <TopBar/>
             <PropertyList/>
-            <div style={{fontWeight:'bolder',height:'50px',display:'flex',flexDirection:'column',flex:1,width:'100%',position:'absolute',bottom:0,zIndex:1,backgroundColor:'lightgray',justifyContent:'center',alignItems:'center'}}>
+            <div style={{fontWeight:'bolder',height:'50px',display:'flex',flexDirection:'column',flex:1,width:'100%',position:'absolute',textAlign:'center',bottom:0,zIndex:1,backgroundColor:'lightgray',justifyContent:'center',alignItems:'center'}}>
                 <p>TLT - תיווך ללא תיווך נכסים והשקעות בע"מ - כל הזכויות שמורות</p>
             </div>
             <PropertyModal/>

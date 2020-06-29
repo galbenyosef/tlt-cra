@@ -4,41 +4,40 @@ import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { setGlobalState, useGlobalState } from '../globalState';
-import ScaleText from 'react-scale-text'
+import { getValueByDevice } from './Utilities';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import TLT_LOGO from '../Logo_TLT.png'
 
-export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
+export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
 
-    const [favourites, setFavourites] = useGlobalState('favourites');
     const handleClick = val => {setGlobalState('selectedProperty',val)}
-    const isFavourite = favourites.includes(property.id)
+    const {isFavourite} = property
+
+    const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
+
+    const {video__url} = property.attributes
 
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{height:amount == 4 ? '33%':'50%'}}>
-        <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'10px 10px 10px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
+      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{height:getValueByDevice('50%','50%') }}>
+        <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
           <div style={{position:'relative',height:'55%',flex:1}}>
             <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>
             {
               isFavourite ?
-              <FaHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={/* amount == 4 ? 24: */32} color={'red'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'red'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
               :
-              <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={/* amount == 4 ? 24: */32} color={'white'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'white'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
             
-            <div onClick={() => {}} style={{overflow:'hidden',width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              {
-                property.thumb_file ?
-                <div>
-                  <LazyLoadImage
-                    style={{maxWidth:'100%',height:'100%'}}
-                    src={`${imageUrl}${property.thumb_file.sm}`} // use normal <img> attributes as props
-                    />
-                  <p style={{width:'100%',textAlign:'center'}}>{`התמונה נטענת...`}</p>
-                </div>
-              : 
-                null
-              }
+            <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden'}}>
+              <LazyLoadImage
+                effect="blur"
+                style={{height:'100%',width:'100%'}}
+                src={property.thumb_file ? `${imageUrl}${property.thumb_file?.sm}` : TLT_LOGO} // use normal <img> attributes as props
+                placeholderSrc={TLT_LOGO}
+              />        
             </div>
          </div>
          <div style={{textAlign:'right',position:'relative',padding:'10px'}}>
@@ -49,23 +48,27 @@ export const PropertyView = React.memo(({property,amount,toggleFavourite}) => {
             </div>
             <div style={{fontFamily:'Assistant',fontWeight:'bold'}}>
                 <p style={{width:'100%'}}>
-                  {property.attributes.rooms ? `${property.attributes.rooms} חדרים ⋅`: ` `}
+                  {property.attributes.rooms ? `${property.attributes.rooms} חדרים | `: ` `}
                   {property.attributes.metres? `${property.attributes.metres} מ"ר`:` `}
                   {property.attributes.terrace ? `+ מרפסת`:``}
-                  {property.attributes.floor != undefined ? (property.attributes.floor ? `⋅ קומה ${property.attributes.floor}`:` ⋅ קומת קרקע`): ' '}
+                  {property.attributes.floor != undefined ? (property.attributes.floor ? ` | קומה ${property.attributes.floor}`:` | קומת קרקע`): ' '}
                 </p>
             </div>
             <div style={{fontSize:'1.3vw',fontWeight:'bolder',fontFamily:'Assistant',textAlign:'end'}}>
               {property.attributes.price ? `${property.attributes.price.toLocaleString('he-IL')} ₪`: ` `}
             </div>
             <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',padding:'10px 0px',justifyContent:'space-between'}}>
-              <div style={{display:'flex',width:'30%',border:'3px solid black',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.propertyNumber ? `#${property.attributes.propertyNumber}`:`-`}`}</div>
-              <div style={{display:'flex',width:'30%',border:'3px solid black',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`סייר בנכס`}</div>
-              <div style={{display:'flex',width:'30%',border:'3px solid black',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`קבע פגישה`}</div>
+              <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
+              <div onClick={
+                (e) => {video__url && setSingleMediaModalOpened(video__url);e.stopPropagation()}
+              } style={{display:'flex',width:'32%',borderRadius:100,backgroundColor:'orangered',border:'1px solid orangered',color:'white',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`סייר בנכס`}</div>
+              <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`קבע פגישה`}</div>
             </div>
           </div>
         </div>
       </Grid>
    )
-  })
+},(prev, next) => {
+  return JSON.stringify(prev.property) == JSON.stringify(next.property)
+})
   

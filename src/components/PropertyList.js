@@ -10,27 +10,25 @@ import { getValueByDevice } from './Utilities';
 
 export const PropertyList = props => {
 
-    const [favourites, setFavourites] = useGlobalState('favourites');
     const [propertiesData, setPropertiesData] = useGlobalState('properties');
     const listRef = React.useRef(null)
+
+    const toggleFavourite = (index) => {
+        let {data} = propertiesData
+        if (data[index].isFavourite){
+            data.splice(index, 1, {...data[index], isFavourite: false })
+        }
+        else{
+            data.splice(index, 1, {...data[index], isFavourite: true })
+        }
+        setPropertiesData({...propertiesData,data})
+    }
 
     useEffect(() => {
         
         if (listRef)
             setGlobalState('listRef',listRef)
     },[listRef])
-
-
-    const toggleFavourite = React.useCallback(id => {
-        let newFavProps = [...favourites]
-        if (favourites.includes(id)){
-            newFavProps.splice(favourites.indexOf(id),1)
-        }
-        else{
-            newFavProps.push(id)
-        }
-        setFavourites(newFavProps)
-    },[])
 
     if (!propertiesData.data.length)
         return null
@@ -54,8 +52,8 @@ export const PropertyList = props => {
                 <PropertyListLoading/>
                 <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
                 {
-                    properties.length > 0 && properties.splice(0,20).map(prop => 
-                        <PropertyView key={prop.id} property={prop} toggleFavourite={toggleFavourite}/>
+                    properties.length > 0 && properties.map((prop,idx) => 
+                        <PropertyView toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
                     )
                 }
                 </Grid>

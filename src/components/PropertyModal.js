@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, createRef } from 'react'
 import { Modal,Grid, TextField, makeStyles, Input, InputAdornment } from '@material-ui/core'
 import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
 import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
 import { getProperty, getUser, getCoordinates, createLead } from '../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
-import { renovationTypes, devices, LeadTypes, getScreenshot } from './Utilities'
+import { renovationTypes, devices, LeadTypes, getScreenshot, getValueByDevice } from './Utilities'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FaBed, FaBuilding, FaBath, FaToilet, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
 import { GiResize, GiBed, GiCrossedAirFlows, GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
@@ -17,6 +17,7 @@ import { AiOutlineTable } from 'react-icons/ai'
 import { RiParentLine, RiLandscapeLine } from 'react-icons/ri'
 import { GrElevator } from 'react-icons/gr'
 import { LocationMap } from './Map'
+import ReactPlayer from 'react-player'
 
 const Tabs = {
     Info:1,
@@ -61,7 +62,7 @@ export const PropertyModal = () => {
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
     const [leadModalData,setLeadModalData] = useGlobalState('newLeadModal')
 
-    const videoRef = useRef(null)
+    const [videoImage,setVideoImage] = useState(null)
 
     const fetchProperty = async (id) => {
 
@@ -129,11 +130,12 @@ export const PropertyModal = () => {
 
         if (selectedProperty)
             fetchProperty(selectedProperty)
-            
+
         return () => {
             setCurrentImageIndex(0)
         }
     },[selectedProperty])
+
 
     //if not pressed on property
     if (!selectedProperty)
@@ -202,11 +204,6 @@ export const PropertyModal = () => {
                 transform: 'translate(50%, -50%)',
                 position: 'absolute',
                maxHeight:'100vh'}} >
-                {/* video for ref and image */}
-                <video ref={videoRef} style={{display:'none'}}>
-                    <source src={`https://tlt.kala-crm.co.il/${video__url}`} type="video/mp4"/>
-                    Your browser does not support the video tag.
-                </video>
                 {/* back button */}
                 <Grid xs={12} item style={{backgroundColor:'white',padding:15,display:'flex'}}>
                     <p style={{cursor:'pointer'}} onClick={() => setSelectedProperty(null)}>חזור</p>
@@ -340,8 +337,8 @@ export const PropertyModal = () => {
                                                 backgroundRepeat: 'no-repeat',
                                                 backgroundSize:'cover',
                                                 position:'relative',
-                                                maxHeight:'360px',
-                                                minHeight:'220px'
+                                                minHeight:'220px',
+                                                maxHeight:'360px'
                                             }}>
                                             <div style={{display:'flex',position:'absolute',top:'calc(50% - 35px)',direction:'ltr',left:0}}>
                                                 <KeyboardArrowLeft style={{margin:'20px 20px',border:'1px solid white',borderRadius:'100vh',color:'white',cursor:'pointer'}} 
@@ -376,7 +373,9 @@ export const PropertyModal = () => {
                                                         backgroundImage:propertyImages.length > 1 ? `url(https://tlt.kala-crm.co.il/${propertyImages[1]})` : `url(https://tlt.kala-crm.co.il/${propertyImages[0]})`,
                                                         backgroundRepeat: 'no-repeat',
                                                         backgroundPosition: 'center',
-                                                        backgroundSize: 'cover'
+                                                        backgroundSize: 'cover',
+                                                        height:getValueByDevice('50%','100%'),
+                                                        maxHeight:getValueByDevice(180,280)
                                                     }}>
                                                         <p style={{
                                                             position: 'absolute',
@@ -392,12 +391,14 @@ export const PropertyModal = () => {
                                                         }}>{`לכל ${propertyImages.length} התמונות`}</p>
                                                     </Grid>
                                                     <Grid item xs={6} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
+                                                        height:getValueByDevice('50%','100%'),
                                                         position:'relative',
-                                                        backgroundImage:videoRef ? getScreenshot(videoRef.current,1): '',
-                                                        backgroundRepeat: 'no-repeat',
-                                                        backgroundPosition: 'center',
-                                                        backgroundSize: 'cover'
+                                                        overflow:'hidden'
                                                     }}>
+                                                         {/* video for ref and image */}
+                                                        <ReactPlayer /* style={{display:'none'}} */ controls={false} width={'100%'} height={'auto'} style={{maxHeight:getValueByDevice(180,280)}}
+                                                            url={`https://tlt.kala-crm.co.il/${video__url}`}>
+                                                        </ReactPlayer>
                                                         <div style={{
                                                                 position: 'absolute',
                                                                 top: '40%',
@@ -409,7 +410,10 @@ export const PropertyModal = () => {
                                                                 color:'white',
                                                                 WebkitTextStrokeWidth: '1px',
                                                                 WebkitTextStrokeColor: 'black',
-                                                                cursor:'pointer'
+                                                                cursor:'pointer',
+                                                                display:'flex',
+                                                                justifyContent:'center',
+                                                                alignItems:'center'
                                                             }}>
                                                             <PlayCircleOutlineOutlined size={40}/>
                                                             <p>{video__url ? `סיור בנכס`:`לא קיים סרטון`}</p>

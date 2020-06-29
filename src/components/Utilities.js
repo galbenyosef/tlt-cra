@@ -45,9 +45,10 @@ const furnitureTypes = {
 export function getScreenshot(videoEl, scale) {
   scale = scale || 1;
 
+  console.log(videoEl)
   const canvas = document.createElement("canvas");
-  canvas.width = videoEl.clientWidth * scale;
-  canvas.height = videoEl.clientHeight * scale;
+  canvas.width = videoEl.videoWidth;
+  canvas.height = videoEl.videoHeight;
   canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height);
 
   const image = new Image()

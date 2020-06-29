@@ -21,6 +21,7 @@
     "react-icons": "^3.10.0",
     "react-lazy-load-image-component": "^1.5.0-beta.0",
     "react-leaflet": "^2.7.0",
+    "react-player": "^2.4.0",
     "react-scripts": "3.4.1",
     "react-windowed-select": "^2.0.3",
     "serve": "^11.3.2"

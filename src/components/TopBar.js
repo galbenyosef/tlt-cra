@@ -4,6 +4,8 @@ import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorde
 import { MySelect } from './MySelect';
 import {useGlobalState, setGlobalState} from '../globalState';
 import { IoIosConstruct } from 'react-icons/io';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import { FaShekelSign } from 'react-icons/fa';
 import { getProperties } from '../dataHandler'
 import StyledMenu from './StyledMenu'
 import {Range} from 'rc-slider';
@@ -22,6 +24,32 @@ const customSelectStyles = {
       fontSize: state.value?.includes(',') ? 14:18,
       fontWeight: state.value?.includes(',') ? null:'bolder'
     })},
+    control: (provided, state) => ({
+        ...provided,
+        // none of react-select's styles are passed to <Control />
+        borderBottom:'2px solid orangered',
+        borderTop:0,
+        borderLeft:0,
+        borderRight:0,
+        color:'black',
+        fontFamily:'Assistant',
+        fontWeight:'bold'
+    }),
+    multiValue: (provided, state)  => ({
+        ...provided,
+        backgroundColor:'black',
+    }),
+    indicatorSeparator: () => ({
+        display:'none'
+    }),
+    dropdownIndicator:  (provided, state)  => ({
+        ...provided,
+        color:'orangered',
+    }),
+    placeholder: (provided, state) => ({
+        ...provided,
+        color:'black',
+    }),
 }
 
 
@@ -201,70 +229,80 @@ const TopBar = props => {
 
                 <div style={{display:'flex',justifyContent:'space-around',flexWrap:'wrap',padding:'0px 20px'}}>
 
-                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                        <IconButton id='budget'  onClick={e => handleClickFilter(e)}>
-                            <i className="fa fa-ils" aria-hidden="true"></i>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}><span style={{fontSize:'1rem'}}>₪</span> תקציב</span>
-                        </IconButton>              
+                    <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
+                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',height:36,borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        <>
+                            <FaShekelSign style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
+                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                        </>              
                         {
                             urlOptionsJson.price.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});fetchProperties({...urlOptionsJson,price:[]})} } 
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});fetchProperties({...urlOptionsJson,price:[]});e.stopPropagation()} } 
                                 style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
                                 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                         }
                     </div>
 
-                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                        <IconButton id='rooms'  onClick={e => handleClickFilter(e)}>
-                            <Hotel/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>חדרים </span>
-                        </IconButton>
+                    <div id='rooms' onClick={e => handleClickFilter(e)}
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        <>
+                            <Hotel style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
+                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                        </>
                         {
                             urlOptionsJson.rooms.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});fetchProperties({...urlOptionsJson,rooms:[]})} } 
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});fetchProperties({...urlOptionsJson,rooms:[]});e.stopPropagation()} } 
                                 style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
                                 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                         }
                     </div>
 
-                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                        <IconButton id='renovation'  onClick={e => handleClickFilter(e)}>
-                            <IoIosConstruct/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>רמת שיפוץ </span>
-                        </IconButton>
+                    <div id='renovation'  onClick={e => handleClickFilter(e)}
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        <>
+                            <IoIosConstruct style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
+                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                        </>
                         {
                             urlOptionsJson.renovation.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});fetchProperties({...urlOptionsJson,renovation:[]})} } 
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});fetchProperties({...urlOptionsJson,renovation:[]});e.stopPropagation()} } 
                                 style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
                                 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                         }
                     </div>
 
-                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                        <IconButton id='addresses'  onClick={e => handleClickFilter(e)}>
-                            <LocationCity/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>שכונות </span>
-                        </IconButton>
+                    <div id='addresses' onClick={e => handleClickFilter(e)}
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        <>
+                            <LocationCity style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
+                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                        </>
                         {
                             urlOptionsJson.addresses.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});fetchProperties({...urlOptionsJson,addresses:[]})} } 
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});fetchProperties({...urlOptionsJson,addresses:[]});setFilters({...filters,addresses:[]});e.stopPropagation()} } 
                                 style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
                                 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
                         }
                     </div>
 
-                    <div style={{border:'2px solid grey',borderRadius:10,position:'relative'}}>
-                        <IconButton id='furniture'  onClick={e => handleClickFilter(e)}>
-                            <Weekend/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>ריהוט </span>
-                        </IconButton>
+                    <div id='furniture' onClick={e => handleClickFilter(e)}
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative'}}>
+                        <>
+                            <Weekend style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
+                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                        </>
                         {
                             urlOptionsJson.furniture.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});fetchProperties({...urlOptionsJson,furniture:[]})} } 
+                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});fetchProperties({...urlOptionsJson,furniture:[]});e.stopPropagation()} } 
                                 style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
                                 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
@@ -274,21 +312,21 @@ const TopBar = props => {
                 </div>
             }
             
-            <IconButton onClick={(e) => {/* setSideBarVisible(true) */}}>
+            <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10}} onClick={(e) => {/* setSideBarVisible(true) */}}>
                 <TuneOutlined/>
                 <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
-            </IconButton>
+            </div>
 
-            <IconButton style={{border:'2px solid grey',borderRadius:10,padding:'6px'}} onClick={() => {}}>
+            <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:'orangered',color:'white',cursor:'pointer'}} onClick={() => {}}>
                 <FavoriteBorder/>
                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
-            </IconButton>
+            </div>
 
             {
-                <IconButton style={{border:'2px solid grey',borderRadius:10,padding:'6px'}} onClick={() => {}}>
+                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {}}>
                     <Sync/>
-                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>רענן חיפוש </span>
-                </IconButton>
+                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'orangered'}}>רענן חיפוש </span>
+                </div>
             }
 
 

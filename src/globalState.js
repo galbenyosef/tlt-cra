@@ -27,6 +27,7 @@ const initialState = {
     },
     properties: {
         data: [],
+        dataFiltered: [],
         currentCount: 0,
         totalCount: 0,
     },
