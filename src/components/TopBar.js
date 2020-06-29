@@ -297,7 +297,7 @@ const TopBar = props => {
 
             {
                 device == devices.Desktop &&
-                <IconButton onClick={() => {}}>
+                <IconButton onClick={() => {window.open('http://109.207.78.24/app',"_self")}}>
                     <AccountCircleOutlined/>
                 </IconButton>
             }
