@@ -48,7 +48,7 @@ export const PropertyList = props => {
 
     return (
         <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',height:'calc(100% - 50px)'}}>
-            <div style={{display:'flex',width:'100%',paddingTop:'20px',margin:'0px 0px 0px -20px',position:'relative'}}>
+            <div style={{display:'flex',width:'100%',paddingTop:getValueByDevice(20,5),position:'relative',justifyContent:'center'}}>
                 <PropertyListLoading/>
                 <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginBottom:50}} container>
                 {
