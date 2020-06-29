@@ -415,7 +415,10 @@ const TopBar = props => {
             <div onClick={() =>  {
                 setUrlOptionsJson({});
                 let dataFiltered = propertiesData.data.filter(prop => prop.isFavourite );
-                setPropertiesData({...propertiesData,dataFiltered})
+                if (JSON.stringify(propertiesData.dataFiltered) == JSON.stringify(dataFiltered))
+                    setPropertiesData({...propertiesData,dataFiltered:propertiesData.data})
+                else
+                    setPropertiesData({...propertiesData,dataFiltered})
             }}
              style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:'orangered',color:'white',cursor:'pointer'}}>
                 <FavoriteBorder/>
