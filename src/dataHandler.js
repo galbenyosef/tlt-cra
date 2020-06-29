@@ -38,11 +38,13 @@ const getUrl = (options = {}) => {
         }).join('&')
     }
     if (options.rooms){
+        optionsEncoded += `page_attributes[__operators][rooms]=between&`
         optionsEncoded += options.rooms.map(function(k) {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
         }).join('&')
     }
     if (options.renovation){
+        optionsEncoded += `page_attributes[__operators][renovation]=between&`
         optionsEncoded += options.renovation.map(function(k) {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
         }).join('&')

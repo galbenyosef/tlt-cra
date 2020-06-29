@@ -20,7 +20,38 @@ const Root = props => {
     const setDevice = (val) => setGlobalState('device',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
 
-    const fetchProperties = async (options={}) => {
+    const fetchProperties = async (options={
+        price:[
+            {
+                name:'page_attributes[price][0]',
+                value:1000
+            },
+            {
+                name:'page_attributes[price][1]',
+                value:30000
+            }
+        ],
+      /*   rooms:[
+            {
+                name:'page_attributes[rooms][0]',
+                value:1
+            },
+            {
+                name:'page_attributes[rooms][1]',
+                value:4
+            }
+        ], */
+      /*   renovation:[
+            {
+                name:'page_attributes[renovation][0]',
+                value:1
+            },
+            {
+                name:'page_attributes[renovation][1]',
+                value:4
+            }
+        ], */
+    }) => {
 
         setIsLoading(true)
 /*         scrollToTop()
@@ -49,7 +80,7 @@ const Root = props => {
     
         setAddressesMap(addressesMap)
         setAddresses(addresses)
-        setProperties({data:_properites,currentCount:_properites.length,totalCount:data.metadata.total})
+        setProperties({data:_properites,dataFiltered:_properites,currentCount:_properites.length,totalCount:data.metadata.total})
         setIsLoading(false)
     
     }

@@ -35,7 +35,7 @@ export const PropertyList = props => {
 
     console.log('property List rendered')
     
-    const {data:properties} = propertiesData
+    const {dataFiltered:properties} = propertiesData
 
     const handleScroll = () => {
         const bottom = listRef && listRef.current && listRef.current.scrollHeight - listRef.current.scrollTop === listRef.current.clientHeight;
@@ -47,10 +47,10 @@ export const PropertyList = props => {
 
 
     return (
-        <div style={{display:'flex',justifyContent:'center',overflow:'hidden'}}>
+        <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',height:'calc(100% - 50px)'}}>
             <div style={{display:'flex',width:'100%',paddingTop:'20px',margin:'0px 0px 0px -20px',position:'relative'}}>
                 <PropertyListLoading/>
-                <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginLeft:'-20px',marginBottom:50}} container>
+                <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginBottom:50}} container>
                 {
                     properties.length > 0 && properties.map((prop,idx) => 
                         <PropertyView toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>

@@ -11,6 +11,7 @@ const initialState = {
         renovationFrom:1,
         renovationTo:constants.MaxRenovation,
         addresses:[],
+        address:'',
         furnitureFrom:1,
         furnitureTo:constants.MaxFurniture
     },
@@ -32,7 +33,7 @@ const initialState = {
         totalCount: 0,
     },
     favourites:[],
-    selectedProperty: 65156 ,
+    selectedProperty: '' ,
     newLeadModal: {
         full_name: '',
         phone: '',

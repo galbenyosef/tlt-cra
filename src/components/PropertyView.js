@@ -4,7 +4,7 @@ import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { setGlobalState, useGlobalState } from '../globalState';
-import { getValueByDevice } from './Utilities';
+import { getValueByDevice, LeadTypes } from './Utilities';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import TLT_LOGO from '../Logo_TLT.png'
 
@@ -14,21 +14,22 @@ export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
     const {isFavourite} = property
 
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
+    const setLeadModal = val => setGlobalState('newLeadModal',val)
 
     const {video__url} = property.attributes
 
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{height:getValueByDevice('50%','50%') }}>
+      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{maxHeight:getValueByDevice('50%','50%') }}>
         <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
           <div style={{position:'relative',height:'55%',flex:1}}>
             <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>
             {
               isFavourite ?
-              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'red'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
               :
-              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'white'} style={{position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'white'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
             
             <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden'}}>
@@ -61,8 +62,8 @@ export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
               <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
               <div onClick={
                 (e) => {video__url && setSingleMediaModalOpened(video__url);e.stopPropagation()}
-              } style={{display:'flex',width:'32%',borderRadius:100,backgroundColor:'orangered',border:'1px solid orangered',color:'white',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`סייר בנכס`}</div>
-              <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`קבע פגישה`}</div>
+              } style={{display:'flex',width:'32%',borderRadius:100,backgroundColor:'orangered',border:'1px solid orangered',color:'white',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:video__url?'pointer':''}}>{`סייר בנכס`}</div>
+              <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`קבע פגישה`}</div>
             </div>
           </div>
         </div>
