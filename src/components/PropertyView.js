@@ -5,7 +5,7 @@ import { FaHeart } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { setGlobalState, useGlobalState } from '../globalState';
 import { getValueByDevice, LeadTypes } from './Utilities';
-import 'react-lazy-load-image-component/src/effects/blur.css';
+import './blur.css';
 import TLT_LOGO from '../Logo_TLT.png'
 
 export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
@@ -21,8 +21,8 @@ export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid onClick={() => {console.log(property);handleClick(property.id)}} item xs={6} md={4} style={{maxHeight:getValueByDevice('50%','50%') }}>
-        <div style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
+      <Grid item xs={6} md={4} style={{maxHeight:getValueByDevice('50%','50%') }}>
+        <div onClick={() => {console.log(property);handleClick(property.id)}}  style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
           <div style={{position:'relative',height:'55%',flex:1}}>
             <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>
             {

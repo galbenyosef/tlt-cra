@@ -9,6 +9,7 @@ import { devices } from './components/Utilities'
 import { AllMediaModal } from './components/MediaModals/AllMediaModal';
 import { SingleMediaModal } from './components/MediaModals/SingleMediaModal';
 import { LeadModal } from './components/LeadModal';
+import { SideFilters } from './components/SideFilters';
 
 
 const Root = props => {
@@ -117,6 +118,7 @@ const Root = props => {
             <AllMediaModal/>
             <SingleMediaModal/>
             <LeadModal/>
+            <SideFilters/>
         </Layout>
 
     )

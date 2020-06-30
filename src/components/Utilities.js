@@ -25,6 +25,30 @@ const constants = {
   MaxRenovation:4,
   MinFurniture:1,
   MaxFurniture:3,
+  MinMetres:1,
+  MaxMetres:250,
+  MinFloor:0,
+  MaxFloor:50,
+}
+
+const switchFilters = {
+  terrace:'מרפסת',
+  bathtub:'אמבטיה',
+ /*  floor:'קו', */
+  landscape:'נוף',
+/*   airconditioner:'מרפסת',
+ */  parking:'חניה',
+  boiler:'דוד',
+  elevator:'מעלית',
+  warehouse:'מחסן',
+  garden:'גינה',
+  accessibility:'נגישות לנכים',
+  saferoom:'ממ"ד',
+  bars:'סורגים',
+  nets:'חלונות מרושתים',
+  parentsunit:'יחידת הורים',
+  electricshutters:'תריס חשמלי',
+
 }
 
 const renovationTypes = {
@@ -40,6 +64,15 @@ const furnitureTypes = {
   3: 'ריהוט מלא',
 }
 
+const propertyTypes = {
+  Apartment:'דירה',
+  Unit:'יחידת דיור',
+  Garden:'דירת גן',
+  Dou:'דו משפחתי',
+  Penthouse:'דירה',
+  Villa:'דירה',
+}
+
 export const getValueByDevice = (desktop,mobile) => {
   if (window.innerWidth < 960)
       return mobile
@@ -52,4 +85,4 @@ const LeadTypes = {
   WannaHearMore:2,
 }
 
-export {constants,renovationTypes,range,furnitureTypes,devices,LeadTypes}
+export {constants,renovationTypes,range,furnitureTypes,devices,LeadTypes,switchFilters}

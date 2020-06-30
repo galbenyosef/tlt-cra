@@ -52,7 +52,7 @@ export const PropertyList = props => {
                 <PropertyListLoading/>
                 <Grid spacing={getValueByDevice(3,1)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginBottom:50}} container>
                 {
-                    properties.length > 0 && properties/* .slice(0,50) */.map((prop,idx) => 
+                    properties.length > 0 && properties.slice(0,50).map((prop,idx) => 
                         <PropertyView toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
                     )
                 }
