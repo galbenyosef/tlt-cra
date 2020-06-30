@@ -1,30 +1,39 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import {constants} from './components/Utilities'
 
+const {
+    MinPrice,
+    MaxPrice,
+    MinRooms,
+    MaxRooms,
+    MinRenovation,
+    MaxRenovation,
+    MinFurniture,
+    MaxFurniture,
+} = constants
+
 const initialState = {
     filters:{
         //default values
-        budgetFrom:1000,
-        budgetTo:constants.MaxPrice,
-        roomsFrom:1,
-        roomsTo:constants.MaxRooms,
-        renovationFrom:1,
-        renovationTo:constants.MaxRenovation,
+        budgetFrom:MinPrice,
+        budgetTo:MaxPrice,
+        budgetActive:0,
+        roomsFrom:MinRooms,
+        roomsTo:MaxRooms,
+        roomsActive:0,
+        renovationFrom:MinRenovation,
+        renovationTo:MaxRenovation,
+        renovationActive:0,
         addresses:[],
+        addressesActive:0,
         address:'',
-        furnitureFrom:1,
-        furnitureTo:constants.MaxFurniture
+        furnitureFrom:MinFurniture,
+        furnitureTo:MaxFurniture,
+        furnitureActive:0,
     },
     currentFilter:{
         currentFilterName:'',
         currentFilterElement:'',
-    },
-    urlOptionsJson: {
-        price: [],
-        rooms: [],
-        renovation: [],
-        addresses: [],
-        furniture: []
     },
     properties: {
         data: [],
@@ -32,7 +41,6 @@ const initialState = {
         currentCount: 0,
         totalCount: 0,
     },
-    favourites:[],
     selectedProperty: '' ,
     newLeadModal: {
         full_name: '',

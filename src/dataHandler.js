@@ -37,7 +37,7 @@ const getUrl = (options = {}) => {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
         }).join('&')
     }
-    if (options.rooms){
+/*     if (options.rooms){
         optionsEncoded += `page_attributes[__operators][rooms]=between&`
         optionsEncoded += options.rooms.map(function(k) {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
@@ -58,7 +58,7 @@ const getUrl = (options = {}) => {
         optionsEncoded += options.furniture.map(function(k) {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
         }).join('&')
-    }
+    } */
 
     console.log(getAllUrl+'&'+optionsEncoded)
     return getAllUrl+'&'+optionsEncoded

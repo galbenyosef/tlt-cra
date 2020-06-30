@@ -17,9 +17,13 @@ const devices = {
 }
 
 const constants = {
-  MaxPrice: 18000,
+  MinPrice: 1000,
+  MaxPrice: 20000,
+  MinRooms: 1,
   MaxRooms: 10,
+  MinRenovation:1,
   MaxRenovation:4,
+  MinFurniture:1,
   MaxFurniture:3,
 }
 
@@ -34,26 +38,6 @@ const furnitureTypes = {
   1: 'ללא ריהוט',
   2: 'ריהוט חלקי',
   3: 'ריהוט מלא',
-}
-
-/**
- * Takes a screenshot from video.
- * @param videoEl {Element} Video element
- * @param scale {Number} Screenshot scale (default = 1)
- * @returns {Element} Screenshot image element
- */
-export function getScreenshot(videoEl, scale) {
-  scale = scale || 1;
-
-  console.log(videoEl)
-  const canvas = document.createElement("canvas");
-  canvas.width = videoEl.videoWidth;
-  canvas.height = videoEl.videoHeight;
-  canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height);
-
-  const image = new Image()
-  image.src = canvas.toDataURL();
-  return image;
 }
 
 export const getValueByDevice = (desktop,mobile) => {

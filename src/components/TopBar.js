@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
 import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorder, Sync, Weekend } from '@material-ui/icons';
 import { MySelect } from './MySelect';
@@ -63,12 +63,15 @@ const customSelectStyles = {
     }),
 }
 
+const xStyle = {fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
+borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
+borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}
+
 
 const TopBar = props => {
 
-    const [addresses, setAddresses] = useGlobalState('addresses');
+    const [addressesData] = useGlobalState('addresses');
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
-    const [urlOptionsJson, setUrlOptionsJson] = useGlobalState('urlOptionsJson');
     const [sideBarVisible, setSideBarVisible] = useGlobalState('sideBarVisible');
     const [filters, setFilters] = useGlobalState('filters');
     const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
@@ -78,201 +81,63 @@ const TopBar = props => {
 
     const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
 
-    if (!addresses.length){
+    const {
+        //default values
+        budgetFrom,
+        budgetTo,
+        roomsFrom,
+        roomsTo,
+        renovationFrom,
+        renovationTo,
+        addresses,
+        addressesActive,
+        address,
+        furnitureFrom,
+        furnitureTo,
+        budgetActive,
+        roomsActive,
+        renovationActive,
+        furnitureActive
+    } = filters
+
+    useEffect(() => {
+
+        console.log(filters)
+        submitFilters()
+
+    },[address,addressesActive,budgetActive,roomsActive,renovationActive,furnitureActive])
+
+    const submitFilters = () => {
+
+
+        let furnitureRange = range(furnitureFrom,furnitureTo)
+        let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
+
+        let dataFiltered = propertiesData.data
+        .filter(prop => (budgetFrom <= prop.attributes.price) && (prop.attributes.price <= budgetTo))
+        .filter(prop => (roomsFrom <= prop.attributes.rooms) && (prop.attributes.rooms <= roomsTo))
+        .filter(prop => (renovationFrom <= prop.attributes.renovation) && (prop.attributes.renovation <= renovationTo))
+        .filter(prop => furnitureRangeText.some(text => prop.attributes.furniture == text)  )
+        
+        if (addressesActive){
+            dataFiltered = dataFiltered.filter(prop => addresses.some(addr => prop.attributes.title.includes(addr)))
+        }
+        else if (address){
+            dataFiltered = dataFiltered.filter(prop => prop.attributes.title.includes(address))
+        }
+
+        setPropertiesData({...propertiesData,dataFiltered})
+  
+    }
+
+    if (!addressesData.length){
         return null
     }
-    
+
     const {currentFilterName} = currentFilter
     const {currentFilterElement} = currentFilter
 
-    const setProperties = (val) => setGlobalState('properties',val)
     const setIsLoading = (val) => setGlobalState('loading',val)
-
-    
- /*    const submitNewFilter = (filterName,filterValue) => {
-
-        switch(filterName){
-          case ('budget'):{
-                
-            const from = {
-                name:"page_attributes[price][0]",
-                value:filterValue[0]
-            }
-
-            const to = {
-                name:"page_attributes[price][1]",
-                value:filterValue[1]
-            }
-    
-            setUrlOptionsJson({...urlOptionsJson,price:[from,to]})
-            fetchProperties({...urlOptionsJson,price:[from,to]})
-            break
-          }
-          case ('rooms'):{
-            let _range = range(filterValue[0],filterValue[1],.5)
-    
-            let range_array = []
-    
-            for (let i=0;i<_range.length;i++){
-              range_array.push({
-                name:"page_attributes[rooms][]",
-                value:_range[i]
-              })
-            }
-    
-            setUrlOptionsJson({...urlOptionsJson,rooms:range_array})
-            fetchProperties({...urlOptionsJson,rooms:range_array})
-            break
-          }
-          case ('renovation'):{
-            let _range = range(filterValue[0],filterValue[1],1)
-    
-            let range_array = []
-    
-            for (let i=0;i<_range.length;i++){
-              range_array.push({
-                name:"page_attributes[renovation][]",
-                value:_range[i]
-              })
-            }
-    
-            setUrlOptionsJson({...urlOptionsJson,renovation:range_array})
-            fetchProperties({...urlOptionsJson,renovation:range_array})
-            break
-          }
-          case ('addresses'):{
-    
-            let range_array = []
-            console.log('setting addresses to '+filterValue)
-            for (let i=0;i<filterValue?.length;i++){
-              if (filterValue[i].includes(','))
-                range_array.push({
-                  name:"page_attributes[street_name][]",
-                  value:filterValue[i].split(', ')[1]
-                })
-              else
-                range_array.push({
-                  name:"page_attributes[neighborhood_name][]",
-                  value:filterValue[i]
-                })
-            }
-            setUrlOptionsJson({...urlOptionsJson,addresses:range_array})
-            fetchProperties({...urlOptionsJson,addresses:range_array})
-            break
-          }
-          case ('furniture'):{
-            let _range = range(filterValue[0],filterValue[1],1)
-            console.log(_range)
-            let range_array = []
-    
-            for (let i of _range){
-              range_array.push({
-                name:"page_attributes[furniture][]",
-                value:furnitureTypes[i]
-              })
-            }
-    
-            setUrlOptionsJson({...urlOptionsJson,furniture:range_array})
-            fetchProperties({...urlOptionsJson,furniture:range_array})
-            break
-          }
-        }
-      }
- */
-
-
-    const submitNewFilter = (filterName,filterValue) => {
-        switch(filterName){
-            case ('budget'):{
-                let dataFiltered = propertiesData.dataFiltered.filter(prop => ((filterValue[0] <= prop.attributes.price) && (prop.attributes.price <= filterValue[1])) )
-                console.log(dataFiltered.length)
-                setUrlOptionsJson({...urlOptionsJson,price:[filterValue[0],filterValue[1]]})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('rooms'):{
-                let dataFiltered = propertiesData.dataFiltered.filter(prop => ((filterValue[0] <= prop.attributes.rooms) && (prop.attributes.rooms <= filterValue[1])) )
-                console.log(dataFiltered.length)
-                setUrlOptionsJson({...urlOptionsJson,rooms:[filterValue[0],filterValue[1]]})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('renovation'):{
-                let dataFiltered = propertiesData.dataFiltered.filter(prop => ((filterValue[0] <= prop.attributes.renovation) && (prop.attributes.renovation <= filterValue[1])) )
-                console.log(dataFiltered.length)
-                setUrlOptionsJson({...urlOptionsJson,renovation:[filterValue[0],filterValue[1]]})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('address'):{
-                let dataFiltered = propertiesData.data.filter(prop => prop.title.includes(filterValue || '') )
-                setUrlOptionsJson({})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('addresses'):{
-                let dataFiltered = propertiesData.dataFiltered.filter(prop => filterValue.some(addr => prop.title.includes(addr)) )
-                setUrlOptionsJson({...urlOptionsJson,addresses:filters.addresses})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            /* case ('furniture'):{
-                let dataFiltered = propertiesData.data.filter(prop => ((filterValue[0] <= prop.attributes.price) && (prop.attributes.price <= filterValue[1])) )
-                console.log(dataFiltered.length)
-                setUrlOptionsJson({...urlOptionsJson,price:[filterValue[0],filterValue[1]]})
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            } */
-        }
-    }
-
-    const fetchProperties = async (options={}) => {
-
-        setIsLoading(true)
-        /* scrollToTop() */
-        const data = await getProperties(options)
-        const _properites = data.payload
-
-        setProperties({data:_properites,currentCount:_properites.length})
-        setIsLoading(false)
-
-    }
-
-    const removeFilter = (filterName) => {
-        switch(filterName){
-            case ('budget'):{
-                let dataFiltered = propertiesData.data.filter(prop => 1000 <= prop.attributes.price <= 30000 )
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('rooms'):{
-                let dataFiltered = propertiesData.data.filter(prop => 1 <= prop.attributes.rooms <= 20 )
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('renovation'):{
-                let dataFiltered = propertiesData.data.filter(prop => 1 <= prop.attributes.renovation <= 4 )
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('addresses'):{
-                let dataFiltered = propertiesData.data
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('address'):{
-                let dataFiltered = propertiesData.data
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-            case ('furniture'):{
-                let dataFiltered = propertiesData.data.filter(prop => 1000 <= prop.attributes.price <= 30000 )
-                setPropertiesData({...propertiesData,dataFiltered})
-                break
-            }
-        }
-    }
-    
 
     const handleClickFilter = (event) => {
         setCurrentFilter({currentFilterName:event.currentTarget.id,currentFilterElement:event.currentTarget})
@@ -280,7 +145,17 @@ const TopBar = props => {
 
     const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
-    console.log(filters)
+    const {
+        MinPrice,
+        MaxPrice,
+        MinRooms,
+        MaxRooms,
+        MinRenovation,
+        MaxRenovation,
+        MinFurniture,
+        MaxFurniture,
+    } = constants
+
     return (
         <div
             style={{
@@ -311,11 +186,12 @@ const TopBar = props => {
                     isMulti={false}
                     getOptionValue={e => e}
                     getOptionLabel={e => e}
-                    options={addresses}
+                    options={addressesData}
                     placeholder="חפש לפי כתובת"
                     value={[filters.address]}
-                    onCl
-                    onChange={e => {console.log(e);setFilters({...filters,address:e});submitNewFilter('address',e)}}
+                    onChange={e => {
+                        setFilters({...filters,address:e,addresses:[],addressesActive:0})
+                    }}
                 />
             </div>
 
@@ -332,11 +208,11 @@ const TopBar = props => {
                             <MdKeyboardArrowDown size={24} color='orangered'/>
                         </>              
                         {
-                            urlOptionsJson.price?.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,price:[]});removeFilter('budget');e.stopPropagation()} } 
-                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            budgetActive &&
+                            <div onClick={(e) => {
+                                setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                                e.stopPropagation()} } 
+                                style={xStyle}>X</div>
                         }
                     </div>
 
@@ -348,11 +224,9 @@ const TopBar = props => {
                             <MdKeyboardArrowDown size={24} color='orangered'/>
                         </>
                         {
-                            urlOptionsJson.rooms?.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,rooms:[]});removeFilter('rooms');e.stopPropagation()} } 
-                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            roomsActive &&
+                            <div onClick={(e) => {setFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} } 
+                            style={xStyle}>X</div>
                         }
                     </div>
 
@@ -364,11 +238,9 @@ const TopBar = props => {
                             <MdKeyboardArrowDown size={24} color='orangered'/>
                         </>
                         {
-                            urlOptionsJson.renovation?.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,renovation:[]});removeFilter('renovation');e.stopPropagation()} } 
-                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            renovationActive &&
+                            <div onClick={(e) => {setFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} } 
+                            style={xStyle}>X</div>
                         }
                     </div>
 
@@ -380,11 +252,9 @@ const TopBar = props => {
                             <MdKeyboardArrowDown size={24} color='orangered'/>
                         </>
                         {
-                            urlOptionsJson.addresses?.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,addresses:[]});removeFilter('addresses');setFilters({...filters,addresses:[]});e.stopPropagation()} } 
-                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            filters.addresses.length > 0 &&
+                            <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
+                            style={xStyle}>X</div>
                         }
                     </div>
 
@@ -396,11 +266,9 @@ const TopBar = props => {
                             <MdKeyboardArrowDown size={24} color='orangered'/>
                         </>
                         {
-                            urlOptionsJson.furniture?.length > 0 &&
-                            <div onClick={(e) => {setUrlOptionsJson({...urlOptionsJson,furniture:[]});removeFilter('furniture');e.stopPropagation()} } 
-                                style={{fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-                                borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-                                borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>X</div>
+                            furnitureActive &&
+                            <div onClick={(e) => {setFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} } 
+                            style={xStyle}>X</div>
                         }
                     </div>
 
@@ -413,7 +281,6 @@ const TopBar = props => {
             </div>
 
             <div onClick={() =>  {
-                setUrlOptionsJson({});
                 let dataFiltered = propertiesData.data.filter(prop => prop.isFavourite );
                 if (JSON.stringify(propertiesData.dataFiltered) == JSON.stringify(dataFiltered))
                     setPropertiesData({...propertiesData,dataFiltered:propertiesData.data})
@@ -427,7 +294,7 @@ const TopBar = props => {
 
             {
                 device == devices.Desktop &&
-                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {}}>
+                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
                     <Sync/>
                     <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'orangered'}}>רענן חיפוש </span>
                 </div>
@@ -446,8 +313,8 @@ const TopBar = props => {
                         <div style={{padding:20}}>
                             <Range
                                 step={50}
-                                min={1500}
-                                max={constants.MaxPrice}
+                                min={MinPrice}
+                                max={MaxPrice}
                                 onChange={(newVal) => setFilters({...filters,budgetFrom:newVal[0],budgetTo:newVal[1]})}
                                 value={[filters.budgetFrom,filters.budgetTo]}
                                 reverse
@@ -461,8 +328,8 @@ const TopBar = props => {
                                 margin="dense"
                                 inputProps={{
                                     step: 10,
-                                    min: 1500,
-                                    max: constants.MaxPrice,
+                                    min: MinPrice,
+                                    max: MaxPrice,
                                     type: 'number',
                                 }}
                                 value={filters.budgetFrom}
@@ -473,8 +340,8 @@ const TopBar = props => {
                                 margin="dense"
                                 inputProps={{
                                     step: 10,
-                                    min: 1500,
-                                    max: constants.MaxPrice,
+                                    min: MinPrice,
+                                    max: MaxPrice,
                                     type: 'number',
                                 }}
                                 value={filters.budgetTo}
@@ -482,7 +349,10 @@ const TopBar = props => {
                             />
                         </div>
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                            <div onClick={() => {submitNewFilter('budget',[filters.budgetFrom,filters.budgetTo]);handleCloseFilter()}} 
+                            <div onClick={() => {
+                                setFilters({...filters,budgetActive:filters.budgetActive++});
+                                handleCloseFilter()}
+                            } 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
@@ -497,8 +367,8 @@ const TopBar = props => {
                         <div style={{padding:20}}>
                             <Range
                                 step={.5}
-                                min={1}
-                                max={constants.MaxRooms}
+                                min={MinRooms}
+                                max={MaxRooms}
                                 onChange={(newVal) => setFilters({...filters,roomsFrom:newVal[0],roomsTo:newVal[1]})}
                                 value={[filters.roomsFrom,filters.roomsTo]}
                                 reverse
@@ -512,8 +382,8 @@ const TopBar = props => {
                                 margin="dense"
                                 inputProps={{
                                     step: .5,
-                                    min: 1,
-                                    max: constants.MaxRooms,
+                                    min: MinRooms,
+                                    max: MaxRooms,
                                     type: 'number',
                                 }}
                                 value={filters.roomsFrom}
@@ -524,8 +394,8 @@ const TopBar = props => {
                                 margin="dense"
                                 inputProps={{
                                     step: .5,
-                                    min: 1,
-                                    max: constants.MaxRooms,
+                                    min: MinRooms,
+                                    max: MaxRooms,
                                     type: 'number',
                                 }}
                                 value={filters.roomsTo}
@@ -533,9 +403,9 @@ const TopBar = props => {
                             />
                         </div>
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                            <div onClick={() => {submitNewFilter('rooms',[filters.roomsFrom,filters.roomsTo]);handleCloseFilter()}} 
-                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => {setFilters({...filters,roomsActive:filters.roomsActive++});handleCloseFilter()}} 
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
@@ -548,8 +418,8 @@ const TopBar = props => {
                         <div style={{padding:20}}>
                             <Range
                                 step={1}
-                                min={1}
-                                max={constants.MaxRenovation}
+                                min={MinRenovation}
+                                max={MaxRenovation}
                                 onChange={(newVal) => setFilters({...filters,renovationFrom:newVal[0],renovationTo:newVal[1]})}
                                 value={[filters.renovationFrom,filters.renovationTo]}
                                 reverse
@@ -561,9 +431,9 @@ const TopBar = props => {
                         </div>
                         
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                            <div onClick={() => {submitNewFilter('renovation',[filters.renovationFrom,filters.renovationTo]);handleCloseFilter()}} 
-                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive++});handleCloseFilter()}} 
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
@@ -590,9 +460,7 @@ const TopBar = props => {
                     <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
                         <div onClick={() => {
                             let newVal = new Set(filters.addresses.concat(neighborhoodSelected))
-
-                            setFilters({...filters,addresses: [...newVal]});
-                            submitNewFilter('addresses',filters.addresses.concat(neighborhoodSelected))
+                            setFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive++,address:''});
                             handleCloseFilter()
                         }} 
                             style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -627,9 +495,9 @@ const TopBar = props => {
                         </div>
                         
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                            <div onClick={() => {submitNewFilter('furniture',[filters.furnitureFrom,filters.furnitureTo]);handleCloseFilter()}} 
-                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
-                            color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
+                            <div onClick={() => {setFilters({...filters,furnitureActive:filters.furnitureActive++});handleCloseFilter()}} 
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}}>סגור</div>
