@@ -27,16 +27,16 @@ const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=$
 
 const getLeadUrl = () => '/kala/v1/lead'
 
-const getUrl = (options = {}) => {
+const getUrl = (/* options = {} */) => {
 
-    console.log(options)
+  /*   console.log(options)
     let optionsEncoded = ''
     if (options.price){
         optionsEncoded += `page_attributes[__operators][price]=between&`
         optionsEncoded += options.price.map(function(k) {
             return encodeURIComponent(k.name) + '=' + encodeURIComponent(k.value)
         }).join('&')
-    }
+    } */
 /*     if (options.rooms){
         optionsEncoded += `page_attributes[__operators][rooms]=between&`
         optionsEncoded += options.rooms.map(function(k) {
@@ -60,8 +60,9 @@ const getUrl = (options = {}) => {
         }).join('&')
     } */
 
-    console.log(getAllUrl+'&'+optionsEncoded)
-    return getAllUrl+'&'+optionsEncoded
+    const url = `/kala/v1/page?select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
+    /* return getAllUrl+'&'+optionsEncoded */
+    return url
 }
 
 export const getUser = async (id) => {
@@ -82,9 +83,9 @@ export const getUser = async (id) => {
 
 }
 
-export const getProperties = async (options) => {
+export const getProperties = async () => {
 
-    let response = await fetch(getUrl(options),{
+    let response = await fetch(getUrl(),{
       method: 'GET',
       headers: {
         "x-kala-key":"kdcG983ujtltGHtgzd"

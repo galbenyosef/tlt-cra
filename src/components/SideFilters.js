@@ -169,7 +169,7 @@ export const SideFilters = props => {
                                 style={xStyle}>X</div>
                         }
                     </div>
-                    <Grid container spacing={1} xs={12}>
+                    <Grid container spacing={1}>
                         {
                             Object.keys(switchFilters).map(filter => <Grid key={filter} item xs={4}>
                                     <label style={{height:'100%',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'center',fontSize:14,textAlign:'center'}}>

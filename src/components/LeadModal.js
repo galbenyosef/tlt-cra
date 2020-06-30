@@ -119,7 +119,7 @@ export const LeadModal = () => {
                         <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
                                 <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
                                     const {full_name,phone,actually_when} = opened
-                                    if (full_name.length > 2 && phone.replace('-','').length == 10 && ((actually_when && type == LeadTypes.MeetingRequest) || type != LeadTypes.MeetingRequest))
+                                    if (full_name && full_name.length > 2 && phone.replace('-','').length == 10 && ((actually_when && type == LeadTypes.MeetingRequest) || type != LeadTypes.MeetingRequest))
                                         createLeadKala(opened)
                                     else{
                                         alert('התגלתה שגיאה באחד מן השדות')

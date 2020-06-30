@@ -21,42 +21,10 @@ const Root = props => {
     const setDevice = (val) => setGlobalState('device',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
 
-    const fetchProperties = async (options={
-        price:[
-            {
-                name:'page_attributes[price][0]',
-                value:1000
-            },
-            {
-                name:'page_attributes[price][1]',
-                value:30000
-            }
-        ],
-      /*   rooms:[
-            {
-                name:'page_attributes[rooms][0]',
-                value:1
-            },
-            {
-                name:'page_attributes[rooms][1]',
-                value:4
-            }
-        ], */
-      /*   renovation:[
-            {
-                name:'page_attributes[renovation][0]',
-                value:1
-            },
-            {
-                name:'page_attributes[renovation][1]',
-                value:4
-            }
-        ], */
-    }) => {
+    const fetchProperties = async () => {
 
         setIsLoading(true)
-/*         scrollToTop()
- */        const data = await getProperties(options)
+        const data = await getProperties()
         const _properites = data.payload
     
         
@@ -64,6 +32,8 @@ const Root = props => {
         
         for (let i=0; i<_properites.length;i++){
             let {attributes} = _properites[i]
+            if (!attributes)
+                console.log(_properites[i])
             if (!addressesMap[attributes.neighborhood_name])
                 addressesMap[attributes.neighborhood_name] = []
             if (!addressesMap[attributes.neighborhood_name].includes(attributes.street_name))

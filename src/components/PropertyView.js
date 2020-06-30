@@ -60,10 +60,10 @@ export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
             </div>
             <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',padding:'10px 0px',justifyContent:'space-between'}}>
               <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
+              <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer',backgroundColor:'orangered',color:'white',}}>{`קבע פגישה`}</div>
               <div onClick={
                 (e) => {video__url && setSingleMediaModalOpened(video__url);e.stopPropagation()}
-              } style={{display:'flex',width:'32%',borderRadius:100,backgroundColor:'orangered',border:'1px solid orangered',color:'white',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:video__url?'pointer':''}}>{`סייר בנכס`}</div>
-              <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer'}}>{`קבע פגישה`}</div>
+              } style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:video__url?'pointer':''}}>{`סייר בנכס`}</div>
             </div>
           </div>
         </div>
