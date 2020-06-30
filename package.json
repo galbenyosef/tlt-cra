@@ -23,6 +23,7 @@
     "react-leaflet": "^2.7.0",
     "react-player": "^2.4.0",
     "react-scripts": "3.4.1",
+    "react-switch": "^5.0.1",
     "react-windowed-select": "^2.0.3",
     "serve": "^11.3.2"
   },
