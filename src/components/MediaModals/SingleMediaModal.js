@@ -21,7 +21,7 @@ export const SingleMediaModal = () => {
                position: 'absolute',
                display:'flex',
                maxHeight:'90vh',
-               width:getValueByDevice('auto','100%') 
+               width:getValueByDevice('auto','100%','100%') 
             }} >
                 {
                     opened && opened.includes('.mp4') ?

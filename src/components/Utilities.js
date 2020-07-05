@@ -13,7 +13,8 @@ const range = (min, max , step = 1) => {
 
 const devices = {
   Desktop:1,
-  Mobile:2
+  Tablet:2,
+  Mobile:3
 }
 
 const constants = {
@@ -73,11 +74,12 @@ const propertyTypes = {
   Villa:'דירה',
 }
 
-export const getValueByDevice = (desktop,mobile) => {
-  if (window.innerWidth < 960)
+export const getValueByDevice = (desktop,tablet,mobile) => {
+  if (window.innerWidth < 560)
       return mobile
-  else
-      return desktop
+  if (window.innerWidth < 1200)
+      return tablet
+  return desktop
 }
 
 const LeadTypes = {

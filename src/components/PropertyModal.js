@@ -25,26 +25,13 @@ const Tabs = {
     Location:3,
 }
 
-const InfoView = ({property}) => {
-
-
-
-    return (
-        <Grid container xs={12}>
-
-        </Grid>
-    )
+const MifratItemStyle = {
+    justifyContent:'space-around',
+    flexWrap:'wrap',
+    display:'flex',
+    alignItems:'center',
+    paddingBottom:35
 }
-
-const useStyles = makeStyles((theme) => ({
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: '25ch',
-    },
-  }));
-
-
 
 export const PropertyModal = () => {
 
@@ -374,8 +361,8 @@ export const PropertyModal = () => {
                                                         backgroundRepeat: 'no-repeat',
                                                         backgroundPosition: 'center',
                                                         backgroundSize: 'cover',
-                                                        height:getValueByDevice('50%','100%'),
-                                                        maxHeight:getValueByDevice(180,280)
+                                                        height:getValueByDevice('50%','100%','100%'),
+                                                        maxHeight:getValueByDevice(180,280,280)
                                                     }}>
                                                         <p style={{
                                                             position: 'absolute',
@@ -391,7 +378,7 @@ export const PropertyModal = () => {
                                                         }}>{`לכל ${propertyImages.length} התמונות`}</p>
                                                     </Grid>
                                                     <Grid item xs={6} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
-                                                        height:getValueByDevice('50%','100%'),
+                                                        height:getValueByDevice('50%','100%','100%'),
                                                         position:'relative',
                                                         overflow:'hidden'
                                                     }}>
@@ -540,128 +527,128 @@ export const PropertyModal = () => {
                                                     </Grid>
                                                     {
                                                         airconditioner?.length &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaFan style={{paddingLeft:20}} size={20}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מיזוג ${airconditioner[0]}`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaFan  size={20}/>
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מיזוג ${airconditioner[0]}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         boiler &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FiSun size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${boiler}`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FiSun size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${boiler}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         shower &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaShower size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מקלחון`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaShower size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מקלחון`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         bathtub &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaBath size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`אמבטיה`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaBath size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`אמבטיה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         structure &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaBuilding size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${structure}`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaBuilding size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מבנה ${structure}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         parking &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaParking size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${parking}`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaParking size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${parking}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         warehouse &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaWarehouse size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מחסן`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaWarehouse size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מחסן`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         garden &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <GiFireFlower size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גינה`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <GiFireFlower size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גינה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         accessibility &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FaAccessibleIcon size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גישה לנכים`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FaAccessibleIcon size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`גישה לנכים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         saferoom &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <FcSafe size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`ממ"ד`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <FcSafe size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`ממ"ד`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         bars &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <GiWindowBars size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`סורגים`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <GiWindowBars size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`סורגים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         nets &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <AiOutlineTable size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`חלונות מרושתים`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <AiOutlineTable size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`חלונות מרושתים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         electricshutters &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <GiWindow size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`תריסים חשמליים`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <GiWindow size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`תריסים חשמליים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         parentsunit &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <RiParentLine size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`יחידת הורים`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <RiParentLine size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`יחידת הורים`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         stairs > 0 &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <GiStairs size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${stairs} מדרגות עד לפתח הדירה`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <GiStairs size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`${stairs} מדרגות עד לפתח הדירה`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         landscape &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <RiLandscapeLine size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`נוף ${landscape}`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <RiLandscapeLine size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`נוף ${landscape}`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         terrace &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <IoIosHome size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מרפסת`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <IoIosHome size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מרפסת`}</p>
                                                         </Grid>
                                                     }
                                                     {
                                                         elevator &&
-                                                        <Grid style={{padding:20,display:'flex',alignItems:'center'}} item xs={3}>
-                                                            <GrElevator size={20} style={{paddingLeft:20}}/>
-                                                            <p style={{textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מעלית`}</p>
+                                                        <Grid style={MifratItemStyle} item xs={4}>
+                                                            <GrElevator size={20} />
+                                                            <p style={{width:'80%',textAlign:'center',fontSize:10,fontWeight:'bold'}}>{`מעלית`}</p>
                                                         </Grid>
                                                     }
                                                     

@@ -16,7 +16,7 @@ export const AllMediaModal = () => {
         return null
     return (
         <Modal open={!!opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setOpened(false)}>
-            <Grid container spacing={getValueByDevice(3,1)} style={{
+            <Grid container spacing={getValueByDevice(3,1,1)} style={{
                 right: '50%',
                 maxWidth: '90%',
                 top: '50%',
@@ -29,7 +29,7 @@ export const AllMediaModal = () => {
             }}>
                 {
                     opened.map(media => 
-                        <Grid item xs={getValueByDevice(4,6)} spacing={3} style={{
+                        <Grid item xs={getValueByDevice(4,6,6)} spacing={3} style={{
                             display:'flex',
                             justifyContent:'center',
                             alignItems:'top',

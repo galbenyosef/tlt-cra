@@ -8,28 +8,32 @@ import { getValueByDevice, LeadTypes } from './Utilities';
 import './blur.css';
 import TLT_LOGO from '../Logo_TLT.png'
 
-export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
+export const PropertyView = ({property,isFavourite,toggleFavourite}) => {
 
     const handleClick = val => {setGlobalState('selectedProperty',val)}
-    const {isFavourite} = property
 
+    
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
     const setLeadModal = val => setGlobalState('newLeadModal',val)
 
     const {video__url} = property.attributes
+    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+    d.setUTCSeconds(property.created);
 
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid item xs={6} md={4} style={{maxHeight:getValueByDevice('50%','50%') }}>
-        <div onClick={() => {console.log(property);handleClick(property.id)}}  style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:'300px'}}>
-          <div style={{position:'relative',height:'55%',flex:1}}>
-            <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'yellow',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder'}}>{`${'חדש!'}`}</p>
+      <Grid item xs={12} sm={6} md={4}  style={{maxHeight:'50%'}}>
+        <div onClick={() => {console.log(property);handleClick(property.id)}}  style={{display:'flex',flexDirection:'column',height:'100%',margin:'auto',backgroundColor:'white',boxShadow:'3px 3px 3px 0px grey',whiteSpace:'nowrap',overflow:'hidden',maxWidth:300}}>
+          <div style={{position:'relative',flex:1,height:'55%'}}>
+            {
+              <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'rgba(255,255,0,0.6)',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder',zIndex:1}}>{`${'חדש !'}`}</p>
+            }
             {
               isFavourite ?
-              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FaHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
               :
-              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={32} color={'white'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
             
             <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden'}}>
@@ -55,21 +59,19 @@ export const PropertyView = React.memo(({property,index,toggleFavourite}) => {
                   {property.attributes.floor != undefined ? (property.attributes.floor ? ` | קומה ${property.attributes.floor}`:` | קומת קרקע`): ' '}
                 </p>
             </div>
-            <div style={{fontSize:'1.3vw',fontWeight:'bolder',fontFamily:'Assistant',textAlign:'end'}}>
+            <div style={{fontSize:18,fontWeight:'bolder',fontFamily:'Assistant',textAlign:'end'}}>
               {property.attributes.price ? `${property.attributes.price.toLocaleString('he-IL')} ₪`: ` `}
             </div>
             <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',padding:'10px 0px',justifyContent:'space-between'}}>
-              <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'1vw'}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
-              <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:'pointer',backgroundColor:'orangered',color:'white',}}>{`קבע פגישה`}</div>
+              <div style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:14}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
+              <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:10,cursor:'pointer',backgroundColor:'orangered',color:'white',}}>{`קבע פגישה`}</div>
               <div onClick={
                 (e) => {video__url && setSingleMediaModalOpened(video__url);e.stopPropagation()}
-              } style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:'.8vw',cursor:video__url?'pointer':''}}>{`סייר בנכס`}</div>
+              } style={{display:'flex',width:'32%',borderRadius:100,border:'1px solid orangered',justifyContent:'center',alignItems:'center',fontSize:12,cursor:video__url?'pointer':''}}>{`סייר בנכס`}</div>
             </div>
           </div>
         </div>
       </Grid>
    )
-},(prev, next) => {
-  return JSON.stringify(prev.property) == JSON.stringify(next.property)
-})
+}
   

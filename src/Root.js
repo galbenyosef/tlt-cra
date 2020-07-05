@@ -51,25 +51,31 @@ const Root = props => {
     
         setAddressesMap(addressesMap)
         setAddresses(addresses)
-        setProperties({data:_properites,dataFiltered:_properites,currentCount:_properites.length,totalCount:data.metadata.total})
+        let favouritesString = localStorage.getItem('favourites')
+        let favourites = JSON.parse(favouritesString) || []
+        setProperties({data:_properites,dataFiltered:_properites,currentCount:_properites.length,totalCount:data.metadata.total,favourites})
         setIsLoading(false)
     
     }
 
     useEffect(() => {
         fetchProperties()
+
         window.addEventListener("resize",() => resize());
         if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
             console.log(window.location.pathname.split('/')[1])
             setProperty(window.location.pathname.split('/')[1])
         }
+
         resize()
     },[])
 
     const resize = () => {
 
-        if (window.innerWidth < 960)
+        if (window.innerWidth < 600)
             setDevice(devices.Mobile)
+        else if (window.innerWidth < 1280)
+            setDevice(devices.Tablet)
         else
             setDevice(devices.Desktop)
     }

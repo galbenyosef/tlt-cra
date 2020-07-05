@@ -7,15 +7,6 @@ import { IoMdPhonePortrait } from 'react-icons/io'
 import DatePicker from "react-datetime-picker"
 import moment from 'moment'
 
-/* () => createLeadKala({
-    ...person,
-    "status_id": 3077,
-    "attributes": { 
-        "type": "בקשה",
-        "kala_property_id": selectedProperty, 
-        "agent_id": data.payload.attributes.agent_member_id
-    }
-}) */
 export const LeadModal = () => {
 
     const [opened,setOpened] = useGlobalState('newLeadModal')
@@ -68,7 +59,7 @@ export const LeadModal = () => {
                display:'flex',
             }} >
                 <div style={{backgroundColor:'white'}}>
-                    <Grid container spacing={getValueByDevice(3,0)} style={{padding:30}}>
+                    <Grid container spacing={getValueByDevice(3,2,0)} style={{padding:30}}>
                         <Grid item xs={12} md={6} style={{paddingBottom:15,display:'flex',justifyContent:'center',alignItems:'center'}}>
                             <Input
                                 placeholder="שם מלא"
@@ -117,14 +108,14 @@ export const LeadModal = () => {
                             <TextField multiline onChange={e => setOpened({...opened,comments:e.currentTarget.value})} value={opened.comments}/>
                         </Grid>
                         <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-                                <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
-                                    const {full_name,phone,actually_when} = opened
-                                    if (full_name && full_name.length > 2 && phone.replace('-','').length == 10 && ((actually_when && type == LeadTypes.MeetingRequest) || type != LeadTypes.MeetingRequest))
-                                        createLeadKala(opened)
-                                    else{
-                                        alert('התגלתה שגיאה באחד מן השדות')
-                                    }
-                                }}>שלח</Button>
+                            <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
+                                const {full_name,phone,actually_when} = opened
+                                if (full_name && full_name.length > 2 && phone.replace('-','').length == 10 && ((actually_when && type == LeadTypes.MeetingRequest) || type != LeadTypes.MeetingRequest))
+                                    createLeadKala(opened)
+                                else{
+                                    alert('התגלתה שגיאה באחד מן השדות')
+                                }
+                            }}>שלח</Button>
                         </Grid>
                     </Grid>
                 </div>

@@ -4,13 +4,14 @@ import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorde
 import {useGlobalState, setGlobalState} from '../globalState';
 import { IoIosConstruct } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { FaShekelSign } from 'react-icons/fa';
+import { FaShekelSign, FaHeart } from 'react-icons/fa';
 import StyledMenu from './StyledMenu'
 import {Range} from 'rc-slider';
-import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters} from './Utilities'
+import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from './Utilities'
 import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
 import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
+import { FiHeart } from 'react-icons/fi';
 
 const customSelectStyles = {
     option: (provided, state) => { return({
@@ -44,6 +45,10 @@ const customSelectStyles = {
         ...provided,
         color:'black',
     }),
+    menu: (provided, state) => ({
+        ...provided,
+        zIndex:2
+    }),
 }
 
 const xStyle = {fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
@@ -58,6 +63,8 @@ const TopBar = props => {
     const [filters, setFilters] = useGlobalState('filters');
     const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
     const [device] = useGlobalState('device')
+
+    const [inputValue,setInputValue] = useState('')
 
     const setSideFilterVisible = val => setGlobalState('sideFiltersVisible',val)
 
@@ -76,6 +83,7 @@ const TopBar = props => {
         addresses,
         addressesActive,
         address,
+        propertyNumber,
         furnitureFrom,
         furnitureTo,
         metresFrom,
@@ -112,6 +120,7 @@ const TopBar = props => {
 
     },[
         address,
+        propertyNumber,
         addressesActive,
         budgetActive,
         roomsActive,
@@ -161,19 +170,19 @@ const TopBar = props => {
         else if (address){
             dataFiltered = dataFiltered.filter(prop => prop.title.includes(address))
         }
+        else if (propertyNumber)
+            dataFiltered = dataFiltered.filter(prop => prop.attributes.custom_id + '' == propertyNumber)
 
         setPropertiesData({...propertiesData,dataFiltered})
   
     }
 
-    if (!addressesData.length){
+    if (!addressesData.length || !propertiesData.data.length){
         return null
     }
 
     const {currentFilterName} = currentFilter
     const {currentFilterElement} = currentFilter
-
-    const setIsLoading = (val) => setGlobalState('loading',val)
 
     const handleClickFilter = (event) => {
         setCurrentFilter({currentFilterName:event.currentTarget.id,currentFilterElement:event.currentTarget})
@@ -196,6 +205,7 @@ const TopBar = props => {
         MaxFloor
     } = constants
 
+
     return (
         <div
             style={{
@@ -204,8 +214,7 @@ const TopBar = props => {
                 display:'flex',
                 justifyContent:'space-between',
                 alignItems:'center',
-                flexWrap:'wrap',
-                padding:'20px',
+                padding:getValueByDevice(20,10,10),
                 marginBottom:'20px'
             }}>
 
@@ -218,19 +227,24 @@ const TopBar = props => {
             }
 
             
-            <div style={{width:'180px'}}>
+            <div style={{width:'190px'}}>
                 <WindowedSelect
                     styles={customSelectStyles}
                     isClearable={true}
                     isRtl={true}
                     isMulti={false}
                     getOptionValue={e => e}
-                    getOptionLabel={e => e}
-                    options={addressesData}
-                    placeholder="חפש לפי כתובת"
-                    value={[filters.address]}
+                    getOptionLabel={e => Number.isInteger(parseInt(inputValue)) ? `נכס מספר #${e}`:e}
+                    inputValue={inputValue}
+                    onInputChange={e => setInputValue(e)}
+                    options={Number.isInteger(parseInt(inputValue)) ? propertiesData.data.map(p => p.attributes.custom_id + '') : addressesData}
+                    placeholder="הקש כתובת/ מספר נכס"
+                    value={filters.propertyNumber ? [`נכס מספר #${filters.propertyNumber}`] : [filters.address]}
                     onChange={e => {
-                        setFilters({...filters,address:e,addresses:[],addressesActive:0})
+                        !Number.isInteger(parseInt(e)) ?
+                            setFilters({...filters,address:e,addresses:[],addressesActive:0,propertyNumber:''})
+                        :
+                            setFilters({...filters,propertyNumber:e,addresses:[],addressesActive:0,address:''})
                     }}
                 />
             </div>
@@ -238,10 +252,10 @@ const TopBar = props => {
             {
                 device == devices.Desktop &&
 
-                <div style={{display:'flex',justifyContent:'space-around',flexWrap:'wrap',padding:'0px 20px'}}>
+                <div style={{display:'flex',justifyContent:'space-around',padding:'0px 20px',height:38}}>
 
                     <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
-                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',height:36,borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
                         <>
                             <FaShekelSign style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
@@ -317,19 +331,32 @@ const TopBar = props => {
             
             <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={(e) => {setSideFilterVisible(true)}}>
                 <TuneOutlined/>
-                <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
+                {
+                    device != devices.Mobile &&
+                    <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
+                }
             </div>
 
             <div onClick={() =>  {
-                let dataFiltered = propertiesData.data.filter(prop => prop.isFavourite );
-                if (JSON.stringify(propertiesData.dataFiltered) == JSON.stringify(dataFiltered))
-                    setPropertiesData({...propertiesData,dataFiltered:propertiesData.data})
-                else
-                    setPropertiesData({...propertiesData,dataFiltered})
+                if (propertiesData.favouritesDisplayed)
+                    setPropertiesData({...propertiesData,dataFiltered:propertiesData.data,favouritesDisplayed:false})
+                else{
+                    let dataFiltered = propertiesData.data.filter(prop => propertiesData.favourites.some(id => prop.id == id))
+                    setPropertiesData({...propertiesData,dataFiltered,favouritesDisplayed:true})
+                }
             }}
-             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:'orangered',color:'white',cursor:'pointer'}}>
-                <FavoriteBorder/>
-                <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
+             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'orangered',color:!propertiesData.favouritesDisplayed ? 'white':'orangered',cursor:'pointer'}}>
+                {
+                    propertiesData.favouritesDisplayed ?               
+                    <FaHeart size={24} color={'red'} style={{paddingLeft:5}} />
+                    :
+                    <FaHeart size={24} color={'white'} style={{paddingLeft:5}} />
+                }
+                {
+                    device != devices.Mobile &&
+                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
+                }
+
             </div>
 
             {

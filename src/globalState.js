@@ -31,6 +31,7 @@ const initialState = {
         addresses:[],
         addressesActive:0,
         address:'',
+        propertyNumber:'',
         furnitureFrom:MinFurniture,
         furnitureTo:MaxFurniture,
         furnitureActive:0,
@@ -66,6 +67,8 @@ const initialState = {
         dataFiltered: [],
         currentCount: 0,
         totalCount: 0,
+        favourites: [],
+        favouritesDisplayed: false
     },
     selectedProperty: '' ,
     newLeadModal: {

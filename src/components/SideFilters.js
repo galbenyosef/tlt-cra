@@ -61,7 +61,7 @@ export const SideFilters = props => {
             <div style={{width:250,borderBottom:'1px solid grey',display:'flex',justifyContent:'center',alignItems:'center',padding:10}}>
                 <div style={{display:'flex',alignItems:'flex-end',flexDirection:'column',padding:'0px 20px'}}>
                 {
-                    device == devices.Mobile &&
+                    device != devices.Desktop &&
 
                     <>
                         <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
