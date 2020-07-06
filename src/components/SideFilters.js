@@ -12,6 +12,17 @@ const xStyle = {fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'point
 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
 borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}
 
+const filterItemStyle = {
+    width:'100%',
+    display:'flex',
+    justifyContent:'space-between',
+    alignItems:'center',
+    cursor:'pointer',
+    height:36,borderBottom:'2px solid orangered',
+    position:'relative',
+    marginBottom:10
+}
+
 export const SideFilters = props => {
 
     const [visible,setVisible] = useGlobalState('sideFiltersVisible')
@@ -65,7 +76,7 @@ export const SideFilters = props => {
 
                     <>
                         <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',height:36,borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                        style={filterItemStyle}>
                             <>
                                 <FaShekelSign style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
@@ -81,7 +92,7 @@ export const SideFilters = props => {
                         </div>
 
                         <div id='rooms' onClick={e => handleClickFilter(e)}
-                            style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                            style={filterItemStyle}>
                             <>
                                 <Hotel style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
@@ -95,7 +106,7 @@ export const SideFilters = props => {
                         </div>
 
                         <div id='renovation'  onClick={e => handleClickFilter(e)}
-                            style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                            style={filterItemStyle}>
                             <>
                                 <IoIosConstruct style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
@@ -109,7 +120,7 @@ export const SideFilters = props => {
                         </div>
 
                         <div id='addresses' onClick={e => handleClickFilter(e)}
-                            style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                            style={filterItemStyle}>
                             <>
                                 <LocationCity style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
@@ -123,7 +134,7 @@ export const SideFilters = props => {
                         </div>
 
                         <div id='furniture' onClick={e => handleClickFilter(e)}
-                            style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative'}}>
+                            style={filterItemStyle}>
                             <>
                                 <Weekend style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
@@ -140,7 +151,7 @@ export const SideFilters = props => {
                 }
 
                     <div id='floor' style={{}}  onClick={e => handleClickFilter(e)}
-                        style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',height:36,borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                        style={filterItemStyle}>
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>קומה</span>
@@ -155,7 +166,7 @@ export const SideFilters = props => {
                         }
                     </div>
                     <div id='metres' style={{}}  onClick={e => handleClickFilter(e)}
-                        style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',height:36,borderBottom:'2px solid orangered',position:'relative',marginBottom:10}}>
+                        style={filterItemStyle}>
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>גודל במ"ר</span>

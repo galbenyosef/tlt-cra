@@ -26,6 +26,7 @@ const customSelectStyles = {
     control: (provided, state) => ({
         ...provided,
         // none of react-select's styles are passed to <Control />
+        borderRadius: 0,
         borderBottom:'2px solid orangered',
         borderTop:0,
         borderLeft:0,
@@ -252,7 +253,7 @@ const TopBar = props => {
             {
                 device == devices.Desktop &&
 
-                <div style={{display:'flex',justifyContent:'space-around',padding:'0px 20px',height:38}}>
+                <div style={{display:'flex',justifyContent:'space-around',paddingRight:20,height:38}}>
 
                     <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
                     style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
@@ -348,9 +349,9 @@ const TopBar = props => {
              style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'orangered',color:!propertiesData.favouritesDisplayed ? 'white':'orangered',cursor:'pointer'}}>
                 {
                     propertiesData.favouritesDisplayed ?               
-                    <FaHeart size={24} color={'red'} style={{paddingLeft:5}} />
+                    <FaHeart size={24} color={'red'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
                     :
-                    <FaHeart size={24} color={'white'} style={{paddingLeft:5}} />
+                    <FaHeart size={24} color={'white'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
                 }
                 {
                     device != devices.Mobile &&
@@ -498,7 +499,7 @@ const TopBar = props => {
                         </div>
                         
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
-                            <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive++});handleCloseFilter()}} 
+                            <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}} 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 

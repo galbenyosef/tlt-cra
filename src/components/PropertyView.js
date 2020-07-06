@@ -36,12 +36,10 @@ export const PropertyView = ({property,isFavourite,toggleFavourite}) => {
               <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
             
-            <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden'}}>
+            <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden',display:'flex',justifyContent:'center',alignItems:'center'}}>
               <LazyLoadImage
-                effect="blur"
-                style={{height:'100%',width:'100%'}}
+                style={{height:property.thumb_file ?'100%':'80%',width:property.thumb_file ?'100%':'80%'}}
                 src={property.thumb_file ? `${imageUrl}${property.thumb_file?.sm}` : TLT_LOGO} // use normal <img> attributes as props
-                placeholderSrc={TLT_LOGO}
               />        
             </div>
          </div>
