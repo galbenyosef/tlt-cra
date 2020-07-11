@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
+import { setGlobalState } from '../globalState'
 
 
-const Layout = ({children}) => 
-<div style={{direction:'rtl',display:'flex',alignItems:'center',height:'100vh',flexDirection:'column',backgroundColor:'lightgray'}}>
-    {
-        children
-    }
-</div>
+const Layout = ({children}) => {
+
+    const rootRef = useRef(null)
+    const setRootRef = val => setGlobalState('rootRef',val)
+    useEffect(() => {
+        setRootRef(rootRef)
+        console.log(rootRef)
+    },[rootRef])
+    return (
+        <div id='rootRef' ref={rootRef} style={{direction:'rtl',display:'flex',alignItems:'center',flexDirection:'column',backgroundColor:'rgb(202,221,235)'}}>
+            {
+                children
+            }
+        </div>
+    )
+}
+
 
 export default Layout

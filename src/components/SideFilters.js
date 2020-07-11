@@ -18,7 +18,7 @@ const filterItemStyle = {
     justifyContent:'space-between',
     alignItems:'center',
     cursor:'pointer',
-    height:36,borderBottom:'2px solid orangered',
+    height:36,borderBottom:'2px solid rgb(112,146,191)',
     position:'relative',
     marginBottom:10
 }
@@ -80,7 +80,7 @@ export const SideFilters = props => {
                             <>
                                 <FaShekelSign style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
-                                <MdKeyboardArrowDown size={24} color='orangered'/>
+                                <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                             </>              
                             {
                                 budgetActive > 0 &&
@@ -96,7 +96,7 @@ export const SideFilters = props => {
                             <>
                                 <Hotel style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
-                                <MdKeyboardArrowDown size={24} color='orangered'/>
+                                <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                             </>
                             {
                                 roomsActive > 0 &&
@@ -110,7 +110,7 @@ export const SideFilters = props => {
                             <>
                                 <IoIosConstruct style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
-                                <MdKeyboardArrowDown size={24} color='orangered'/>
+                                <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                             </>
                             {
                                 renovationActive > 0 &&
@@ -124,7 +124,7 @@ export const SideFilters = props => {
                             <>
                                 <LocationCity style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
-                                <MdKeyboardArrowDown size={24} color='orangered'/>
+                                <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                             </>
                             {
                                 filters.addresses.length > 0 &&
@@ -138,7 +138,7 @@ export const SideFilters = props => {
                             <>
                                 <Weekend style={{paddingLeft:5}}/>
                                 <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
-                                <MdKeyboardArrowDown size={24} color='orangered'/>
+                                <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                             </>
                             {
                                 furnitureActive > 0 &&
@@ -155,7 +155,7 @@ export const SideFilters = props => {
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>קומה</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>              
                         {
                             floorActive > 0 &&
@@ -170,7 +170,7 @@ export const SideFilters = props => {
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>גודל במ"ר</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>              
                         {
                             metresActive > 0 &&

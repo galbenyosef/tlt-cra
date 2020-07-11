@@ -1,5 +1,6 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import {constants} from './components/Utilities'
+import { createRef } from 'react';
 
 const {
     MinPrice,
@@ -88,6 +89,7 @@ const initialState = {
     loading: false,
     addressSearch: '',
     device:null,
+    rootRef:createRef(null)
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

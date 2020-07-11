@@ -27,7 +27,7 @@ const customSelectStyles = {
         ...provided,
         // none of react-select's styles are passed to <Control />
         borderRadius: 0,
-        borderBottom:'2px solid orangered',
+        borderBottom:'2px solid rgb(112,146,191)',
         borderTop:0,
         borderLeft:0,
         borderRight:0,
@@ -40,7 +40,7 @@ const customSelectStyles = {
     }),
     dropdownIndicator:  (provided, state)  => ({
         ...provided,
-        color:'orangered',
+        color:'rgb(112,146,191)',
     }),
     placeholder: (provided, state) => ({
         ...provided,
@@ -256,11 +256,11 @@ const TopBar = props => {
                 <div style={{display:'flex',justifyContent:'space-around',paddingRight:20,height:38}}>
 
                     <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
-                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
                             <FaShekelSign style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>              
                         {
                             budgetActive > 0 &&
@@ -272,11 +272,11 @@ const TopBar = props => {
                     </div>
 
                     <div id='rooms' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
                             <Hotel style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>
                         {
                             roomsActive > 0 &&
@@ -286,11 +286,11 @@ const TopBar = props => {
                     </div>
 
                     <div id='renovation'  onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
                             <IoIosConstruct style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>
                         {
                             renovationActive > 0 &&
@@ -300,11 +300,11 @@ const TopBar = props => {
                     </div>
 
                     <div id='addresses' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
                             <LocationCity style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>
                         {
                             filters.addresses.length > 0 &&
@@ -314,11 +314,11 @@ const TopBar = props => {
                     </div>
 
                     <div id='furniture' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid orangered',position:'relative'}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative'}}>
                         <>
                             <Weekend style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
-                            <MdKeyboardArrowDown size={24} color='orangered'/>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
                         </>
                         {
                             furnitureActive > 0 &&
@@ -346,7 +346,7 @@ const TopBar = props => {
                     setPropertiesData({...propertiesData,dataFiltered,favouritesDisplayed:true})
                 }
             }}
-             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'orangered',color:!propertiesData.favouritesDisplayed ? 'white':'orangered',cursor:'pointer'}}>
+             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgb(112,146,191)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'rgb(112,146,191)',color:!propertiesData.favouritesDisplayed ? 'white':'rgb(112,146,191)',cursor:'pointer'}}>
                 {
                     propertiesData.favouritesDisplayed ?               
                     <FaHeart size={24} color={'red'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
@@ -362,9 +362,9 @@ const TopBar = props => {
 
             {
                 device == devices.Desktop &&
-                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid orangered',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
+                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgb(112,146,191)',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
                     <Sync/>
-                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'orangered'}}>רענן חיפוש </span>
+                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'rgb(112,146,191)'}}>רענן חיפוש </span>
                 </div>
             }
 
@@ -421,7 +421,7 @@ const TopBar = props => {
                                 setFilters({...filters,budgetActive:filters.budgetActive+1});
                                 handleCloseFilter()}
                             } 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -472,7 +472,7 @@ const TopBar = props => {
                         </div>
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
                             <div onClick={() => {setFilters({...filters,roomsActive:filters.roomsActive+1});handleCloseFilter()}} 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -500,7 +500,7 @@ const TopBar = props => {
                         
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
                             <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}} 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -531,7 +531,7 @@ const TopBar = props => {
                             setFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
                             handleCloseFilter()
                         }} 
-                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                             color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => {handleCloseFilter();setNeighborhoodSelected([]) }} 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -564,7 +564,7 @@ const TopBar = props => {
                         
                         <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
                             <div onClick={() => {setFilters({...filters,furnitureActive:filters.furnitureActive+1});handleCloseFilter()}} 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -618,7 +618,7 @@ const TopBar = props => {
                                 setFilters({...filters,metresActive:filters.metresActive+1});
                                 handleCloseFilter()}
                             } 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -672,7 +672,7 @@ const TopBar = props => {
                                 setFilters({...filters,floorActive:filters.floorActive+1});
                                 handleCloseFilter()}
                             } 
-                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',color:'black',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
+                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
                                 style={{width:'30%',fontWeight:'bolder',fontSize:14,cursor:'pointer',backgroundColor:'grey',color:'white',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",

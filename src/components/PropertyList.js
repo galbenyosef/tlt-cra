@@ -60,13 +60,13 @@ export const PropertyList = props => {
     }
 
     return (
-        <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',height:'calc(100% - 50px)'}}>
-            <div style={{display:'flex',width:'100%',position:'relative',justifyContent:'center'}}>
+        <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
+            <div style={{display:'flex',maxWidth:window.innerWidth > 1000 ? '1000px': window.innerWidth > 660 ? '670px' : '320px' ,position:'relative',justifyContent:'center'}}>
                 <PropertyListLoading/>
-                <Grid spacing={getValueByDevice(3,2,2)} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',marginBottom:50}} container>
+                <Grid spacing={3} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto'}} container>
                 {
-                    properties.length > 0 && properties.slice(0,50).map((prop,idx) => 
-                        <PropertyView toggleFavourite={toggleFavourite} isFavourite={propertiesData.favourites.includes(prop.id)} key={prop.id} property={prop}/>
+                    properties.length > 0 && properties.slice(0,20).map((prop,idx) => 
+                        <PropertyView toggleFavourite={toggleFavourite} index={idx} isFavourite={propertiesData.favourites.includes(prop.id)} key={prop.id} property={prop}/>
                     )
                 }
                 </Grid>

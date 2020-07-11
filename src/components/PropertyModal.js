@@ -318,7 +318,7 @@ export const PropertyModal = () => {
                                     propertyImages.length &&
                                     <Grid item xs={12}>
                                         <Grid container>
-                                            <Grid onClick={() => setSingleMediaModalOpened(propertyImages[currentImageIndex])} item md={8} xs={12} style={{
+                                            <Grid onClick={() => setSingleMediaModalOpened(propertyImages[currentImageIndex])} item md={video__url ? 8:12} xs={12} style={{
                                                 backgroundImage:`url(https://tlt.kala-crm.co.il/${propertyImages[currentImageIndex]})`,
                                                 backgroundPosition: 'center',
                                                 backgroundRepeat: 'no-repeat',
@@ -353,62 +353,43 @@ export const PropertyModal = () => {
                                                 />
                                             </div> 
                                             </Grid>
-                                            <Grid item md={4} xs={12} style={{minHeight:120}}>
-                                                <Grid container style={{height:'100%'}}>
-                                                    <Grid item xs={6} md={12} onClick={() => setAllMediaModalOpened(propertyImages)} style={{
-                                                        position:'relative',
-                                                        backgroundImage:propertyImages.length > 1 ? `url(https://tlt.kala-crm.co.il/${propertyImages[1]})` : `url(https://tlt.kala-crm.co.il/${propertyImages[0]})`,
-                                                        backgroundRepeat: 'no-repeat',
-                                                        backgroundPosition: 'center',
-                                                        backgroundSize: 'cover',
-                                                        height:getValueByDevice('50%','100%','100%'),
-                                                        maxHeight:getValueByDevice(180,280,280)
-                                                    }}>
-                                                        <p style={{
-                                                            position: 'absolute',
-                                                            top: '45%',
-                                                            right: 0,
-                                                            left: 0,
-                                                            textAlign: 'center',
-                                                            fontWeight:'bolder',
-                                                            fontSize:20,
-                                                            color:'white',
-                                                            WebkitTextStrokeWidth: '1px',
-                                                            WebkitTextStrokeColor: 'black'
-                                                        }}>{`לכל ${propertyImages.length} התמונות`}</p>
+                                            {
+                                                video__url &&
+                                                <Grid item md={4} xs={12} style={{minHeight:120,maxHeight:220}}>
+                                                    <Grid container style={{height:'100%'}}>
+                                                        <Grid item xs={12} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
+                                                            height:getValueByDevice('100%','100%','100%'),
+                                                            position:'relative',
+                                                            overflow:'hidden'
+                                                        }}>
+                                                            {/* video for ref and image */}
+                                                            <ReactPlayer /* style={{display:'none'}} */ controls={false} width={'100%'} height={'auto'} style={{maxHeight:getValueByDevice(180,280)}}
+                                                                url={`https://tlt.kala-crm.co.il/${video__url}`}>
+                                                            </ReactPlayer>
+                                                            <div style={{
+                                                                    position: 'absolute',
+                                                                    top: '40%',
+                                                                    right: 0,
+                                                                    left: 0,
+                                                                    textAlign: 'center',
+                                                                    fontWeight:'bolder',
+                                                                    fontSize:20,
+                                                                    color:'white',
+                                                                    WebkitTextStrokeWidth: '1px',
+                                                                    WebkitTextStrokeColor: 'black',
+                                                                    cursor:'pointer',
+                                                                    display:'flex',
+                                                                    justifyContent:'center',
+                                                                    alignItems:'center'
+                                                                }}>
+                                                                <PlayCircleOutlineOutlined size={40}/>
+                                                                <p>{video__url ? `סיור בנכס`:`לא קיים סרטון`}</p>
+                                                            </div>
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid item xs={6} md={12} onClick={video__url ? () => setSingleMediaModalOpened(video__url) : () => {}} style={{
-                                                        height:getValueByDevice('50%','100%','100%'),
-                                                        position:'relative',
-                                                        overflow:'hidden'
-                                                    }}>
-                                                         {/* video for ref and image */}
-                                                        <ReactPlayer /* style={{display:'none'}} */ controls={false} width={'100%'} height={'auto'} style={{maxHeight:getValueByDevice(180,280)}}
-                                                            url={`https://tlt.kala-crm.co.il/${video__url}`}>
-                                                        </ReactPlayer>
-                                                        <div style={{
-                                                                position: 'absolute',
-                                                                top: '40%',
-                                                                right: 0,
-                                                                left: 0,
-                                                                textAlign: 'center',
-                                                                fontWeight:'bolder',
-                                                                fontSize:20,
-                                                                color:'white',
-                                                                WebkitTextStrokeWidth: '1px',
-                                                                WebkitTextStrokeColor: 'black',
-                                                                cursor:'pointer',
-                                                                display:'flex',
-                                                                justifyContent:'center',
-                                                                alignItems:'center'
-                                                            }}>
-                                                            <PlayCircleOutlineOutlined size={40}/>
-                                                            <p>{video__url ? `סיור בנכס`:`לא קיים סרטון`}</p>
-                                                        </div>
-                                                    </Grid>
-                                    
                                                 </Grid>
-                                            </Grid>
+                                            }
+                                            
                                         </Grid>
                                     </Grid>
                                 }
