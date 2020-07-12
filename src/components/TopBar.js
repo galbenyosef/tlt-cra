@@ -255,19 +255,19 @@ const TopBar = props => {
 
                 <div style={{display:'flex',justifyContent:'space-around',paddingRight:20,height:38}}>
 
-                    <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
-                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+
+
+                    <div id='addresses' onClick={e => handleClickFilter(e)}
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
-                            <FaShekelSign style={{paddingLeft:5}}/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
+                            <LocationCity style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
                             <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
-                        </>              
+                        </>
                         {
-                            budgetActive > 0 &&
-                            <div onClick={(e) => {
-                                setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
-                                e.stopPropagation()} } 
-                                style={xStyle}>X</div>
+                            filters.addresses.length > 0 &&
+                            <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
+                            style={xStyle}>X</div>
                         }
                     </div>
 
@@ -285,6 +285,22 @@ const TopBar = props => {
                         }
                     </div>
 
+                    <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
+                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+                        <>
+                            <FaShekelSign style={{paddingLeft:5}}/>
+                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
+                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                        </>              
+                        {
+                            budgetActive > 0 &&
+                            <div onClick={(e) => {
+                                setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                                e.stopPropagation()} } 
+                                style={xStyle}>X</div>
+                        }
+                    </div>
+                   
                     <div id='renovation'  onClick={e => handleClickFilter(e)}
                         style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
@@ -299,19 +315,7 @@ const TopBar = props => {
                         }
                     </div>
 
-                    <div id='addresses' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
-                        <>
-                            <LocationCity style={{paddingLeft:5}}/>
-                            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
-                        </>
-                        {
-                            filters.addresses.length > 0 &&
-                            <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
-                            style={xStyle}>X</div>
-                        }
-                    </div>
+                    
 
                     <div id='furniture' onClick={e => handleClickFilter(e)}
                         style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative'}}>

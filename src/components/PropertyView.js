@@ -2,17 +2,16 @@ import React from 'react'
 import { Grid} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { setGlobalState, useGlobalState } from '../globalState';
 import { getValueByDevice, LeadTypes } from './Utilities';
 import './blur.css';
 import TLT_LOGO from '../Logo_TLT.png'
 
+const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
+
 export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
 
     const handleClick = val => {setGlobalState('selectedProperty',val)}
-
-    
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
     const setLeadModal = val => setGlobalState('newLeadModal',val)
 
@@ -20,11 +19,12 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
       video__url,
       project
     } = property.attributes
+
     var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
     d.setUTCSeconds(property.created);
 
-    let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
+
     return (
       <Grid item xs={12} sm={index % 4 == 0 || (index+1) % 4 == 0 ? 12:6} md={index % 10 == 0 || (index-6) % 10 == 0 ? 8 : 4} >
         <div onClick={() => {console.log(property);handleClick(property.id)}}  

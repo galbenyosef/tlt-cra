@@ -18,6 +18,8 @@ import { RiParentLine, RiLandscapeLine } from 'react-icons/ri'
 import { GrElevator } from 'react-icons/gr'
 import { LocationMap } from './Map'
 import ReactPlayer from 'react-player'
+import ImageGallery from 'react-image-gallery';
+import "./image-gallery.css";
 
 const Tabs = {
     Info:1,
@@ -135,7 +137,6 @@ export const PropertyModal = () => {
         return null
 
     let property = data.payload.attributes
-    let propertyImages = data.payload.page_assets_urls
 
     const {
         street_name,
@@ -180,6 +181,18 @@ export const PropertyModal = () => {
         landscape
     } = property
 
+    let propertyImages = data.payload.page_assets_urls.map(image => ({
+        original:`https://tlt.kala-crm.co.il/${image}`,
+        thumbnail:`https://tlt.kala-crm.co.il/${image}`
+    }))
+
+    if (video__url){
+        propertyImages.unshift({
+            embedUrl: `https://tlt.kala-crm.co.il/${video__url}`,
+            description: 'Render custom slides within the gallery',
+        })
+    }
+    
     console.log(property)
 
     return (
@@ -314,7 +327,8 @@ export const PropertyModal = () => {
                         <Grid item md={6} xs={12}>
                             <Grid container style={{paddingLeft:10,paddingRight:10}}>
                                 {/* images */}
-                                {
+                                <ImageGallery thumbnailPosition={'left'} infinite showIndex showBullets isRTL items={propertyImages} />;
+                                {/*
                                     propertyImages.length &&
                                     <Grid item xs={12}>
                                         <Grid container>
@@ -362,8 +376,7 @@ export const PropertyModal = () => {
                                                             position:'relative',
                                                             overflow:'hidden'
                                                         }}>
-                                                            {/* video for ref and image */}
-                                                            <ReactPlayer /* style={{display:'none'}} */ controls={false} width={'100%'} height={'auto'} style={{maxHeight:getValueByDevice(180,280)}}
+                                                            <ReactPlayer controls={false} width={'100%'} height={'auto'} style={{maxHeight:getValueByDevice(180,280)}}
                                                                 url={`https://tlt.kala-crm.co.il/${video__url}`}>
                                                             </ReactPlayer>
                                                             <div style={{
@@ -392,7 +405,7 @@ export const PropertyModal = () => {
                                             
                                         </Grid>
                                     </Grid>
-                                }
+                                */}
                                 {/* tab menu */}
                                 <Grid item xs={12}>
                                     <Grid container>
