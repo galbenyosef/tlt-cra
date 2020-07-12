@@ -26,14 +26,14 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
     let imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
     console.log('card render')
     return (
-      <Grid item xs={12} sm={index % 4 == 0 || (index+1) % 4 == 0 ? 12:6} md={index % 4 == 0 || (index+1) % 4 == 0 ? 8 : 4} >
+      <Grid item xs={12} sm={index % 4 == 0 || (index+1) % 4 == 0 ? 12:6} md={index % 10 == 0 || (index-6) % 10 == 0 ? 8 : 4} >
         <div onClick={() => {console.log(property);handleClick(property.id)}}  
           style={{
             display:'flex',
             flexDirection:'column',
             height:320,
-            width:window.innerWidth < 320 ? '100%' : window.innerWidth < 660 ? '100%' :  index % 4 == 0 || (index+1) % 4 == 0 ? 660:320,
-            margin:'auto',
+/*             width:window.innerWidth < 320 ? '100%' : window.innerWidth < 660 ? '100%' :  index % 10 == 0 || (index-6) % 10 == 0 ? 660:320,
+ */            margin:'auto',
             backgroundColor:'white',
             boxShadow:'3px 3px 3px 0px grey',
             whiteSpace:'nowrap',
@@ -46,13 +46,19 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
             position:'relative',
           }}>
             {
-              <p style={{position:'absolute',top:'10px',right:'10px',backgroundColor:'rgba(255,255,0,0.6)',transform:'rotate(-12.5deg)',color:'green',fontWeight:'bolder',zIndex:1}}>{`${'חדש !'}`}</p>
+              <p style={{position:'absolute',top: 30,
+              width: 150,
+              textAlign: 'center',
+              right: -35,
+              fontSize:22,
+              backgroundColor: 'rgb(112, 146, 191)',
+              transform: 'rotate(45deg)',color:'white',fontWeight:'bolder',zIndex:1}}>{`${'חדש !'}`}</p>
             }
             {
               isFavourite ?
               <FaHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'red'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
               :
-              <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
+              <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
             
          {/*    <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden',display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -62,24 +68,24 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
               />        
             </div> */}
          <div style={{textAlign:'right',display:'flex',flexDirection:'column',backgroundImage:'linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6))',justifyContent:'flex-end',alignItems:'flex-start'}}>
-            <div style={{fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:22}}>
+            <div style={{padding:'0px 10px',fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:22}}>
                 <p>
                   {`שכונת ${property.attributes.neighborhood_name}, רחוב ${property.attributes.street_name}`}
                 </p>
             </div>
             <div style={{width:'100%',justifyContent:'space-between',display:'flex',flexDirection:'row',fontFamily:'Assistant',fontWeight:'bold',color:'white'}}>
-              <p>
+              <p style={{paddingRight:10}}>
                 {property.attributes.rooms ? `${property.attributes.rooms} חדרים | `: ` `}
                 {property.attributes.metres? `${property.attributes.metres} מ"ר`:` `}
                 {property.attributes.terrace ? `+ מרפסת`:``}
                 {property.attributes.floor != undefined ? (property.attributes.floor ? ` | קומה ${property.attributes.floor}`:` | קומת קרקע`): ' '}
               </p>
-              <p style={{fontSize:26,fontWeight:'bolder'}}>
+              <p style={{fontSize:26,fontWeight:'bolder',paddingLeft:10}}>
               {property.attributes.price ? `${property.attributes.price.toLocaleString('he-IL')} ₪`: ` `}
 
               </p>
             </div>
-            <div style={{padding:10,display:'flex',flexDirection:'row',fontWeight:'bold',justifyContent:'space-between',margin:'auto'}}>
+            <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',justifyContent:'space-between',margin:'auto'}}>
               <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',justifyContent:'space-between'}}>
                 <div style={{padding:5,display:'flex',width:project? 100 :90,borderRadius:100,border:'1px solid rgb(112,146,191)',justifyContent:'center',alignItems:'center',fontSize:14,color:'white'}}>{`${property.attributes.custom_id ? `#${property.attributes.custom_id}`:`-`}`}</div>
                 <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} 

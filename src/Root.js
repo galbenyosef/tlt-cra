@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from './components/Layout'
 import {useGlobalState,getGlobalState,setGlobalState} from './globalState'
 import { getProperties } from './dataHandler'
@@ -15,6 +15,7 @@ import TLT_DETAILED_Trans from './Logo_DETAILED_Trans.png'
 
 import WindowedSelect from "react-windowed-select";
 import { TextField, Button, Grid } from '@material-ui/core';
+import { aboutUsText, aboutUsDetailedText } from './components/aboutUsText';
 
 const customSelectStyles = {
     option: (provided, state) => { return({
@@ -66,6 +67,7 @@ const Root = props => {
     const setDevice = (val) => setGlobalState('device',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
     const [rootRef] = useGlobalState('rootRef')
+    const [aboutUsDetailed,setAboutUsDetailed] = useState(false)
     const fetchProperties = async () => {
 
         setIsLoading(true)
@@ -154,17 +156,21 @@ const Root = props => {
                                     <div style={{border:'1px solid black',fontWeight:'bold',color:'white',width:100,padding:5}}>חיפה</div>
                                     <div style={{border:'1px solid black',fontWeight:'bold',color:'white',width:100,padding:5}}>תל אביב</div>
                                     <div style={{border:'1px solid black',fontWeight:'bold',color:'white',width:100,padding:5}}>טירת הכרמל</div>
+                                    <div style={{border:'1px solid black',fontWeight:'bold',color:'white',width:100,padding:5}}>נשר</div>
                                 </div>
                             </div>
-                            <div style={{paddingRight:20,margin:'auto',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
-                                מי אנחנו
-                            </div>
-                            <div onClick={
-                                () => {
-                                    scrollToBottom(rootRef)
-                                }
-                            } style={{paddingRight:20,margin:'auto',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
-                                צור קשר
+                            <div style={{flex:1,display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',textAlign:'center',fontWeight:'bolder'}}>
+                                <div onClick={() => setAboutUsDetailed(true)} style={{padding:20,cursor:'pointer',color:'white',border:'2px solid white',borderRadius:100,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
+                                    מי אנחנו
+                                </div>
+                                <div style={{flex:.2}}/>
+                                <div onClick={
+                                    () => {
+                                        scrollToBottom(rootRef)
+                                    }
+                                } style={{padding:20,cursor:'pointer',color:'white',border:'2px solid white',borderRadius:100,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
+                                    צור קשר
+                                </div>
                             </div>
                         </div>
                         <div style={{width:210}}/>
@@ -198,19 +204,37 @@ const Root = props => {
                     backgroundSize:'80%' 
                 }}>
             </div>
-            <div style={{width:'60%',paddingBottom:20}}>
-            <cite>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tristique convallis feugiat. Donec id eros sit amet nisi aliquam molestie vel in massa. Vivamus auctor suscipit arcu, quis tincidunt libero egestas non. Nunc ultricies metus justo, vel faucibus felis efficitur a. Curabitur pellentesque varius diam, id mattis enim ullamcorper a. Ut laoreet dui lacus, a pretium justo molestie efficitur. Maecenas in volutpat nisl, et maximus quam. Donec mattis eleifend egestas.
-
-Mauris accumsan, mauris at imperdiet blandit, nulla justo iaculis nisl, a finibus velit ante vitae dui. Sed tortor mauris, luctus vel lorem ac, finibus tempus dolor. Vivamus blandit eu turpis a accumsan. Donec a luctus ex, et gravida lorem. Maecenas quis scelerisque nulla, eget tristique mauris. Phasellus nec ultrices ipsum. Nunc sodales mauris nunc, ut convallis sapien auctor at. Fusce rutrum consequat urna. Fusce justo nisi, imperdiet vel neque at, dapibus vestibulum orci. Sed molestie ipsum in massa pellentesque, nec ullamcorper turpis lacinia. Nullam non sodales neque, a luctus elit. Sed a eros non odio ultrices mollis nec vitae magna. Proin commodo, magna quis dapibus luctus, ipsum arcu dictum nunc, vitae volutpat massa ipsum et neque.
+            <div style={{maxWidth:'80%',padding:20,whiteSpace:'break-spaces',fontSize:24,display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+                <cite style={{padding:'0px 20px 20px 20px'}}>
+                    {
+                        aboutUsText
+                    }
                 </cite>
+                <div style={{backgroundColor:'grey',color:'white',textDecoration:'underline',borderRadius:aboutUsDetailed ? 0: 100}}>
+                    <p onClick={() => setAboutUsDetailed(aboutUs => !aboutUs)} style={{textAlign:'center',padding:20,cursor:'pointer'}}>{
+                        aboutUsDetailed ? `הסתר`:`קרא עוד...`
+                    }</p>
+                    {
+                        aboutUsDetailed ?
+                        <cite>
+                            <ol>
+                            {
+                                aboutUsDetailedText.map(i => <li>{i}</li>)
+                            }
+                            </ol>
+                        </cite>
+                        :
+                        null
+                    }
+                </div>
             </div>
             <TopBar/>
             <PropertyList/>
    {/*          <div style={{fontWeight:'bolder',height:'50px',display:'flex',flexDirection:'column',flex:1,width:'100%',position:'fixed',textAlign:'center',bottom:0,zIndex:1,backgroundColor:'lightgray',justifyContent:'center',alignItems:'center'}}>
                 <p>TLT - תיווך ללא תיווך נכסים והשקעות בע"מ - כל הזכויות שמורות</p>
             </div> */}
-            <Grid container direction='column' style={{maxWidth:600,alignItems:'center'}}>
+            <Grid container direction='column' 
+                style={{maxWidth:600,alignItems:'center',textAlign:'center',backgroundColor: 'lightsteelblue', marginTop: 20,border: '2px solid black'}}>
                 <Grid item xs={12}>
                     צור קשר
                 </Grid>
@@ -224,9 +248,7 @@ Mauris accumsan, mauris at imperdiet blandit, nulla justo iaculis nisl, a finibu
                         </Grid>
                     </Grid>
                     <Grid container xs={6}>
-                        <Grid item xs={12} style={{height:50,margin:'auto'}}>
-                            <textarea placeholder='טקסט חופשי'/>
-                        </Grid>
+                        <textarea style={{margin:'auto',padding:0,height:48,textAlign:'center'}} placeholder='טקסט חופשי'/>
                     </Grid>
                     <Grid container xs={6}>
                         <Grid item xs={12}>
