@@ -61,7 +61,7 @@ export const PropertyList = props => {
 
     return (
         <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
-            <div style={{display:'flex',maxWidth:window.innerWidth > 1000 ? '1000px': window.innerWidth > 660 ? '670px' : '320px' ,position:'relative',justifyContent:'center'}}>
+            <div style={{width:'100%',display:'flex',maxWidth:window.innerWidth > 1000 ? '1000px': window.innerWidth > 660 ? '670px' : '320px' ,position:'relative',justifyContent:'center'}}>
                 <PropertyListLoading/>
                 <Grid spacing={4} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto'}} container>
                 {
