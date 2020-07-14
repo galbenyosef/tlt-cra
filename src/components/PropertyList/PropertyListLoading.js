@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { useGlobalState } from '../globalState';
+import { useGlobalState } from '../../globalState';
 import { CircularProgress } from '@material-ui/core';
 
 

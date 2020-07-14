@@ -3,8 +3,8 @@ import Layout from './components/Layout'
 import {useGlobalState,getGlobalState,setGlobalState} from './globalState'
 import { getProperties } from './dataHandler'
 import TopBar from './components/TopBar';
-import { PropertyList } from './components/PropertyList';
-import { PropertyModal } from './components/PropertyModal';
+import { PropertyList } from './components/PropertyList/PropertyList';
+import { PropertyModal } from './components/PropertyModal/PropertyModal';
 import { devices } from './components/Utilities'
 import { AllMediaModal } from './components/MediaModals/AllMediaModal';
 import { SingleMediaModal } from './components/MediaModals/SingleMediaModal';

@@ -71,7 +71,7 @@ const initialState = {
         favourites: [],
         favouritesDisplayed: false
     },
-    selectedProperty: '' ,
+    selectedProperty: 64297 ,
     newLeadModal: {
         full_name: '',
         phone: '',

@@ -2,10 +2,10 @@ import React from 'react'
 import { Grid} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
-import { setGlobalState, useGlobalState } from '../globalState';
-import { getValueByDevice, LeadTypes } from './Utilities';
+import { setGlobalState, useGlobalState } from '../../globalState';
+import { getValueByDevice, LeadTypes } from '../Utilities';
 import './blur.css';
-import TLT_LOGO from '../Logo_TLT.png'
+import TLT_LOGO from '../../Logo_TLT.png'
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 

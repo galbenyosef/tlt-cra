@@ -1,10 +1,10 @@
 
 import React, { useEffect } from 'react'
-import { useGlobalState, setGlobalState, getGlobalState } from '../globalState';
+import { useGlobalState, setGlobalState, getGlobalState } from '../../globalState';
 import { CircularProgress,Grid } from '@material-ui/core';
 import {PropertyView} from './PropertyView'
 import {PropertyListLoading} from './PropertyListLoading'
-import { getValueByDevice } from './Utilities';
+import { getValueByDevice } from '../Utilities';
 
 export const PropertyList = props => {
 
