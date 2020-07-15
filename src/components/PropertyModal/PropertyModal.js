@@ -20,6 +20,7 @@ import { LocationMap } from '../Map'
 import ReactPlayer from 'react-player'
 import ImageGallery from 'react-image-gallery';
 import "./image-gallery.css";
+import { PropertyView } from '../PropertyList/PropertyView'
 
 const Tabs = {
     Info:1,
@@ -39,11 +40,9 @@ export const PropertyModal = () => {
 
     const [selectedProperty,setSelectedProperty] = useGlobalState('selectedProperty')
     const [propertiesData, setPropertiesData] = useGlobalState('properties');
-
-    const [tabSelected,setTabSelected] = React.useState(Tabs.Info)
     const [data,setData] = useState(null)
+    const [alternatives,setAlternatives] = useState([])
     const [loading,setLoading] = useState(true)
-    const [currentImageIndex,setCurrentImageIndex] = useState(0)
     const [mapInfo,setMapInfo] = useState({
         lat:'',
         lon:'',
@@ -54,31 +53,43 @@ export const PropertyModal = () => {
     const fetchProperty = async (id) => {
 
         setLoading(true)
-
+        console.log('1')
         try{
             const _data = await getProperty(id)
+            console.log('2')
+
+            const {
+                city_id,
+                street_name,
+                neighborhood_name,
+                price,
+                rooms
+            } = _data.payload.attributes
+
+            const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
+            console.log([street_name,neighborhood_name,city_id].join(', '))
+            if (coords.length){
+                setMapInfo({
+                    lat:coords[0].lat,
+                    lon:coords[0].lon,
+                    boundingbox:coords[0].boundingbox
+                })
+            }
+
+            let alternativeProperties = propertiesData.data
+                .filter(p => 
+                    p.attributes.neighborhood_name == neighborhood_name &&
+                    (p.price <= price*1.10 || price >= price*.9) &&
+                    p.rooms == rooms
+                )
+            console.log('all: '+alternativeProperties)
+            setAlternatives(alternativeProperties)
 
             //agent exists
             if (_data.payload.attributes.agent_member_id){
                 const agentId = _data.payload.attributes.agent_member_id
                 const agentData = await getUser(agentId)
 
-                const {
-                    city_id,
-                    street_name,
-                    neighborhood_name
-                } = _data.payload.attributes
-
-                const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
-                console.log([street_name,neighborhood_name,city_id].join(', '))
-                if (coords.length){
-                    setMapInfo({
-                        lat:coords[0].lat,
-                        lon:coords[0].lon,
-/*                         boundingbox:coords[0].boundingbox
- */                    })
-                }
-                console.log(coords)
                 const {
                     first_name,
                     phone
@@ -97,8 +108,6 @@ export const PropertyModal = () => {
                     },
                     
                 })
-
-                let alternativeProperties = propertiesData.find()
             } 
 
             //no agent
@@ -108,7 +117,7 @@ export const PropertyModal = () => {
 
         }
         catch(e){
-
+            console.log(e)
         }
 
         setLoading(false)
@@ -120,9 +129,6 @@ export const PropertyModal = () => {
         if (selectedProperty)
             fetchProperty(selectedProperty)
 
-        return () => {
-            setCurrentImageIndex(0)
-        }
     },[selectedProperty])
 
 
@@ -199,7 +205,7 @@ export const PropertyModal = () => {
         <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty('')}>
             <Grid container style={{
                 right: '50%',
-                maxWidth: '90%',
+                maxWidth:'1000px',
                 height:'90vh',
                 overflow:'auto',
                 top: '50%',
@@ -210,30 +216,67 @@ export const PropertyModal = () => {
                 <Grid xs={12} item style={{backgroundColor:'white',padding:15,display:'flex'}}>
                     <p style={{cursor:'pointer'}} onClick={() => setSelectedProperty(null)}>חזור</p>
                 </Grid>
+                <Grid xs={12} item style={{backgroundColor:'white',padding:15,display:'flex'}}>
+                    <p style={{color:'blue',margin:'auto'}} >{`${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}`}</p>
+                </Grid>
                 {/* main view */}
                 <Grid item style={{justifyContent:'center',display:'flex'}} xs={12}>
                     <ImageGallery thumbnailPosition={'left'} infinite showIndex showBullets isRTL items={propertyImages} />
                 </Grid>
-                <Grid style={{padding:20,height:320}} item xs={12} sm={6}>
+                <Grid style={{padding:20,height:320,display:'flex',flexDirection:'column'}} item xs={12} sm={6}>
                     {/* property info */}
-                    <Grid style={{height:'calc(100% / 3)',borderBottom:'1px solid',display:'flex',flexDirection:'column'}} item xs={12}>
-                        <Grid item xs={12}>
-                            <p style={{display:'flex',alignItems:'center',whiteSpace:'break-spaces',fontFamily:'Assistant'}}><p style={{fontSize:26,color:'blue',fontFamily:'Assistant',fontWeight:'bolder'}}>{`כתובת מלאה\t`}</p>{`${`${city_id}, שכונת ${neighborhood_name}, רחוב ${street_name}`}`}</p>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <p style={{display:'flex',alignItems:'center',whiteSpace:'break-spaces',fontFamily:'Assistant'}}><p style={{fontSize:26,color:'blue',fontFamily:'Assistant',fontWeight:'bolder'}}>{`מחיר\t`}</p>{`${price.toLocaleString('he-IL')} ₪`}</p>
-                        </Grid>
-                    </Grid>
-                    <Grid style={{display:'flex',alignItems:'center',height:'calc(100% / 3)',borderBottom:'1px solid'}} item xs={12}>
-                        <p>כאן צריך להיות תיאור נכס</p>
-                    </Grid>
-                    <Grid item style={{height:'calc(100% / 3)',display:'flex'}} xs={12}>
-                        <p style={{display:'flex',alignItems:'center',whiteSpace:'break-spaces',fontFamily:'Assistant'}}><p style={{fontSize:26,color:'blue',fontFamily:'Assistant',fontWeight:'bolder'}}>{`סוג\t`}</p>{`${propertytype}\t\t`}</p>
-                        <p style={{display:'flex',alignItems:'center',whiteSpace:'break-spaces',fontFamily:'Assistant'}}><p style={{fontSize:26,color:'blue',fontFamily:'Assistant',fontWeight:'bolder'}}>{`קומה\t`}</p>{`${floor}\t\t`}</p>
-                        <p style={{display:'flex',alignItems:'center',whiteSpace:'break-spaces',fontFamily:'Assistant'}}><p style={{fontSize:26,color:'blue',fontFamily:'Assistant',fontWeight:'bolder'}}>{`גודל\t`}</p>{`${metres}\t\t`}</p>
-                    </Grid>
+                    <div style={{height:'calc(100% / 3)',display:'flex',flexDirection:'column',justifyContent:'center'}}>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                                כתובת הנכס
+                            </p>
+                            <p>
+                                {`${`${city_id}, שכונת ${neighborhood_name}, רחוב ${street_name}`}`}
+                            </p>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                        <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                                מחיר
+                            </p>
+                            <p>
+                                {`${price.toLocaleString('he-IL')} ₪`}
+                            </p>
+                        </div>
+                    </div>
+                    <div style={{height:'calc(100% / 3)',display:'flex',flexDirection:'column',justifyContent:'center'}}>
+                        <p>
+                            תיאור הנכס
+                        </p>
+                    </div>
+                    <div style={{height:'calc(100% / 3)',display:'flex',justifyContent:'space-evenly'}}>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                                סוג
+                            </p>
+                            <p>
+                                {propertytype}
+                            </p>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                                קומה
+                            </p>
+                            <p>
+                                {floor ? floor:`קרקע`}
+                            </p>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                                גודל
+                            </p>
+                            <p>
+                                {`${metres} מ"ר`}
+                            </p>
+                        </div>
+                    </div>
+   
                 </Grid>
-                <Grid style={{padding:20,height:320}} container xs={12} sm={6}>
+                <Grid style={{padding:20,height:320,display:'flex',flexDirection:'column'}} item xs={12} sm={6}>
                     {/* property agent contact */}
                     <Grid style={{display:'flex',justifyContent:'flex-start'}} item xs={6}>
                         <p style={{padding:10,fontSize:18,borderRadius:100,backgroundColor:'teal',color:'white'}}>ליצירת קשר</p>
@@ -242,17 +285,21 @@ export const PropertyModal = () => {
                         <p style={{fontSize:16}}>{`נכס מספר`}</p>
                         <p style={{fontSize:20}}>{` #${custom_id}`}</p>
                     </Grid>
-                    <Grid item xs={12} style={{paddingTop:20}}>
-                        <Grid container>
-                            <Grid item xs={6} style={{display:'flex',flexDirection:'row',alignItems:'center',border:'1px dashed black'}}>
-                                <BsPeopleCircle size={36} style={{paddingLeft:20,paddingRight:10}}/>
-                                <Grid container>
-                                    <Grid item xs={12}>{`שם הסוכן - ${agentName}`}</Grid>
-                                    <Grid item xs={12}>{agentPhone}</Grid>
+                    {
+                        agentName ?
+                        <Grid item xs={12} style={{paddingTop:20}}>
+                            <Grid container>
+                                <Grid item xs={6} style={{display:'flex',flexDirection:'row',alignItems:'center',border:'1px dashed black'}}>
+                                    <BsPeopleCircle size={36} style={{paddingLeft:20,paddingRight:10}}/>
+                                    <Grid container>
+                                        <Grid item xs={12}>{`שם הסוכן - ${agentName}`}</Grid>
+                                        <Grid item xs={12}>{agentPhone}</Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid>
+                        </Grid>: null
+                    }
+                    
                     <Grid item xs={12}>
                         <Grid container style={{padding:30}}>
                             <Grid item xs={6}>
@@ -286,11 +333,12 @@ export const PropertyModal = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Grid container>
-                            <Grid item xs={1}>
-                            </Grid>
-                            <Grid item xs={4}>
+                    <Grid item xs={12} style={{
+                            display: 'flex',
+                            justifyContent: 'space-evenly',
+                            alignItems: 'center'
+                    }}>
+
                                 <p onClick={
                                         () => setLeadModalData({
                                             ...leadModalData,
@@ -300,12 +348,8 @@ export const PropertyModal = () => {
                                                 kala_property_id:selectedProperty,
                                             }
                                         })
-                                    } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'teal',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
-                            </Grid>
-                            <Grid item xs={2} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                                    } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'white',color:'blue',border:'1px solid black',textAlign:'center'}}>קבע פגישה</p>
                                 <p style={{fontsize:24}}>או</p>
-                            </Grid>
-                            <Grid item xs={4}>
                                 <p onClick={
                                         () => setLeadModalData({
                                             ...leadModalData,
@@ -315,11 +359,8 @@ export const PropertyModal = () => {
                                                 kala_property_id:selectedProperty,
                                             }
                                         })
-                                    } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'limegreen',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
-                            </Grid>
-                            <Grid item xs={1}>
-                            </Grid>
-                        </Grid>
+                                    } style={{cursor:'pointer',padding:10,fontSize:18,borderRadius:100,backgroundColor:'blue',color:'white',border:'1px solid black',textAlign:'center'}}>רוצה לשמוע עוד</p>
+
                     </Grid>
                 </Grid>
                 <Grid container >
@@ -456,10 +497,10 @@ export const PropertyModal = () => {
                     }
                     </Grid>
                 </Grid>
-                <Grid container direction='row'>
+                <Grid container direction='row' style={{height:320}}>
                     <Grid item style={{padding:20}} xs={12} sm={6}>
                         {/* property financial */}
-                        <Grid container>
+                        <Grid container style={{height:'100%',display:'flex',flexDirection:'colum',justifyContent:'center'}}>
                             <Grid item xs={6} style={{paddingBottom:15}}>
                                 <p>ועד בית</p>
                             </Grid>
@@ -498,7 +539,21 @@ export const PropertyModal = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
+                {
+                    alternatives.length ?
+                    <p style={{color:'blue',fontSize:30,textAlign:'center',margin:'auto'}}>נכסים נוספים העשויים להתאים לך</p>
+                    :
+                    <p style={{color:'red',fontSize:30,textAlign:'center',margin:'auto'}}>לא נמצאו נכסים דומים</p>
+                }
+                </Grid> 
+
+                <Grid item xs={12}>
                     {/* alternative properties */}
+                    <div style={{display:'flex',overflow:'auto'}}>
+                    {
+                        alternatives.map(p => <PropertyView key={p.id} property={p} isAlternative/>)
+                    }
+                    </div>
                 </Grid>
                 <Grid item xs={12}>
                     {/* contact us */}

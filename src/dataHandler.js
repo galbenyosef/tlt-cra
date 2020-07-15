@@ -103,8 +103,8 @@ export const getProperties = async () => {
 
 export const getProperty = async id => {
 
-    console.log(getSingleUrl(id))
-    let response = await fetch(getSingleUrl(id),{
+/*     console.log(getSingleUrl(id))
+ */    let response = await fetch(getSingleUrl(id),{
         method: 'GET',
         headers: {
           "x-kala-key":"kdcG983ujtltGHtgzd"
@@ -121,8 +121,8 @@ export const getProperty = async id => {
 
 export const getCoordinates = async (q) => {
 
-    console.log(getCoordinatesUrl(q))
-    let response = await fetch(getCoordinatesUrl(q),{
+/*     console.log(getCoordinatesUrl(q))
+ */    let response = await fetch(getCoordinatesUrl(q),{
         method: 'GET',
     })
 

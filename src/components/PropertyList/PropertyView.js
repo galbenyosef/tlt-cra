@@ -9,7 +9,7 @@ import TLT_LOGO from '../../Logo_TLT.png'
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
-export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
+export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlternative}) => {
 
     const handleClick = val => {setGlobalState('selectedProperty',val)}
     const setSingleMediaModalOpened = val => setGlobalState('singleMediaModal',val)
@@ -25,15 +25,14 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
 
     console.log('card render')
 
-    return (
-      <Grid item xs={12} sm={index % 4 == 0 || (index+1) % 4 == 0 ? 12:6} md={index % 10 == 0 || (index-6) % 10 == 0 ? 8 : 4} >
+    const PropertyViewComponent = () => 
         <div onClick={() => {console.log(property);handleClick(property.id)}}  
           style={{
             display:'flex',
             flexDirection:'column',
-            height:320,
-/*             width:window.innerWidth < 320 ? '100%' : window.innerWidth < 660 ? '100%' :  index % 10 == 0 || (index-6) % 10 == 0 ? 660:320,
- */            margin:'auto',
+            height:isAlternative ? 320*.8 : 320,
+            width:isAlternative ? 300 : 'auto',
+            margin:'auto',
             backgroundColor:'white',
             boxShadow:'3px 3px 3px 0px grey',
             whiteSpace:'nowrap',
@@ -60,13 +59,6 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
               :
               <FiHeart onClick={(event) => {toggleFavourite(property.id);event.stopPropagation()}} size={32} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
             }
-            
-         {/*    <div onClick={() => {}} style={{width:'100%',height:'100%',overflow:'hidden',display:'flex',justifyContent:'center',alignItems:'center'}}>
-              <LazyLoadImage
-                style={{height:property.thumb_file ?'100%':'80%',width:property.thumb_file ?'100%':'80%'}}
-                src={property.thumb_file ? `${imageUrl}${property.thumb_file?.sm}` : TLT_LOGO} // use normal <img> attributes as props
-              />        
-            </div> */}
          <div style={{textAlign:'right',display:'flex',flexDirection:'column',backgroundImage:'linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6))',justifyContent:'flex-end',alignItems:'flex-start'}}>
             <div style={{padding:'0px 10px',fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:22}}>
                 <p>
@@ -98,7 +90,16 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index}) => {
             </div>
           </div>
         </div>
+
+    return isAlternative ? (
+      <div style={{padding:20}}>
+        <PropertyViewComponent/>
+      </div>
+    ) : (
+      <Grid item xs={12} sm={index % 4 == 0 || (index+1) % 4 == 0 ? 12:6} md={index % 10 == 0 || (index-6) % 10 == 0 ? 8 : 4} >
+        <PropertyViewComponent/>
       </Grid>
-   )
+    )
+    
 }
   

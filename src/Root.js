@@ -239,7 +239,7 @@ const Root = props => {
                     צור קשר
                 </Grid>
                 <Grid container>
-                    <Grid container xs={6} style={{height:50}}>
+                    <Grid item xs={6} style={{height:50}}>
                         <Grid item xs={12} style={{margin:'auto'}}>
                             <input placeholder="שם"></input>
                         </Grid>
@@ -247,10 +247,10 @@ const Root = props => {
                             <input placeholder="נייד"></input>
                         </Grid>
                     </Grid>
-                    <Grid container xs={6}>
+                    <Grid item xs={6}>
                         <textarea style={{margin:'auto',padding:0,height:48,textAlign:'center'}} placeholder='טקסט חופשי'/>
                     </Grid>
-                    <Grid container xs={6}>
+                    <Grid item xs={6}>
                         <Grid item xs={12}>
                             <p>*6345</p>
                         </Grid>
