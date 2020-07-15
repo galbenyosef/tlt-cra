@@ -53,10 +53,9 @@ export const PropertyModal = () => {
     const fetchProperty = async (id) => {
 
         setLoading(true)
-        console.log('1')
+
         try{
             const _data = await getProperty(id)
-            console.log('2')
 
             const {
                 city_id,
@@ -68,6 +67,7 @@ export const PropertyModal = () => {
 
             const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
             console.log([street_name,neighborhood_name,city_id].join(', '))
+
             if (coords.length){
                 setMapInfo({
                     lat:coords[0].lat,
@@ -79,8 +79,8 @@ export const PropertyModal = () => {
             let alternativeProperties = propertiesData.data
                 .filter(p => 
                     p.attributes.neighborhood_name == neighborhood_name &&
-                    (p.price <= price*1.10 || price >= price*.9) &&
-                    p.rooms == rooms
+                    (p.attributes.price <= price*1.10 || price >= p.attributes.price*.9) &&
+                    p.attributes.rooms == rooms
                 )
             console.log('all: '+alternativeProperties)
             setAlternatives(alternativeProperties)
@@ -223,7 +223,7 @@ export const PropertyModal = () => {
                 <Grid item style={{justifyContent:'center',display:'flex'}} xs={12}>
                     <ImageGallery thumbnailPosition={'left'} infinite showIndex showBullets isRTL items={propertyImages} />
                 </Grid>
-                <Grid style={{padding:20,height:320,display:'flex',flexDirection:'column'}} item xs={12} sm={6}>
+                <Grid style={{padding:20,display:'flex',flexDirection:'column'}} item xs={12} sm={6}>
                     {/* property info */}
                     <div style={{height:'calc(100% / 3)',display:'flex',flexDirection:'column',justifyContent:'center'}}>
                         <div style={{display:'flex',alignItems:'center'}}>
@@ -249,24 +249,24 @@ export const PropertyModal = () => {
                         </p>
                     </div>
                     <div style={{height:'calc(100% / 3)',display:'flex',justifyContent:'space-evenly'}}>
-                        <div style={{display:'flex',alignItems:'center'}}>
-                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                        <div style={{display:'flex',alignItems:'center',width:'calc(100% / 3)',justifyContent:'space-around'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder'}}>
                                 סוג
                             </p>
                             <p>
                                 {propertytype}
                             </p>
                         </div>
-                        <div style={{display:'flex',alignItems:'center'}}>
-                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                        <div style={{display:'flex',alignItems:'center',width:'calc(100% / 3)',justifyContent:'space-around'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder'}}>
                                 קומה
                             </p>
                             <p>
                                 {floor ? floor:`קרקע`}
                             </p>
                         </div>
-                        <div style={{display:'flex',alignItems:'center'}}>
-                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder',marginLeft:20}}>
+                        <div style={{display:'flex',alignItems:'center',width:'calc(100% / 3)',justifyContent:'space-around'}}>
+                            <p style={{color:'blue',fontSize:24,fontWeight:'bolder'}}>
                                 גודל
                             </p>
                             <p>
@@ -497,8 +497,8 @@ export const PropertyModal = () => {
                     }
                     </Grid>
                 </Grid>
-                <Grid container direction='row' style={{height:320}}>
-                    <Grid item style={{padding:20}} xs={12} sm={6}>
+                <Grid container direction='row'>
+                    <Grid item style={{padding:20,minHeight:320}} xs={12} sm={6}>
                         {/* property financial */}
                         <Grid container style={{height:'100%',display:'flex',flexDirection:'colum',justifyContent:'center'}}>
                             <Grid item xs={6} style={{paddingBottom:15}}>
@@ -533,7 +533,7 @@ export const PropertyModal = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid style={{padding:20}} item xs={12} sm={6}>
+                    <Grid style={{padding:20,minHeight:320}} item xs={12} sm={6}>
                         {/* property location */}
                         <LocationMap lat={mapInfo.lat} lon={mapInfo.lon}/>
                     </Grid>
