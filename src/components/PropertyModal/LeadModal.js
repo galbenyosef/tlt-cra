@@ -1,8 +1,8 @@
 import React from 'react'
 import { Modal,Grid, Input, InputAdornment, Button,TextField } from '@material-ui/core'
-import { getGlobalState, useGlobalState, setGlobalState } from '../globalState'
-import { LeadTypes, getValueByDevice } from './Utilities'
-import { createLead } from '../dataHandler'
+import { getGlobalState, useGlobalState, setGlobalState } from '../../globalState'
+import { LeadTypes, getValueByDevice } from '../Utilities'
+import { createLead } from '../../dataHandler'
 import { IoMdPhonePortrait } from 'react-icons/io'
 import DatePicker from "react-datetime-picker"
 import moment from 'moment'

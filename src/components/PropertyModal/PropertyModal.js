@@ -5,7 +5,6 @@ import { getGlobalState, useGlobalState, setGlobalState } from '../../globalStat
 import { getProperty, getUser, getCoordinates, createLead } from '../../dataHandler'
 import { PropertyModalLoading } from './PropertyModalLoading'
 import { renovationTypes, devices, LeadTypes, getScreenshot, getValueByDevice } from '../Utilities'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FaBed, FaBuilding, FaBath, FaToilet, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
 import { GiResize, GiBed, GiCrossedAirFlows, GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
 import { BsPersonBoundingBox, BsFillPersonFill, BsPeopleCircle } from 'react-icons/bs'
@@ -16,8 +15,7 @@ import { FiSun } from 'react-icons/fi'
 import { AiOutlineTable } from 'react-icons/ai'
 import { RiParentLine, RiLandscapeLine } from 'react-icons/ri'
 import { GrElevator } from 'react-icons/gr'
-import { LocationMap } from '../Map'
-import ReactPlayer from 'react-player'
+import { LocationMap } from './Map'
 import ImageGallery from 'react-image-gallery';
 import "./image-gallery.css";
 import { PropertyView } from '../PropertyList/PropertyView'

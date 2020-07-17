@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {useGlobalState, getGlobalState} from '../globalState';
+import {useGlobalState, getGlobalState} from '../../globalState';
 import { Checkbox } from '@material-ui/core';
 
 

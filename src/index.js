@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Root from './Root';
+import Main from './components/Main/Main';
 import * as serviceWorker from './serviceWorker';
 import "leaflet/dist/leaflet.css";
 
 ReactDOM.render(
-  <Root />
+  <Main />
   ,
   document.getElementById('root')
 );

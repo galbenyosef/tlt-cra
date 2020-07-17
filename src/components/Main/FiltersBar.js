@@ -1,63 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
 import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorder, Sync, Weekend } from '@material-ui/icons';
-import {useGlobalState, setGlobalState} from '../globalState';
+import {useGlobalState, setGlobalState} from '../../globalState';
 import { IoIosConstruct } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { FaShekelSign, FaHeart } from 'react-icons/fa';
 import StyledMenu from './StyledMenu'
 import {Range} from 'rc-slider';
-import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from './Utilities'
+import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from '../Utilities'
 import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
 import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
-import { FiHeart } from 'react-icons/fi';
+import { clearFilterStyle, searchStyle } from '../../styles';
 
-const customSelectStyles = {
-    option: (provided, state) => { return({
-      ...provided,
-      direction:'rtl',
-      borderBottom: '1px dotted pink',
-      color: state.isSelected ? 'red' : 'blue',
-      padding: 10,
-      fontSize: state.value?.includes(',') ? 14:18,
-      fontWeight: state.value?.includes(',') ? null:'bolder'
-    })},
-    control: (provided, state) => ({
-        ...provided,
-        // none of react-select's styles are passed to <Control />
-        borderRadius: 0,
-        borderBottom:'2px solid rgb(112,146,191)',
-        borderTop:0,
-        borderLeft:0,
-        borderRight:0,
-        color:'black',
-        fontFamily:'Assistant',
-        fontWeight:'bold'
-    }),
-    indicatorSeparator: () => ({
-        display:'none'
-    }),
-    dropdownIndicator:  (provided, state)  => ({
-        ...provided,
-        color:'rgb(112,146,191)',
-    }),
-    placeholder: (provided, state) => ({
-        ...provided,
-        color:'black',
-    }),
-    menu: (provided, state) => ({
-        ...provided,
-        zIndex:2
-    }),
-}
-
-const xStyle = {fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
-borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
-borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'}
-
-
-const TopBar = props => {
+const FiltersBar = props => {
 
     const [addressesData] = useGlobalState('addresses');
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
@@ -230,7 +186,7 @@ const TopBar = props => {
             
             <div style={{width:'190px'}}>
                 <WindowedSelect
-                    styles={customSelectStyles}
+                    styles={searchStyle}
                     isClearable={true}
                     isRtl={true}
                     isMulti={false}
@@ -267,7 +223,7 @@ const TopBar = props => {
                         {
                             filters.addresses.length > 0 &&
                             <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
-                            style={xStyle}>X</div>
+                            style={clearFilterStyle}>X</div>
                         }
                     </div>
 
@@ -281,7 +237,7 @@ const TopBar = props => {
                         {
                             roomsActive > 0 &&
                             <div onClick={(e) => {setFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} } 
-                            style={xStyle}>X</div>
+                            style={clearFilterStyle}>X</div>
                         }
                     </div>
 
@@ -297,7 +253,7 @@ const TopBar = props => {
                             <div onClick={(e) => {
                                 setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                                 e.stopPropagation()} } 
-                                style={xStyle}>X</div>
+                                style={clearFilterStyle}>X</div>
                         }
                     </div>
                    
@@ -311,7 +267,7 @@ const TopBar = props => {
                         {
                             renovationActive > 0 &&
                             <div onClick={(e) => {setFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} } 
-                            style={xStyle}>X</div>
+                            style={clearFilterStyle}>X</div>
                         }
                     </div>
 
@@ -327,7 +283,7 @@ const TopBar = props => {
                         {
                             furnitureActive > 0 &&
                             <div onClick={(e) => {setFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} } 
-                            style={xStyle}>X</div>
+                            style={clearFilterStyle}>X</div>
                         }
                     </div>
 
@@ -692,4 +648,4 @@ const TopBar = props => {
 }
 
 
-export default TopBar
+export default FiltersBar

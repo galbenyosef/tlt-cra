@@ -1,62 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Layout from './components/Layout'
-import {useGlobalState,getGlobalState,setGlobalState} from './globalState'
-import { getProperties } from './dataHandler'
-import TopBar from './components/TopBar';
-import { PropertyList } from './components/PropertyList/PropertyList';
-import { PropertyModal } from './components/PropertyModal/PropertyModal';
-import { devices } from './components/Utilities'
-import { AllMediaModal } from './components/MediaModals/AllMediaModal';
-import { SingleMediaModal } from './components/MediaModals/SingleMediaModal';
-import { LeadModal } from './components/LeadModal';
-import { SideFilters } from './components/SideFilters';
-import TLT_LOGO from './Logo_TLT.png'
-import TLT_DETAILED_Trans from './Logo_DETAILED_Trans.png'
-
-import WindowedSelect from "react-windowed-select";
-import { TextField, Button, Grid } from '@material-ui/core';
-import { aboutUsText, aboutUsDetailedText } from './components/aboutUsText';
-
-const customSelectStyles = {
-    option: (provided, state) => { return({
-      ...provided,
-      direction:'rtl',
-      borderBottom: '1px dotted pink',
-      color: state.isSelected ? 'red' : 'blue',
-      padding: 10,
-      fontSize: state.value?.includes(',') ? 14:18,
-      fontWeight: state.value?.includes(',') ? null:'bolder'
-    })},
-    control: (provided, state) => ({
-        ...provided,
-        // none of react-select's styles are passed to <Control />
-        borderRadius: 0,
-        borderBottom:'2px solid rgb(112,146,191)',
-        borderTop:0,
-        borderLeft:0,
-        borderRight:0,
-        color:'black',
-        fontFamily:'Assistant',
-        fontWeight:'bold'
-    }),
-    indicatorSeparator: () => ({
-        display:'none'
-    }),
-    dropdownIndicator:  (provided, state)  => ({
-        ...provided,
-        color:'rgb(112,146,191)',
-    }),
-    placeholder: (provided, state) => ({
-        ...provided,
-        color:'black',
-    }),
-    menu: (provided, state) => ({
-        ...provided,
-        zIndex:2
-    }),
-}
+import Layout from '../Layout'
+import {useGlobalState,getGlobalState,setGlobalState} from '../../globalState'
+import { getProperties } from '../../dataHandler'
+import FiltersBar from './FiltersBar';
+import { PropertyList } from '../PropertyList/PropertyList';
+import { PropertyModal } from '../PropertyModal/PropertyModal';
+import { devices } from '../Utilities'
+import { AllMediaModal } from '../MediaModals/AllMediaModal';
+import { SingleMediaModal } from '../MediaModals/SingleMediaModal';
+import { LeadModal } from '../../components/PropertyModal/LeadModal';
+import { SideFilters } from '../SideFilters';
+import TLT_LOGO from '../../assets/Logo_TLT.png'
+import TLT_DETAILED_Trans from '../../assets/Logo_DETAILED_Trans.png'
+import { Grid } from '@material-ui/core';
+import { aboutUsText, aboutUsDetailedText } from '../../components/Main/aboutUsText';
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+
 
 const Root = props => {
 
@@ -129,6 +89,7 @@ const Root = props => {
 
 
     console.log('root rendered')
+
     return (
 
         <Layout>
@@ -139,15 +100,6 @@ const Root = props => {
 
                     </div>
                     <div style={{flex:1,display:'flex',flexDirection:'row',width:'100%',height:'calc(100% * 1/2)',backgroundColor:'rgb(112,146,191)'}}>
-                        {/* <div style={{width:'190px'}}>
-                            <WindowedSelect
-                                styles={customSelectStyles}
-                                isClearable={true}
-                                isRtl={true}
-                                isMulti={false}
-                                placeholder="הקש כתובת/ מספר נכס"
-                            />
-                        </div> */}
                         <div style={{width:210}}/>
                         <div style={{flex:1,display:'flex',margin:'auto',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
                             <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
@@ -228,11 +180,8 @@ const Root = props => {
                     }
                 </div>
             </div>
-            <TopBar/>
+            <FiltersBar/>
             <PropertyList/>
-   {/*          <div style={{fontWeight:'bolder',height:'50px',display:'flex',flexDirection:'column',flex:1,width:'100%',position:'fixed',textAlign:'center',bottom:0,zIndex:1,backgroundColor:'lightgray',justifyContent:'center',alignItems:'center'}}>
-                <p>TLT - תיווך ללא תיווך נכסים והשקעות בע"מ - כל הזכויות שמורות</p>
-            </div> */}
             <Grid container direction='column' 
                 style={{maxWidth:600,alignItems:'center',textAlign:'center',backgroundColor: 'lightsteelblue', marginTop: 20,border: '2px solid black'}}>
                 <Grid item xs={12}>
