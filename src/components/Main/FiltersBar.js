@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
-import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, FavoriteBorder, Sync, Weekend } from '@material-ui/icons';
+import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, Sync, Weekend } from '@material-ui/icons';
 import {useGlobalState, setGlobalState} from '../../globalState';
 import { IoIosConstruct } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -11,9 +11,9 @@ import {constants, renovationTypes, range, furnitureTypes, devices, switchFilter
 import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
 import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
-import { clearFilterStyle, searchStyle } from '../../styles';
+import {clearFilterStyle, filterBoxStyle, searchStyle} from '../../styles';
 
-const FiltersBar = props => {
+const FiltersBar = () => {
 
     const [addressesData] = useGlobalState('addresses');
     const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
@@ -72,7 +72,6 @@ const FiltersBar = props => {
 
     useEffect(() => {
 
-        console.log(filters)
         submitFilters()
 
     },[
@@ -109,29 +108,43 @@ const FiltersBar = props => {
         let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
 
         let dataFiltered = propertiesData.data
-        .filter(prop => (budgetFrom <= prop.attributes.price) && (prop.attributes.price <= budgetTo))
-        .filter(prop => (roomsFrom <= prop.attributes.rooms) && (prop.attributes.rooms <= roomsTo))
-        .filter(prop => (metresFrom <= prop.attributes.metres) && (prop.attributes.metres <= metresTo))
-        .filter(prop => (floorFrom <= prop.attributes.floor) && (prop.attributes.floor <= floorTo))
-        .filter(prop => (renovationFrom <= prop.attributes.renovation) && (prop.attributes.renovation <= renovationTo))
-        .filter(prop => furnitureRangeText.some(text => prop.attributes.furniture == text)  )
-        
+            .filter(prop => {
+                const {
+                    price,
+                    rooms,
+                    metres,
+                    floor,
+                    renovation,
+                    furniture,
+                } = prop.attributes;
+
+                return (budgetFrom <= price) && (price <= budgetTo) &&
+                  (metresFrom <= metres) && (metres <= metresTo) &&
+                  (roomsFrom <= rooms) && (rooms <= roomsTo) &&
+                  (floorFrom <= floor) && (floor <= floorTo) &&
+                  (renovationFrom <= renovation) && (renovation <= renovationTo) &&
+                  (furnitureRangeText.some(text => furniture === text));
+
+            })
+
+
         Object.keys(switchFilters).forEach(filter => {
             if (filters[filter])
-                dataFiltered = dataFiltered.filter(prop => prop.attributes[filter])
+                dataFiltered = dataFiltered.filter(({attributes}) => attributes[filter])
         })
 
+
         if (addressesActive){
-            dataFiltered = dataFiltered.filter(prop => addresses.some(addr => prop.title.includes(addr)))
+            dataFiltered = dataFiltered.filter(({title}) => addresses.some(addr => title.includes(addr)))
         }
         else if (address){
-            dataFiltered = dataFiltered.filter(prop => prop.title.includes(address))
+            dataFiltered = dataFiltered.filter(({title}) => title.includes(address))
         }
         else if (propertyNumber)
-            dataFiltered = dataFiltered.filter(prop => prop.attributes.custom_id + '' == propertyNumber)
+            dataFiltered = dataFiltered.filter(({attributes:{custom_id}}) =>  custom_id + '' === propertyNumber)
 
         setPropertiesData({...propertiesData,dataFiltered})
-  
+
     }
 
     if (!addressesData.length || !propertiesData.data.length){
@@ -177,7 +190,7 @@ const FiltersBar = props => {
 
 
             {
-                device == devices.Desktop &&
+                device === devices.Desktop &&
                 <IconButton onClick={() => {window.open('http://109.207.78.24/app',"_self")}}>
                     <AccountCircleOutlined/>
                 </IconButton>
@@ -194,7 +207,9 @@ const FiltersBar = props => {
                     getOptionLabel={e => Number.isInteger(parseInt(inputValue)) ? `נכס מספר #${e}`:e}
                     inputValue={inputValue}
                     onInputChange={e => setInputValue(e)}
-                    options={Number.isInteger(parseInt(inputValue)) ? propertiesData.data.map(p => p.attributes.custom_id + '') : addressesData}
+                    options={Number.isInteger(parseInt(inputValue)) ? propertiesData.data.map(({attributes:{
+                        custom_id
+                    }}) => custom_id + '') : addressesData}
                     placeholder="הקש כתובת/ מספר נכס"
                     value={filters.propertyNumber ? [`נכס מספר #${filters.propertyNumber}`] : [filters.address]}
                     onChange={e => {
@@ -207,7 +222,7 @@ const FiltersBar = props => {
             </div>
 
             {
-                device == devices.Desktop &&
+                device === devices.Desktop &&
 
                 <div style={{display:'flex',justifyContent:'space-around',paddingRight:20,height:38}}>
 
@@ -241,7 +256,7 @@ const FiltersBar = props => {
                         }
                     </div>
 
-                    <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
+                    <div id='budget'  onClick={e => handleClickFilter(e)}
                     style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
                         <>
                             <FaShekelSign style={{paddingLeft:5}}/>
@@ -290,10 +305,10 @@ const FiltersBar = props => {
                 </div>
             }
             
-            <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={(e) => {setSideFilterVisible(true)}}>
+            <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
                 <TuneOutlined/>
                 {
-                    device != devices.Mobile &&
+                    device !== devices.Mobile &&
                     <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
                 }
             </div>
@@ -302,7 +317,7 @@ const FiltersBar = props => {
                 if (propertiesData.favouritesDisplayed)
                     setPropertiesData({...propertiesData,dataFiltered:propertiesData.data,favouritesDisplayed:false})
                 else{
-                    let dataFiltered = propertiesData.data.filter(prop => propertiesData.favourites.some(id => prop.id == id))
+                    let dataFiltered = propertiesData.data.filter(prop => propertiesData.favourites.some(id => prop.id === id))
                     setPropertiesData({...propertiesData,dataFiltered,favouritesDisplayed:true})
                 }
             }}
@@ -314,14 +329,14 @@ const FiltersBar = props => {
                     <FaHeart size={24} color={'white'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
                 }
                 {
-                    device != devices.Mobile &&
+                    device !== devices.Mobile &&
                     <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
                 }
 
             </div>
 
             {
-                device == devices.Desktop &&
+                device === devices.Desktop &&
                 <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgb(112,146,191)',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
                     <Sync/>
                     <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'rgb(112,146,191)'}}>רענן חיפוש </span>
@@ -335,7 +350,7 @@ const FiltersBar = props => {
                 onClose={() => handleCloseFilter()}
             >
                 {
-                currentFilterName == 'budget' ?
+                currentFilterName === 'budget' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -376,7 +391,7 @@ const FiltersBar = props => {
                                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
                             />
                         </div>
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {
                                 setFilters({...filters,budgetActive:filters.budgetActive+1});
                                 handleCloseFilter()}
@@ -389,7 +404,7 @@ const FiltersBar = props => {
                         </div>
                     </div>
                 </div>:
-                currentFilterName == 'rooms' ?
+                currentFilterName === 'rooms' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -430,7 +445,7 @@ const FiltersBar = props => {
                                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
                             />
                         </div>
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {setFilters({...filters,roomsActive:filters.roomsActive+1});handleCloseFilter()}} 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
@@ -440,7 +455,7 @@ const FiltersBar = props => {
                         </div>
                     </div>
                 </div>:
-                currentFilterName == "renovation" ?
+                currentFilterName === "renovation" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -458,7 +473,7 @@ const FiltersBar = props => {
                             />
                         </div>
                         
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}} 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
@@ -468,7 +483,7 @@ const FiltersBar = props => {
                         </div>
                     </div>
                 </div>:
-                currentFilterName == "addresses" ?
+                currentFilterName === "addresses" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap',overflow:'hidden'}}>
                     <div style={{padding:20}}>
@@ -485,7 +500,7 @@ const FiltersBar = props => {
                         <NeighborhoodsFilterView neighborhoodSelected={neighborhoodSelected} setNeighborhoodSelected={setNeighborhoodSelected}/>
                     </div>
                     
-                    <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                    <div style={filterBoxStyle}>
                         <div onClick={() => {
                             let newVal = new Set(filters.addresses.concat(neighborhoodSelected))
                             setFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
@@ -500,7 +515,7 @@ const FiltersBar = props => {
                     </div>
                 </div>
                 :
-                currentFilterName == "furniture" ?
+                currentFilterName === "furniture" ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -522,7 +537,7 @@ const FiltersBar = props => {
                             />
                         </div>
                         
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {setFilters({...filters,furnitureActive:filters.furnitureActive+1});handleCloseFilter()}} 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
@@ -532,7 +547,7 @@ const FiltersBar = props => {
                         </div>
                     </div>
                 </div>:
-                currentFilterName == 'metres' ?
+                currentFilterName === 'metres' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -573,7 +588,7 @@ const FiltersBar = props => {
                                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
                             />
                         </div>
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {
                                 setFilters({...filters,metresActive:filters.metresActive+1});
                                 handleCloseFilter()}
@@ -586,7 +601,7 @@ const FiltersBar = props => {
                         </div>
                     </div>
                 </div>:
-                currentFilterName == 'floor' ?
+                currentFilterName === 'floor' ?
                 <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',paddingLeft:20,paddingRight:20,position:'relative'}}>
                     <div style={{width:'300px',display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
                         <div style={{padding:20}}>
@@ -627,7 +642,7 @@ const FiltersBar = props => {
                                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
                             />
                         </div>
-                        <div style={{flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}}>
+                        <div style={filterBoxStyle}>
                             <div onClick={() => {
                                 setFilters({...filters,floorActive:filters.floorActive+1});
                                 handleCloseFilter()}

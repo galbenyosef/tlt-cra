@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
-import {useGlobalState,getGlobalState,setGlobalState} from '../../globalState'
+import {useGlobalState,setGlobalState} from '../../globalState'
 import { getProperties } from '../../dataHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyList } from '../PropertyList/PropertyList';
@@ -8,23 +8,32 @@ import { PropertyModal } from '../PropertyModal/PropertyModal';
 import { devices } from '../Utilities'
 import { AllMediaModal } from '../MediaModals/AllMediaModal';
 import { SingleMediaModal } from '../MediaModals/SingleMediaModal';
-import { LeadModal } from '../../components/PropertyModal/LeadModal';
+import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
 import TLT_LOGO from '../../assets/Logo_TLT.png'
 import TLT_DETAILED_Trans from '../../assets/Logo_DETAILED_Trans.png'
 import { Grid } from '@material-ui/core';
-import { aboutUsText, aboutUsDetailedText } from '../../components/Main/aboutUsText';
+import { aboutUsText, aboutUsDetailedText } from './aboutUsText';
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
+const resize = () => {
+    const setDevice = (val) => setGlobalState('device',val)
 
-const Root = props => {
+    if (window.innerWidth < 600)
+        setDevice(devices.Mobile)
+    else if (window.innerWidth < 1280)
+        setDevice(devices.Tablet)
+    else
+        setDevice(devices.Desktop)
+}
+
+const Root = () => {
 
     const setIsLoading = (val) => setGlobalState('loading',val)
     const setProperties = (val) => setGlobalState('properties',val)
     const setAddresses = (val) => setGlobalState('addresses',val)
     const setAddressesMap = (val) => setGlobalState('neighborhoods',val)
-    const setDevice = (val) => setGlobalState('device',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
     const [rootRef] = useGlobalState('rootRef')
     const [aboutUsDetailed,setAboutUsDetailed] = useState(false)
@@ -33,14 +42,14 @@ const Root = props => {
         setIsLoading(true)
         const data = await getProperties()
 
-        const _properites = data.payload.sort((a,b) => b.created - a.created)
+        const _properties = data.payload.sort((a,b) => b.created - a.created)
 
         let addressesMap = {}
         
-        for (let i=0; i<_properites.length;i++){
-            let {attributes} = _properites[i]
+        for (let i=0; i<_properties.length;i++){
+            let {attributes} = _properties[i]
             if (!attributes)
-                console.log(_properites[i])
+                console.log(_properties[i])
             if (!addressesMap[attributes.neighborhood_name])
                 addressesMap[attributes.neighborhood_name] = []
             if (!addressesMap[attributes.neighborhood_name].includes(attributes.street_name))
@@ -60,9 +69,9 @@ const Root = props => {
         setAddresses(addresses)
         let favouritesString = localStorage.getItem('favourites')
         let favourites = JSON.parse(favouritesString) || []
-        setProperties({data:_properites,dataFiltered:_properites,currentCount:_properites.length,totalCount:data.metadata.total,favourites})
+        setProperties({data:_properties,dataFiltered:_properties,currentCount:_properties.length,totalCount:data.metadata.total,favourites})
         setIsLoading(false)
-    
+
     }
 
     useEffect(() => {
@@ -76,17 +85,6 @@ const Root = props => {
 
         resize()
     },[])
-
-    const resize = () => {
-
-        if (window.innerWidth < 600)
-            setDevice(devices.Mobile)
-        else if (window.innerWidth < 1280)
-            setDevice(devices.Tablet)
-        else
-            setDevice(devices.Desktop)
-    }
-
 
     console.log('root rendered')
 
@@ -190,10 +188,10 @@ const Root = props => {
                 <Grid container>
                     <Grid item xs={6} style={{height:50}}>
                         <Grid item xs={12} style={{margin:'auto'}}>
-                            <input placeholder="שם"></input>
+                            <input placeholder="שם"/>
                         </Grid>
                         <Grid item xs={12} style={{margin:'auto'}}>
-                            <input placeholder="נייד"></input>
+                            <input placeholder="נייד"/>
                         </Grid>
                     </Grid>
                     <Grid item xs={6}>

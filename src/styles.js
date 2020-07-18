@@ -43,3 +43,5 @@ export const clearFilterStyle = {
     borderWidth:2,borderColor:'black',display:'flex',justifyContent:'center',alignItems:'center'
 }
 
+export const filterBoxStyle = {flex:1,display:'flex',justifyContent:'space-evenly',alignItems:'center',padding:20}
+

@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useRef, createRef } from 'react'
-import { Modal,Grid, TextField, makeStyles, Input, InputAdornment } from '@material-ui/core'
-import { KeyboardArrowLeft,KeyboardArrowRight, PlayCircleOutlineOutlined } from '@material-ui/icons'
-import { getGlobalState, useGlobalState, setGlobalState } from '../../globalState'
-import { getProperty, getUser, getCoordinates, createLead } from '../../dataHandler'
-import { PropertyModalLoading } from './PropertyModalLoading'
-import { renovationTypes, devices, LeadTypes, getScreenshot, getValueByDevice } from '../Utilities'
-import { FaBed, FaBuilding, FaBath, FaToilet, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
-import { GiResize, GiBed, GiCrossedAirFlows, GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
-import { BsPersonBoundingBox, BsFillPersonFill, BsPeopleCircle } from 'react-icons/bs'
+import React, { useEffect, useState } from 'react'
+import { Modal,Grid, Input, InputAdornment } from '@material-ui/core'
+import { useGlobalState,setGlobalState } from '../../globalState'
+import { getProperty, getUser, getCoordinates } from '../../dataHandler'
+import { renovationTypes, LeadTypes,  } from '../Utilities'
+import { FaBuilding, FaBath, FaFan, FaShower, FaParking, FaWarehouse, FaAccessibleIcon } from 'react-icons/fa'
+import { GiFireFlower, GiWindowBars, GiWindow, GiStairs } from 'react-icons/gi'
+import { BsPeopleCircle } from 'react-icons/bs'
 import { IoMdPhonePortrait, IoIosHome } from 'react-icons/io'
 import { isMobile } from 'react-device-detect'
-import { FcHome, FcWorkflow, FcGlobe, FcSafe } from 'react-icons/fc'
+import { FcSafe } from 'react-icons/fc'
 import { FiSun } from 'react-icons/fi'
 import { AiOutlineTable } from 'react-icons/ai'
 import { RiParentLine, RiLandscapeLine } from 'react-icons/ri'
@@ -20,11 +18,7 @@ import ImageGallery from 'react-image-gallery';
 import "./image-gallery.css";
 import { PropertyView } from '../PropertyList/PropertyView'
 
-const Tabs = {
-    Info:1,
-    Plan:2,
-    Location:3,
-}
+
 
 const MifratItemStyle = {
     justifyContent:'space-around',
@@ -37,14 +31,15 @@ const MifratItemStyle = {
 export const PropertyModal = () => {
 
     const [selectedProperty,setSelectedProperty] = useGlobalState('selectedProperty')
-    const [propertiesData, setPropertiesData] = useGlobalState('properties');
+    const [propertiesData] = useGlobalState('properties');
     const [data,setData] = useState(null)
     const [alternatives,setAlternatives] = useState([])
-    const [loading,setLoading] = useState(true)
     const [mapInfo,setMapInfo] = useState({
         lat:'',
         lon:'',
     })
+
+    const setLoading = val => setGlobalState('loading',val)
 
     const [leadModalData,setLeadModalData] = useGlobalState('newLeadModal')
 
@@ -75,11 +70,16 @@ export const PropertyModal = () => {
             }
 
             let alternativeProperties = propertiesData.data
-                .filter(p => 
-                    p.attributes.neighborhood_name == neighborhood_name &&
-                    (p.attributes.price <= price*1.10 || price >= p.attributes.price*.9) &&
-                    p.attributes.rooms == rooms &&
-                    p.id != _data.payload.id
+                .filter(({attributes:{
+                    neighborhood_name:_neighborhood_name,
+                    price:_price,
+                    rooms:_rooms,
+                    id
+                  }}) =>
+                    _neighborhood_name === neighborhood_name &&
+                    (_price <= price*1.10 || price >= _price*.9) &&
+                    _rooms === rooms &&
+                    id !== _data.payload.id
                 )
 
             setAlternatives(alternativeProperties)
@@ -139,6 +139,7 @@ export const PropertyModal = () => {
         return null
 
     let property = data.payload.attributes
+    const {payload:{page_assets_urls}} = data
 
     const {
         street_name,
@@ -183,7 +184,7 @@ export const PropertyModal = () => {
         landscape
     } = property
 
-    let propertyImages = data.payload.page_assets_urls.map(image => ({
+    let propertyImages = page_assets_urls.map(image => ({
         original:`https://tlt.kala-crm.co.il/${image}`,
         thumbnail:`https://tlt.kala-crm.co.il/${image}`,
     }))
@@ -227,7 +228,7 @@ export const PropertyModal = () => {
                                 כתובת הנכס
                             </p>
                             <p>
-                                {`${`${city_id}, שכונת ${neighborhood_name}, רחוב ${street_name}`}`}
+                                {`${city_id}, שכונת ${neighborhood_name}, רחוב ${street_name}`}
                             </p>
                         </div>
                         <div style={{display:'flex',alignItems:'center'}}>
@@ -235,7 +236,7 @@ export const PropertyModal = () => {
                                 מחיר
                             </p>
                             <p>
-                                {`${price.toLocaleString('he-IL')} ₪`}
+                                {`${price.toLocaleString()} ₪`}
                             </p>
                         </div>
                     </div>
@@ -501,13 +502,13 @@ export const PropertyModal = () => {
                                 <p>ועד בית</p>
                             </Grid>
                             <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
-                                <p>{`${committee? committee.toLocaleString('he-IL'): 0} ₪`}</p>
+                                <p>{`${committee? committee.toLocaleString(): 0} ₪`}</p>
                             </Grid>
                             <Grid item xs={6} style={{paddingBottom:15}}>
                                 <p>ארנונה דו חודשית</p>
                             </Grid>
                             <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
-                                <p>{`${tax?.toLocaleString('he-IL')} ₪`}</p>
+                                <p>{`${tax?.toLocaleString()} ₪`}</p>
                             </Grid>
                             {
                                 price &&
@@ -516,7 +517,7 @@ export const PropertyModal = () => {
                                         <p>שכר דירה</p>
                                     </Grid>
                                     <Grid item xs={6} style={{paddingBottom:15,textAlign:'left'}}>
-                                        <p>{`${price.toLocaleString('he-IL')} ₪`}</p>
+                                        <p>{`${price.toLocaleString()} ₪`}</p>
                                     </Grid> 
                                 </>
                             }
