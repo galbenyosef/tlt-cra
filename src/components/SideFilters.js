@@ -23,7 +23,7 @@ const filterItemStyle = {
     marginBottom:10
 }
 
-export const SideFilters = props => {
+export const SideFilters = () => {
 
     const [visible,setVisible] = useGlobalState('sideFiltersVisible')
     const [device] = useGlobalState('device')
@@ -72,10 +72,10 @@ export const SideFilters = props => {
             <div style={{width:250,borderBottom:'1px solid grey',display:'flex',justifyContent:'center',alignItems:'center',padding:10}}>
                 <div style={{display:'flex',alignItems:'flex-end',flexDirection:'column',padding:'0px 20px'}}>
                 {
-                    device != devices.Desktop &&
+                    device !== devices.Desktop &&
 
                     <>
-                        <div id='budget' style={{}}  onClick={e => handleClickFilter(e)}
+                        <div id='budget'  onClick={e => handleClickFilter(e)}
                         style={filterItemStyle}>
                             <>
                                 <FaShekelSign style={{paddingLeft:5}}/>
@@ -150,7 +150,7 @@ export const SideFilters = props => {
                     </>
                 }
 
-                    <div id='floor' style={{}}  onClick={e => handleClickFilter(e)}
+                    <div id='floor' onClick={e => handleClickFilter(e)}
                         style={filterItemStyle}>
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>
@@ -165,7 +165,7 @@ export const SideFilters = props => {
                                 style={xStyle}>X</div>
                         }
                     </div>
-                    <div id='metres' style={{}}  onClick={e => handleClickFilter(e)}
+                    <div id='metres' onClick={e => handleClickFilter(e)}
                         style={filterItemStyle}>
                         <>
                             <IoIosResize style={{paddingLeft:5}}/>

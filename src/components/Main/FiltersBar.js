@@ -103,36 +103,34 @@ const FiltersBar = () => {
 
     const submitFilters = () => {
 
+        const {data} = propertiesData
 
         let furnitureRange = range(furnitureFrom,furnitureTo)
         let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
 
-        let dataFiltered = propertiesData.data
-            .filter(prop => {
-                const {
-                    price,
-                    rooms,
-                    metres,
-                    floor,
-                    renovation,
-                    furniture,
-                } = prop.attributes;
+        let dataFiltered = data
+            .filter(({attributes:{
+                price,
+                rooms,
+                metres,
+                floor,
+                renovation,
+                furniture,
+            }}) => {
 
                 return (budgetFrom <= price) && (price <= budgetTo) &&
                   (metresFrom <= metres) && (metres <= metresTo) &&
                   (roomsFrom <= rooms) && (rooms <= roomsTo) &&
-                  (floorFrom <= floor) && (floor <= floorTo) &&
+                  (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
                   (renovationFrom <= renovation) && (renovation <= renovationTo) &&
                   (furnitureRangeText.some(text => furniture === text));
 
             })
 
-
         Object.keys(switchFilters).forEach(filter => {
             if (filters[filter])
                 dataFiltered = dataFiltered.filter(({attributes}) => attributes[filter])
         })
-
 
         if (addressesActive){
             dataFiltered = dataFiltered.filter(({title}) => addresses.some(addr => title.includes(addr)))
@@ -143,7 +141,7 @@ const FiltersBar = () => {
         else if (propertyNumber)
             dataFiltered = dataFiltered.filter(({attributes:{custom_id}}) =>  custom_id + '' === propertyNumber)
 
-        setPropertiesData({...propertiesData,dataFiltered})
+        setPropertiesData({...propertiesData,dataFiltered:dataFiltered.sort(({created:createdA},{created:createdB}) => createdB - createdA)})
 
     }
 

@@ -1,6 +1,6 @@
 
 //get properties
-const getAllUrl = 
+/*const getAllUrl =
     `/kala/v1/page?
     select[]=id&
     select[]=site_id&
@@ -13,7 +13,7 @@ const getAllUrl =
     type_id=2933&
     active=1&
     page_attributes[__operators][status]==&
-    page_attributes[status]=במאגר`
+    page_attributes[status]=במאגר`*/
 
 const getSingleUrl = id => `/kala/v1/page/${id}?get_page_assets_urls=true`
 

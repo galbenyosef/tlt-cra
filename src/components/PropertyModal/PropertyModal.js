@@ -70,11 +70,10 @@ export const PropertyModal = () => {
             }
 
             let alternativeProperties = propertiesData.data
-                .filter(({attributes:{
+                .filter(({id,attributes:{
                     neighborhood_name:_neighborhood_name,
                     price:_price,
                     rooms:_rooms,
-                    id
                   }}) =>
                     _neighborhood_name === neighborhood_name &&
                     (_price <= price*1.10 || price >= _price*.9) &&

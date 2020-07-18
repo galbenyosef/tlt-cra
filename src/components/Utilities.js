@@ -19,7 +19,7 @@ const devices = {
 
 const constants = {
   MinPrice: 1000,
-  MaxPrice: 20000,
+  MaxPrice: 40000,
   MinRooms: 1,
   MaxRooms: 10,
   MinRenovation:1,
@@ -35,10 +35,8 @@ const constants = {
 const switchFilters = {
   terrace:'מרפסת',
   bathtub:'אמבטיה',
- /*  floor:'קו', */
   landscape:'נוף',
-/*   airconditioner:'מרפסת',
- */  parking:'חניה',
+  parking:'חניה',
   boiler:'דוד',
   elevator:'מעלית',
   warehouse:'מחסן',
@@ -65,14 +63,14 @@ const furnitureTypes = {
   3: 'ריהוט מלא',
 }
 
-const propertyTypes = {
+/*const propertyTypes = {
   Apartment:'דירה',
   Unit:'יחידת דיור',
   Garden:'דירת גן',
   Dou:'דו משפחתי',
   Penthouse:'דירה',
   Villa:'דירה',
-}
+}*/
 
 export const getValueByDevice = (desktop,tablet,mobile) => {
   if (window.innerWidth < 560)

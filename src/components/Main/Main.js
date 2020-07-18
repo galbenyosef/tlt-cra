@@ -6,8 +6,6 @@ import FiltersBar from './FiltersBar';
 import { PropertyList } from '../PropertyList/PropertyList';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
 import { devices } from '../Utilities'
-import { AllMediaModal } from '../MediaModals/AllMediaModal';
-import { SingleMediaModal } from '../MediaModals/SingleMediaModal';
 import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
 import TLT_LOGO from '../../assets/Logo_TLT.png'
@@ -28,51 +26,63 @@ const resize = () => {
         setDevice(devices.Desktop)
 }
 
+const fetchProperties = () => {
+
+  const setIsLoading = (val) => setGlobalState('loading',val)
+  const setProperties = (val) => setGlobalState('properties',val)
+  const setAddresses = (val) => setGlobalState('addresses',val)
+  const setAddressesMap = (val) => setGlobalState('neighborhoods',val)
+
+  setIsLoading(true)
+
+  getProperties()
+    .then(data => {
+      const properties = data.payload.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+
+      let addressesMap = {}
+
+      for (let i=0; i<properties.length;i++){
+        let {
+          attributes,attributes:{
+            neighborhood_name,
+            street_name
+          }
+        } = properties[i]
+
+        if (!attributes)
+          console.log(properties[i])
+        if (!addressesMap[neighborhood_name])
+          addressesMap[neighborhood_name] = []
+        if (!addressesMap[neighborhood_name].includes(street_name))
+          addressesMap[neighborhood_name].push(street_name)
+      }
+
+      let addresses = []
+      let neighborhoods = Object.keys(addressesMap).sort()
+      for (let i=0; i<neighborhoods.length;i++){
+        addresses.push(neighborhoods[i])
+        for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
+          addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
+        }
+      }
+
+      setAddressesMap(neighborhoods)
+      setAddresses(addresses)
+      let favouritesString = localStorage.getItem('favourites')
+      let favourites = JSON.parse(favouritesString) || []
+      setProperties({data:properties,dataFiltered:properties,currentCount:properties.length,totalCount:data.metadata.total,favourites})
+    })
+    .catch(e => console.log(e))
+    .then(() => {
+      setIsLoading(false)
+    })
+}
+
 const Root = () => {
 
-    const setIsLoading = (val) => setGlobalState('loading',val)
-    const setProperties = (val) => setGlobalState('properties',val)
-    const setAddresses = (val) => setGlobalState('addresses',val)
-    const setAddressesMap = (val) => setGlobalState('neighborhoods',val)
     const setProperty = (val) => setGlobalState('selectedProperty',val)
     const [rootRef] = useGlobalState('rootRef')
     const [aboutUsDetailed,setAboutUsDetailed] = useState(false)
-    const fetchProperties = async () => {
-
-        setIsLoading(true)
-        const data = await getProperties()
-
-        const _properties = data.payload.sort((a,b) => b.created - a.created)
-
-        let addressesMap = {}
-        
-        for (let i=0; i<_properties.length;i++){
-            let {attributes} = _properties[i]
-            if (!attributes)
-                console.log(_properties[i])
-            if (!addressesMap[attributes.neighborhood_name])
-                addressesMap[attributes.neighborhood_name] = []
-            if (!addressesMap[attributes.neighborhood_name].includes(attributes.street_name))
-                addressesMap[attributes.neighborhood_name].push(attributes.street_name)
-        }
-        
-        let addresses = []
-        let neighborhoods = Object.keys(addressesMap).sort()
-        for (let i=0; i<neighborhoods.length;i++){
-            addresses.push(neighborhoods[i])
-            for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
-                addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
-            }
-        }
-    
-        setAddressesMap(neighborhoods)
-        setAddresses(addresses)
-        let favouritesString = localStorage.getItem('favourites')
-        let favourites = JSON.parse(favouritesString) || []
-        setProperties({data:_properties,dataFiltered:_properties,currentCount:_properties.length,totalCount:data.metadata.total,favourites})
-        setIsLoading(false)
-
-    }
 
     useEffect(() => {
         fetchProperties()
@@ -212,8 +222,6 @@ const Root = () => {
                 
             </Grid>
             <PropertyModal/>
-            <AllMediaModal/>
-            <SingleMediaModal/>
             <LeadModal/>
             <SideFilters/>
         </Layout>

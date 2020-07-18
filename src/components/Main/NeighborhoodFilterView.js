@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {useGlobalState, getGlobalState} from '../../globalState';
 import { Checkbox } from '@material-ui/core';
 
@@ -8,14 +8,12 @@ import { Checkbox } from '@material-ui/core';
 
 export const NeighborhoodsFilterView = ({neighborhoodSelected,setNeighborhoodSelected}) => {
 
-    const [addressesMap, setAddressesMap] = useGlobalState('neighborhoods');
-    const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
+    const [addressesMap] = useGlobalState('neighborhoods');
+    const [addressSearch] = useGlobalState('addressSearch');
     const filters = getGlobalState('filters')
 
     useEffect(() => {
-
-        let alreadyExistsNeighborhoodsInFilters =  filters.addresses.filter(v => !v.includes(','))
-        setNeighborhoodSelected(alreadyExistsNeighborhoodsInFilters)
+        setNeighborhoodSelected(filters.addresses.filter(v => !v.includes(',')))
     },[])
 
     let data = []

@@ -1,33 +1,20 @@
 
 import React, { useEffect } from 'react'
-import { useGlobalState, setGlobalState, getGlobalState } from '../../globalState';
-import { CircularProgress,Grid } from '@material-ui/core';
+import { useGlobalState, setGlobalState } from '../../globalState';
+import { Grid } from '@material-ui/core';
 import {PropertyView} from './PropertyView'
 import {PropertyListLoading} from './PropertyListLoading'
-import { getValueByDevice } from '../Utilities';
 
-export const PropertyList = props => {
+export const PropertyList = () => {
 
     const [propertiesData, setPropertiesData] = useGlobalState('properties');
     const listRef = React.useRef(null)
 
-   /*  const toggleFavourite = (index) => {
-        let {data} = propertiesData
-        if (data[index].isFavourite){
-            data.splice(index, 1, {...data[index], isFavourite: false })
-
-        }
-        else{
-            data.splice(index, 1, {...data[index], isFavourite: true })
-        }
-        setPropertiesData({...propertiesData,data})
-    }
- */
     const toggleFavourite = (id) => {
         let {favourites} = propertiesData
         
         if (favourites.includes(id)){
-            favourites = favourites.filter(_id => _id != id)
+            favourites = favourites.filter(_id => _id !== id)
         }
         else{
             favourites = [...favourites,id]
@@ -52,7 +39,14 @@ export const PropertyList = props => {
     const {dataFiltered:properties} = propertiesData
 
     const handleScroll = () => {
-        const bottom = listRef && listRef.current && listRef.current.scrollHeight - listRef.current.scrollTop === listRef.current.clientHeight;
+        const {
+            current:{
+                scrollHeight,
+                scrollTop,
+                clientHeight
+            }
+        } = listRef
+        const bottom = scrollHeight - scrollTop === clientHeight;
     
         if (bottom) {
 
@@ -63,7 +57,7 @@ export const PropertyList = props => {
         <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
             <div style={{width:'100%',display:'flex',maxWidth:window.innerWidth > 1000 ? '1000px': window.innerWidth > 660 ? '670px' : '320px' ,position:'relative',justifyContent:'center'}}>
                 <PropertyListLoading/>
-                <Grid spacing={4} ref={listRef}  onScroll={e => handleScroll()}  style={{width:'100%',overflow:'auto',justifyContent:'center'}} container>
+                <Grid spacing={4} ref={listRef}  onScroll={() => handleScroll()}  style={{width:'100%',overflow:'auto',justifyContent:'center'}} container>
                 {
                     properties.length > 0 && properties.slice(0,20).map((prop,idx) => 
                         <PropertyView toggleFavourite={toggleFavourite} index={idx} isFavourite={propertiesData.favourites.includes(prop.id)} key={prop.id} property={prop}/>

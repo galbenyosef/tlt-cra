@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal,Grid, Input, InputAdornment, Button,TextField } from '@material-ui/core'
-import { getGlobalState, useGlobalState, setGlobalState } from '../../globalState'
+import { useGlobalState, setGlobalState } from '../../globalState'
 import { LeadTypes, getValueByDevice } from '../Utilities'
 import { createLead } from '../../dataHandler'
 import { IoMdPhonePortrait } from 'react-icons/io'
@@ -34,7 +34,7 @@ export const LeadModal = () => {
                     comments,
                     actual_when:moment(actually_when).format("DD-MM-YYYY HH:mm")
                 },
-                status_id:type == LeadTypes.MeetingRequest ? 3077:3124
+                status_id:type === LeadTypes.MeetingRequest ? 3077:3124
             }
 
             let response = await createLead(body)
@@ -90,7 +90,7 @@ export const LeadModal = () => {
                             />
                         </Grid>
                         {
-                            type == LeadTypes.MeetingRequest &&
+                            type === LeadTypes.MeetingRequest &&
                             <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',paddingBottom:15}}>
                                 <p>בחר תאריך ושעה</p>
                                 <DatePicker
@@ -110,7 +110,7 @@ export const LeadModal = () => {
                         <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
                             <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
                                 const {full_name,phone,actually_when} = opened
-                                if (full_name && full_name.length > 2 && phone.replace('-','').length == 10 && ((actually_when && type == LeadTypes.MeetingRequest) || type != LeadTypes.MeetingRequest))
+                                if (full_name && full_name.length > 2 && phone.replace('-','').length === 10 && ((actually_when && type === LeadTypes.MeetingRequest) || type !== LeadTypes.MeetingRequest))
                                     createLeadKala(opened)
                                 else{
                                     alert('התגלתה שגיאה באחד מן השדות')
