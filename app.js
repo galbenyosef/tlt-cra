@@ -17,7 +17,7 @@ app.use('/', indexRouter);
 
 app.get('*', (req, res) => {
   if (process.env.NODE_ENV === "production") {
-    res.sendFile(path.join('./client/build', 'index.html'));
+    res.sendFile(__dirname + '/client/build/index.html'));
   }
   else{
     console.log('received request')
