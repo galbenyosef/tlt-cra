@@ -1,4 +1,5 @@
 const {createProxyMiddleware} = require("http-proxy-middleware");
+import morgan from 'morgan'
 
 module.exports = app => {
   app.use(
@@ -20,5 +21,5 @@ module.exports = app => {
     })
   );*/
 
-/*   app.use(morgan('combined'));
- */};
+   app.use(morgan('combined'));
+ };
