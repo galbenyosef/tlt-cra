@@ -1,5 +1,4 @@
 const {createProxyMiddleware} = require("http-proxy-middleware");
-const morgan = require("morgan");
 
 module.exports = app => {
   app.use(
@@ -13,13 +12,13 @@ module.exports = app => {
     })
   );
 
-  app.use(
+/*  app.use(
     "/api",
     createProxyMiddleware({
-      target: 'http://localhost:16656',
+      target: `http://localhost:${process.env.PORT || '16656'}`,
       changeOrigin: true,
     })
-  );
+  );*/
 
 /*   app.use(morgan('combined'));
  */};
