@@ -155,3 +155,20 @@ export const createLead = async (body) => {
   
 }
 
+export const apiTest = async (body) => {
+
+  console.log(body)
+  let response = await fetch(`/api`,{
+    method: 'GET',
+  })
+
+  if (response && response.ok){
+    let responseJson = await response.json()
+    return responseJson
+  }
+  throw(response)
+
+}
+
+
+

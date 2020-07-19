@@ -13,5 +13,13 @@ module.exports = app => {
     })
   );
 
+  app.use(
+    "/api",
+    createProxyMiddleware({
+      target: 'http://localhost:16656',
+      changeOrigin: true,
+    })
+  );
+
 /*   app.use(morgan('combined'));
  */};
