@@ -94,7 +94,9 @@ const Root = () => {
     const [aboutUsDetailed,setAboutUsDetailed] = useState(false)
     useEffect(() => {
         fetchProperties()
+/*
       testAPI()
+*/
 
         window.addEventListener("resize",() => resize());
         if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
