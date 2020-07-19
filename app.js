@@ -22,7 +22,7 @@ app.use('/', indexRouter);
 app.get('*', (req, res) => {
 
   if (process.env.NODE_ENV === "production") {
-    res.sendFile('index.html', { client });
+    res.sendFile('index.html', { root:client });
   }
   else{
     console.log('received request')
