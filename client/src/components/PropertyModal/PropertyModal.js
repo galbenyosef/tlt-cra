@@ -76,7 +76,7 @@ export const PropertyModal = () => {
                     rooms:_rooms,
                   }}) =>
                     _neighborhood_name === neighborhood_name &&
-                    (_price <= price*1.10 || price >= _price*.9) &&
+                    (_price <= price*1.10 && price >= _price*.9) &&
                     _rooms === rooms &&
                     id !== _data.payload.id
                 )
