@@ -49,7 +49,7 @@ export const PropertyModal = () => {
 
         try{
             const _data = await getProperty(id)
-
+            console.log(_data)
             const {
                 city_id,
                 street_name,
@@ -106,7 +106,7 @@ export const PropertyModal = () => {
                     },
                     
                 })
-            } 
+            }
 
             //no agent
             else{

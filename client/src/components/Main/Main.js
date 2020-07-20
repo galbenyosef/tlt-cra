@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
 import {useGlobalState,setGlobalState} from '../../globalState'
-import {apiTest, getProperties} from '../../dataHandler'
+import { getProperties} from '../../dataHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyList } from '../PropertyList/PropertyList';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
@@ -78,15 +78,6 @@ const fetchProperties = () => {
     })
 }
 
-
-const testAPI = async () => {
-
-  let result = await apiTest()
-  console.log(result)
-
-
-}
-
 const Root = () => {
 
     const setProperty = (val) => setGlobalState('selectedProperty',val)
@@ -94,9 +85,6 @@ const Root = () => {
     const [aboutUsDetailed,setAboutUsDetailed] = useState(false)
     useEffect(() => {
         fetchProperties()
-/*
-      testAPI()
-*/
 
         window.addEventListener("resize",() => resize());
         if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
