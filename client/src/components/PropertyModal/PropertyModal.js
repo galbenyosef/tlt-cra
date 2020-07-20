@@ -75,10 +75,10 @@ export const PropertyModal = () => {
                     price:_price,
                     rooms:_rooms,
                   }) =>
-                    _neighborhood_name === neighborhood_name &&
-                    (_price <= price*1.10 && price >= _price*.9) &&
-                    _rooms === rooms &&
-                    id !== data.id
+                    _neighborhood_name == neighborhood_name &&
+                    (_price <= price*1.10 && _price >= price*.9) &&
+                    _rooms == rooms &&
+                    id != data.id
                 )
 
             setAlternatives(alternativeProperties)
