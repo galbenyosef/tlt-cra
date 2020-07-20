@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 
 const getSingleUrl = id => `/api/properties/${id}`
 
@@ -13,9 +11,7 @@ const getUrl = () => `/api/properties`
 
 export const getUser = async (id) => {
 
-  let response = await fetch(getUserUrl(id),{
-      method: 'GET',
-  })
+  let response = await fetch(getUserUrl(id))
 
   if (response && response.ok){
     let responseJson = await response.json()
@@ -28,7 +24,7 @@ export const getUser = async (id) => {
 export const getProperties = async () => {
 
   let response = await fetch(getUrl())
-  console.log(response)
+
   if (response && response.ok){
     let responseJson = await response.json()
     return responseJson
@@ -39,14 +35,13 @@ export const getProperties = async () => {
 
 export const getProperty = async id => {
 
-  let response = await axios.get(`/api/properties/${id}`)
+  let response = await fetch(getSingleUrl(id))
 
-  console.log(response)
-  if (response && response.data){
-    return response.data
+  if (response && response.ok){
+    let responseJson = await response.json()
+    return responseJson
   }
   throw(response)
-
 }
 
 export const getCoordinates = async (q) => {
@@ -63,17 +58,21 @@ export const getCoordinates = async (q) => {
 
 export const createLead = async (body) => {
 
-  let response = await fetch(getLeadUrl(),{
+  try{
+    let response = await fetch(getLeadUrl(),{
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body:JSON.stringify(body),
-  })
-
-  if (response && response.ok){
-    let responseJson = await response.json()
-    return responseJson
+    })
+    return response.ok
   }
-  throw(response)
-  
+  catch(e){
+    console.log(e)
+    return
+  }
+
 }
 
 

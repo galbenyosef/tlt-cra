@@ -48,15 +48,15 @@ export const PropertyModal = () => {
         setLoading(true)
 
         try{
-            const _data = await getProperty(id)
-            console.log(_data)
+            const data = await getProperty(id)
+
             const {
                 city_id,
                 street_name,
                 neighborhood_name,
                 price,
                 rooms,
-            } = _data.payload.attributes
+            } = data
 
             const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
             console.log([street_name,neighborhood_name,city_id].join(', '))
@@ -70,47 +70,40 @@ export const PropertyModal = () => {
             }
 
             let alternativeProperties = propertiesData.data
-                .filter(({id,attributes:{
+                .filter(({id,
                     neighborhood_name:_neighborhood_name,
                     price:_price,
                     rooms:_rooms,
-                  }}) =>
+                  }) =>
                     _neighborhood_name === neighborhood_name &&
                     (_price <= price*1.10 && price >= _price*.9) &&
                     _rooms === rooms &&
-                    id !== _data.payload.id
+                    id !== data.id
                 )
 
             setAlternatives(alternativeProperties)
 
             //agent exists
-            if (_data.payload.attributes.agent_id){
-                const agentId = _data.payload.attributes.agent_id
+            if (data.agent_id){
+                const agentId = data.agent_id
                 const agentData = await getUser(agentId)
 
                 const {
                     first_name,
                     phone
-                } = agentData.payload
+                } = agentData
 
                 setData({
-                    ..._data,
-                    payload:{
-                        ..._data.payload,
-                        attributes:{
-                            ..._data.payload.attributes,
-                            agentName:first_name,
-                            agentPhone:phone,
-                            agentId
-                        }
-                    },
-                    
+                    ...data,
+                    agentName:first_name,
+                    agentPhone:phone,
+                    agentId
                 })
             }
 
             //no agent
             else{
-                setData(_data)
+                setData(data)
             }
 
         }
@@ -137,8 +130,8 @@ export const PropertyModal = () => {
     if (!data)
         return null
 
-    let property = data.payload.attributes
-    const {payload:{page_assets_urls}} = data
+    let property = data
+    const {page_assets_urls} = data
 
     const {
         street_name,
@@ -196,9 +189,9 @@ export const PropertyModal = () => {
     }
     
     console.log(property)
-    console.log(agentName)
+
     return (
-        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty('')}>
+        <Modal open={!!selectedProperty} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setSelectedProperty(null)}>
             <Grid container style={{
                 right: '50%',
                 maxWidth:'1000px',
@@ -304,7 +297,7 @@ export const PropertyModal = () => {
                                     id="outlined-margin-dense"
                                     margin="dense"
                                     variant="outlined"
-                                    value={leadModalData.full_name}
+                                    value={leadModalData?.full_name || ''}
                                     onChange={
                                         e => setLeadModalData({...leadModalData,full_name:e.currentTarget.value})
                                     }
@@ -321,7 +314,7 @@ export const PropertyModal = () => {
                                     id="outlined-margin-dense"
                                     margin="dense"
                                     variant="outlined"
-                                    value={leadModalData.phone}
+                                    value={leadModalData?.phone || ''}
                                     onChange={
                                         e => setLeadModalData({...leadModalData,phone:e.currentTarget.value})
                                     }
@@ -341,6 +334,7 @@ export const PropertyModal = () => {
                                             type:LeadTypes.MeetingRequest,
                                             attributes:{
                                                 agent_id:agentId,
+                                                user_id:agentId,
                                                 kala_property_id:selectedProperty,
                                             }
                                         })
@@ -352,6 +346,7 @@ export const PropertyModal = () => {
                                             type:LeadTypes.WannaHearMore,
                                             attributes:{
                                                 agent_id:agentId,
+                                                user_id:agentId,
                                                 kala_property_id:selectedProperty,
                                             }
                                         })

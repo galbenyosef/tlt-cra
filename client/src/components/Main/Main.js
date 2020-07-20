@@ -37,20 +37,16 @@ const fetchProperties = () => {
 
   getProperties()
     .then(data => {
-      const properties = data.payload.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+      const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
       let addressesMap = {}
 
       for (let i=0; i<properties.length;i++){
         let {
-          attributes,attributes:{
             neighborhood_name,
             street_name
-          }
         } = properties[i]
 
-        if (!attributes)
-          console.log(properties[i])
         if (!addressesMap[neighborhood_name])
           addressesMap[neighborhood_name] = []
         if (!addressesMap[neighborhood_name].includes(street_name))
@@ -70,7 +66,7 @@ const fetchProperties = () => {
       setAddresses(addresses)
       let favouritesString = localStorage.getItem('favourites')
       let favourites = JSON.parse(favouritesString) || []
-      setProperties({data:properties,dataFiltered:properties,currentCount:properties.length,totalCount:data.metadata.total,favourites})
+      setProperties({data:properties,dataFiltered:properties,favourites})
     })
     .catch(e => console.log(e))
     .then(() => {

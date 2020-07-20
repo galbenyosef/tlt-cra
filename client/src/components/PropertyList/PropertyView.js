@@ -18,18 +18,17 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
       id,
       created,
       thumb_file,
-      attributes:{
-        video__url,
-        project,
-        neighborhood_name,
-        street_name,
-        rooms,
-        metres,
-        terrace,
-        floor,
-        price,
-        custom_id
-      }
+      video__url,
+      project,
+      neighborhood_name,
+      street_name,
+      rooms,
+      metres,
+      terrace,
+      floor,
+      price,
+      custom_id
+
     } = property
 
     let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch

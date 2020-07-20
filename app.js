@@ -15,7 +15,6 @@ app.use(express.static(client));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', indexRouter);
 
@@ -25,14 +24,16 @@ app.use(createProxyMiddleware(
     target: 'https://tlt.kala-crm.co.il',
     changeOrigin: true,
     pathRewrite: {
-      '^/kala':'/api'
+      '^/kala/':'/api/'
     }
   }))
 
+/*
 app.use(createProxyMiddleware(
   {
     target: `https://localhost:${process.env.PORT || '16656'}`,
   }))
+*/
 
 
 

@@ -36,11 +36,10 @@ export const LeadModal = () => {
                 },
                 status_id:type === LeadTypes.MeetingRequest ? 3077:3124
             }
-            console.log(body)
-            let response = await createLead(body)
-            if (response.ok){
-                alert('הפגישה נקבעה')
-            }
+
+            if (await createLead(body))
+                setOpened(false)
+
         }
         catch(e){
             console.log(e)
