@@ -3,18 +3,18 @@ var router = express.Router();
 
 const axios = require('axios')
 
-const getUserUrl = id => `http://localhost:${process.env.PORT || '16656'}/kala/v1/user/${id}`
-const getUrl = () => `http://localhost:${process.env.PORT || '16656'}/kala/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
-const getSingleUrl = id => `http://localhost:${process.env.PORT || '16656'}/kala/v1/page/${id}?get_page_assets_urls=true`
+const getUserUrl = id => `https://tlt.kala-crm.co.il/api/v1/user/${id}`
+const getUrl = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
+const getSingleUrl = id => `https://tlt.kala-crm.co.il/api/v1/page/${id}?get_page_assets_urls=true`
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
-const getLeadUrl = () => `http://tlt.kala-crm.co.il/api/v1/lead`
+const getLeadUrl = () => `https://tlt.kala-crm.co.il/api/v1/lead`
 
 router.post('/lead', async (req,res) => {
 
   const {body} = req
 
   try {
-    let response = await axios.post('http://tlt.kala-crm.co.il/api/v1/lead',
+    let response = await axios.post(getLeadUrl(),
       body, {
         headers:{
           'Content-Type': 'application/json;charset=UTF-8',

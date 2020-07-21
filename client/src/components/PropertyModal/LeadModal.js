@@ -62,7 +62,6 @@ export const LeadModal = () => {
                         <Grid item xs={12} md={6} style={{paddingBottom:15,display:'flex',justifyContent:'center',alignItems:'center'}}>
                             <Input
                                 placeholder="שם מלא"
-                                id="outlined-margin-dense"
                                 margin="dense"
                                 variant="outlined"
                                 value={opened.full_name}
@@ -79,7 +78,6 @@ export const LeadModal = () => {
                                     </InputAdornment>
                                 }
                                 placeholder="נייד"
-                                id="outlined-margin-dense"
                                 margin="dense"
                                 variant="outlined"
                                 value={opened.phone}
