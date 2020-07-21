@@ -64,7 +64,7 @@ export const LeadModal = () => {
                                 placeholder="שם מלא"
                                 margin="dense"
                                 variant="outlined"
-                                value={opened.full_name}
+                                value={opened?.full_name || ''}
                                 onChange={
                                     e => setOpened({...opened,full_name:e.currentTarget.value})
                                 }
@@ -80,7 +80,7 @@ export const LeadModal = () => {
                                 placeholder="נייד"
                                 margin="dense"
                                 variant="outlined"
-                                value={opened.phone}
+                                value={opened?.phone || ''}
                                 onChange={
                                     e => setOpened({...opened,phone:e.currentTarget.value})
                                 }

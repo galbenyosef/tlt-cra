@@ -294,7 +294,6 @@ export const PropertyModal = () => {
                             <Grid item xs={6}>
                                 <Input
                                     placeholder="שם מלא"
-                                    id="outlined-margin-dense"
                                     margin="dense"
                                     variant="outlined"
                                     value={leadModalData?.full_name || ''}
@@ -311,7 +310,6 @@ export const PropertyModal = () => {
                                         </InputAdornment>
                                     }
                                     placeholder="נייד"
-                                    id="outlined-margin-dense"
                                     margin="dense"
                                     variant="outlined"
                                     value={leadModalData?.phone || ''}
