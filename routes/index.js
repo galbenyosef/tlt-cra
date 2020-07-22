@@ -203,6 +203,7 @@ router.get('/properties', async (req,res) => {
     let properties = payload.map(({
       id,
       created,
+      title,
       thumb_file,
       attributes:{
         video__url,
@@ -212,6 +213,8 @@ router.get('/properties', async (req,res) => {
         rooms,
         metres,
         terrace,
+        furniture,
+        renovation,
         floor,
         price,
         custom_id
@@ -225,10 +228,13 @@ router.get('/properties', async (req,res) => {
       neighborhood_name,
       street_name,
       rooms,
-      metres,
+      metres:parseInt(metres),
       terrace,
+      title,
       floor,
       price,
+      furniture,
+      renovation,
       custom_id
     }))
 

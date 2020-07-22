@@ -17,6 +17,7 @@ import { LocationMap } from './Map'
 import ImageGallery from 'react-image-gallery';
 import "./image-gallery.css";
 import { PropertyView } from '../PropertyList/PropertyView'
+import VideoThumbnail from 'react-video-thumbnail'; // use npm published version
 
 
 
@@ -59,7 +60,6 @@ export const PropertyModal = () => {
             } = data
 
             const coords = await getCoordinates([street_name,neighborhood_name,city_id].join(', '))
-            console.log([street_name,neighborhood_name,city_id].join(', '))
 
             if (coords.length){
                 setMapInfo({
@@ -70,15 +70,15 @@ export const PropertyModal = () => {
             }
 
             let alternativeProperties = propertiesData.data
-                .filter(({id,
+                .filter(({id:_id,
                     neighborhood_name:_neighborhood_name,
                     price:_price,
                     rooms:_rooms,
                   }) =>
-                    _neighborhood_name == neighborhood_name &&
+                    _neighborhood_name === neighborhood_name &&
                     (_price <= price*1.10 && _price >= price*.9) &&
-                    _rooms == rooms &&
-                    id != data.id
+                    _rooms === rooms &&
+                    _id !== id
                 )
 
             setAlternatives(alternativeProperties)
@@ -181,11 +181,15 @@ export const PropertyModal = () => {
         thumbnail:`https://tlt.kala-crm.co.il/${image}`,
     }))
 
+    console.log(video__url)
     if (video__url){
+        console.log('detected video url')
         propertyImages.unshift({
-            embedUrl: `https://tlt.kala-crm.co.il/${video__url}`,
-            description: 'Render custom slides within the gallery',
-        })
+                original:`https://picsum.photos/300/200`,
+                thumbnail:`https://picsum.photos/300/200`,
+              renderThumbInner: (a) => {console.log(a);return (<div><p>Hello</p></div>)},
+              description: 'Render custom slides within the gallery',
+          })
     }
     
     console.log(property)

@@ -126,7 +126,6 @@ const FiltersBar = () => {
                   (furnitureRangeText.some(text => furniture === text));
 
             })
-
         Object.keys(switchFilters).forEach(filter => {
             if (filters[filter])
                 dataFiltered = dataFiltered.filter(prop => prop[filter])
@@ -136,7 +135,10 @@ const FiltersBar = () => {
             dataFiltered = dataFiltered.filter(({title}) => addresses.some(addr => title.includes(addr)))
         }
         else if (address){
-            dataFiltered = dataFiltered.filter(({title}) => title.includes(address))
+            dataFiltered = dataFiltered.filter(({neighborhood_name,street_name}) => {
+                let [neighborhood,street] = address.split(', ')
+                return (neighborhood_name === neighborhood && street_name === street)
+            })
         }
         else if (propertyNumber)
             dataFiltered = dataFiltered.filter(({custom_id}) =>  custom_id + '' === propertyNumber)
