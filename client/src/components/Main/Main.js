@@ -144,7 +144,10 @@ const Root = () => {
         flexWrap:'nowrap',
         alignItems:'center',
         backgroundColor:'white',
-        boxShadow: '0px 10px 10px 0px grey'
+        boxShadow: '0px 10px 10px 0px grey',
+        position:'sticky',
+        top:0,
+        zIndex:2
       }}>
         <div style={{display:'flex',alignItems:'center'}}>
           <div style={{

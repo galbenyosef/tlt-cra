@@ -109,14 +109,14 @@ const FiltersBar = () => {
         let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
 
         let dataFiltered = data
-            .filter(({attributes:{
+            .filter(({
                 price,
                 rooms,
                 metres,
                 floor,
                 renovation,
                 furniture,
-            }}) => {
+            }) => {
 
                 return (budgetFrom <= price) && (price <= budgetTo) &&
                   (metresFrom <= metres) && (metres <= metresTo) &&
@@ -129,7 +129,7 @@ const FiltersBar = () => {
 
         Object.keys(switchFilters).forEach(filter => {
             if (filters[filter])
-                dataFiltered = dataFiltered.filter(({attributes}) => attributes[filter])
+                dataFiltered = dataFiltered.filter(prop => prop[filter])
         })
 
         if (addressesActive){
@@ -139,7 +139,7 @@ const FiltersBar = () => {
             dataFiltered = dataFiltered.filter(({title}) => title.includes(address))
         }
         else if (propertyNumber)
-            dataFiltered = dataFiltered.filter(({attributes:{custom_id}}) =>  custom_id + '' === propertyNumber)
+            dataFiltered = dataFiltered.filter(({custom_id}) =>  custom_id + '' === propertyNumber)
 
         setPropertiesData({...propertiesData,dataFiltered:dataFiltered.sort(({created:createdA},{created:createdB}) => createdB - createdA)})
 
