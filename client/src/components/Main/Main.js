@@ -16,6 +16,7 @@ import {Grid, Hidden} from '@material-ui/core';
 import { aboutUsText, aboutUsDetailedText } from './aboutUsText';
 import {AiFillPhone,AiOutlineYoutube} from 'react-icons/ai'
 import {BsEnvelope} from 'react-icons/bs'
+import {GiHamburgerMenu} from 'react-icons/gi'
 import {FaWhatsapp,FaFacebookF,FaTwitter,FaGooglePlusG,FaInstagram,FaPhoneAlt,FaRegHandPointer} from 'react-icons/fa'
 import {IoLogoWhatsapp} from 'react-icons/io'
 
@@ -179,20 +180,27 @@ const Root = () => {
             </div>
           </div>
         </Hidden>
+        <Hidden smUp={true}>
+          <div>
+            <GiHamburgerMenu size={40}/>
+          </div>
+        </Hidden>
       </Grid>
 
       <div style={{display:'flex',maxWidth:1000,marginBottom:20,marginTop:40,padding:20,alignItems:'center'}}>
-        <div style={{
-          borderRadius:50,
-          boxShadow:'0px 0px 3px 4px grey',
-          minWidth:250,
-          height:250,
-          backgroundImage:`url(${Logo_Trans})`,
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize:'90%',
-          marginLeft:30
-        }}/>
+        <Hidden xsDown>
+          <div style={{
+            borderRadius:50,
+            boxShadow:'0px 0px 3px 4px grey',
+            minWidth:250,
+            height:250,
+            backgroundImage:`url(${Logo_Trans})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize:'90%',
+            marginLeft:30
+          }}/>
+        </Hidden>
         <div>
           <div style={{
             width:'100%',
@@ -222,15 +230,15 @@ const Root = () => {
             borderTop: '20px solid rgb(29,31,60)',
             position: 'absolute'}}></div>
         </div>
-        <div style={{minHeight:160,padding:'30px 50px',width:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'black'}}>
-          <div style={{height:'100%',maxWidth:250,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+        <div style={{minHeight:160,padding:'30px 50px',width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',backgroundColor:'black',flexWrap:'wrap'}}>
+          <div style={{padding:20,margin:'auto',minHeight:160,maxWidth:250,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
             <p style={{fontSize:24}}>קצת עלינו</p>
             <p style={{fontSize:14}}>חברת תיווך ללא תיווך נוסדה בשנת 2014 ושינתה את כללי המשחק מקצה לקצה.
               מטרתנו היא להביא את החיבור הטוב ביותר בין השוכרים הפוטנציאלים לבין בעלי הנכסים.
             </p>
           </div>
-          <div style={{maxWidth:800,height:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',width:'100%'}}>
-            <div style={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+          <div style={{padding:20,margin:'auto',minWidth:350,maxWidth:800,minHeight:160,display:'flex',justifyContent:'space-around',alignItems:'center'}}>
+            <div style={{minHeight:160,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
               <p style={{fontSize:18,whiteSpace:'nowrap'}}>תפריט ראשי</p>
               <div>
                 <p style={{fontSize:14}}>ראשי</p>
@@ -240,7 +248,7 @@ const Root = () => {
                 <p style={{fontSize:14}}>אודות</p>
               </div>
             </div>
-            <div style={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+            <div style={{minHeight:160,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
               <p style={{fontSize:18,whiteSpace:'nowrap'}}>תפריט ראשי</p>
               <div>
                 <p style={{fontSize:14}}>ראשי</p>
@@ -250,7 +258,7 @@ const Root = () => {
                 <p style={{fontSize:14}}>אודות</p>
               </div>
             </div>
-            <div style={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+            <div style={{minHeight:160,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
               <p style={{fontSize:18,whiteSpace:'nowrap'}}>תפריט ראשי</p>
               <div>
                 <p style={{fontSize:14}}>ראשי</p>
@@ -261,7 +269,7 @@ const Root = () => {
               </div>
             </div>
           </div>
-          <div style={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+          <div style={{padding:20,margin:'auto',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
             <p style={{fontSize:14,paddingBottom:15}}>הרשם לקבלת נכסים חדשים המתאימים לך !</p>
             <input style={{margin:'auto'}} placeholder='שם מלא'/>
             <input style={{margin:'auto'}} placeholder='אימייל'/>
