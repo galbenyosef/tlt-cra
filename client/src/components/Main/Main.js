@@ -103,6 +103,7 @@ const Root = () => {
   return (
 
     <Layout>
+      <div style={{width:'100%'}}>
       <Grid container direction={'row'} style={{width:'100%',
         backgroundColor:'rgb(29,31,60)'}}>
         <Grid item xs={1}/>
@@ -147,7 +148,7 @@ const Root = () => {
         boxShadow: '0px 10px 10px 0px grey',
         position:'sticky',
         top:0,
-        zIndex:2
+        zIndex:2,
       }}>
         <div style={{display:'flex',alignItems:'center'}}>
           <div style={{
@@ -163,7 +164,7 @@ const Root = () => {
             <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>דירות להשכרה ללא תיווך</p>
           </div>
         </div>
-        <Hidden only={'xs'}>
+        <Hidden smDown>
           <div style={{display:'flex',flexWrap:'wrap'}}>
             <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>ראשי</p>
             <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>אודות</p>
@@ -183,13 +184,13 @@ const Root = () => {
             </div>
           </div>
         </Hidden>
-        <Hidden smUp={true}>
+        <Hidden mdUp>
           <div>
             <GiHamburgerMenu size={40}/>
           </div>
         </Hidden>
       </Grid>
-
+      </div>
       <div style={{display:'flex',maxWidth:1000,marginBottom:20,marginTop:40,padding:20,alignItems:'center'}}>
         <Hidden xsDown>
           <div style={{
@@ -233,7 +234,7 @@ const Root = () => {
             borderTop: '20px solid rgb(29,31,60)',
             position: 'absolute'}}></div>
         </div>
-        <div style={{minHeight:160,padding:'30px 50px',width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',backgroundColor:'black',flexWrap:'wrap'}}>
+        <div style={{minHeight:160,padding:'30px 0px',width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',backgroundColor:'black',flexWrap:'wrap'}}>
           <div style={{padding:20,margin:'auto',minHeight:160,maxWidth:250,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
             <p style={{fontSize:24}}>קצת עלינו</p>
             <p style={{fontSize:14}}>חברת תיווך ללא תיווך נוסדה בשנת 2014 ושינתה את כללי המשחק מקצה לקצה.

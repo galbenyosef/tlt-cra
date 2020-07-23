@@ -119,6 +119,7 @@ router.get('/properties/:id', async (req,res) => {
         roomsbig,
         kitchenbig,
         salonbig,
+        video__url
       },
       position,
       active,
@@ -154,6 +155,7 @@ router.get('/properties/:id', async (req,res) => {
       structure,
       entrance,
       furniture,
+      video__url,
       price,
       tax,
       committee,
