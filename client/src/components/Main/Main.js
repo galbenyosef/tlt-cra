@@ -103,13 +103,10 @@ const Root = () => {
   return (
 
     <Layout>
-      <div style={{width:'100%'}}>
       <Grid container direction={'row'} style={{width:'100%',
         backgroundColor:'rgb(29,31,60)'}}>
-        <Grid item xs={1}/>
-
         <Hidden only={'xs'}>
-          <Grid item sm={6}>
+          <Grid item sm={7}>
             <div style={{display:'flex',justifyContent:'center'}}>
                 <div style={{display:'flex',padding:10}}>
                   <AiFillPhone style={{color:'yellow'}}/>
@@ -126,7 +123,7 @@ const Root = () => {
             </div>
           </Grid>
         </Hidden>
-        <Grid item xs={10} sm={4}>
+        <Grid item xs={12} sm={5}>
           <div style={{display:'flex',justifyContent:'center'}}>
               <FaFacebookF style={{padding:10,color:'white'}}/>
               <FaTwitter style={{padding:10,color:'white'}}/>
@@ -135,8 +132,6 @@ const Root = () => {
               <AiOutlineYoutube style={{padding:10,color:'white'}}/>
           </div>
         </Grid>
-        <Grid xs={1}/>
-
       </Grid>
       <Grid container direction={'row'} style={{
         width:'100%',
@@ -190,8 +185,7 @@ const Root = () => {
           </div>
         </Hidden>
       </Grid>
-      </div>
-      <div style={{display:'flex',maxWidth:1000,marginBottom:20,marginTop:40,padding:20,alignItems:'center'}}>
+      <div style={{display:'flex',maxWidth:1000,alignItems:'center',minHeight:'calc(100vh - 436px)'}}>
         <Hidden xsDown>
           <div style={{
             borderRadius:50,
@@ -227,7 +221,7 @@ const Root = () => {
       <div style={{display:'flex',flexWrap:'wrap',fontFamily:'Assistant',color:'white',width:'100%'}}>
         <div style={{height:60,width:'100%',display:'flex',justifyContent:'center',
           alignItems:'center',backgroundColor:'rgb(29,31,60)',position:'relative'}}>
-          <p>צריך עזרה? לא מוצא את הנכס שאתה מחפש? חייג עכשיו *4567 !</p>
+          <p style={{padding:'0px 20px',textAlign:'center'}}>צריך עזרה? לא מוצא את הנכס שאתה מחפש? חייג עכשיו *4567 !</p>
           <div style={{bottom: -20,
             borderLeft: '20px solid transparent',
             borderRight: '20px solid transparent',

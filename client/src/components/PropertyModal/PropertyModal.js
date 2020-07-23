@@ -194,7 +194,7 @@ export const PropertyModal = () => {
                src={`https://tlt.kala-crm.co.il/${video__url}`}
                />
       </div>),
-      renderItem:(<div>
+      renderItem:() => (<div>
         <video muted
                style={{
                  width:'100%',
