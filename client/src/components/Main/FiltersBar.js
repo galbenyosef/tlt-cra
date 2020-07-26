@@ -182,12 +182,24 @@ const FiltersBar = () => {
                 border:'2px solid grey',
                 backgroundColor:'white',
                 display:'flex',
+                flexDirection:'column',
                 justifyContent:'space-between',
                 alignItems:'center',
                 padding:getValueByDevice(20,10,10),
-                marginBottom:'20px'
+                marginBottom:'20px',
+                borderRadius:20,
+                boxShadow:'0px 0px 10px 0px grey'
             }}>
 
+            <p style={{fontWeight:'bolder',marginLeft:'auto',paddingBottom:10,color:'rgba(29,31,60)',textDecoration:'underline'}}>חיפוש מתקדם:</p>
+
+            <div
+              style={{
+                  backgroundColor:'white',
+                  display:'flex',
+                  justifyContent:'space-between',
+                  alignItems:'center',
+              }}>
 
             {
                 device === devices.Desktop &&
@@ -196,7 +208,6 @@ const FiltersBar = () => {
                 </IconButton>
             }
 
-            
             <div style={{width:'190px'}}>
                 <WindowedSelect
                     styles={searchStyle}
@@ -229,11 +240,11 @@ const FiltersBar = () => {
 
 
                     <div id='addresses' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgba(29,31,60)',position:'relative',marginLeft:5}}>
                         <>
                             <LocationCity style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                            <MdKeyboardArrowDown size={24} color='rgba(29,31,60)'/>
                         </>
                         {
                             filters.addresses.length > 0 &&
@@ -243,11 +254,11 @@ const FiltersBar = () => {
                     </div>
 
                     <div id='rooms' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgba(29,31,60)',position:'relative',marginLeft:5}}>
                         <>
                             <Hotel style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                            <MdKeyboardArrowDown size={24} color='rgba(29,31,60)'/>
                         </>
                         {
                             roomsActive > 0 &&
@@ -257,11 +268,11 @@ const FiltersBar = () => {
                     </div>
 
                     <div id='budget'  onClick={e => handleClickFilter(e)}
-                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgba(29,31,60)',position:'relative',marginLeft:5}}>
                         <>
                             <FaShekelSign style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                            <MdKeyboardArrowDown size={24} color='rgba(29,31,60)'/>
                         </>              
                         {
                             budgetActive > 0 &&
@@ -273,11 +284,11 @@ const FiltersBar = () => {
                     </div>
                    
                     <div id='renovation'  onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative',marginLeft:5}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgba(29,31,60)',position:'relative',marginLeft:5}}>
                         <>
                             <IoIosConstruct style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                            <MdKeyboardArrowDown size={24} color='rgba(29,31,60)'/>
                         </>
                         {
                             renovationActive > 0 &&
@@ -289,11 +300,11 @@ const FiltersBar = () => {
                     
 
                     <div id='furniture' onClick={e => handleClickFilter(e)}
-                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgb(112,146,191)',position:'relative'}}>
+                        style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:'2px solid rgba(29,31,60)',position:'relative'}}>
                         <>
                             <Weekend style={{paddingLeft:5}}/>
                             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
-                            <MdKeyboardArrowDown size={24} color='rgb(112,146,191)'/>
+                            <MdKeyboardArrowDown size={24} color='rgba(29,31,60)'/>
                         </>
                         {
                             furnitureActive > 0 &&
@@ -321,7 +332,7 @@ const FiltersBar = () => {
                     setPropertiesData({...propertiesData,dataFiltered,favouritesDisplayed:true})
                 }
             }}
-             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgb(112,146,191)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'rgb(112,146,191)',color:!propertiesData.favouritesDisplayed ? 'white':'rgb(112,146,191)',cursor:'pointer'}}>
+             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'rgba(29,31,60)',color:!propertiesData.favouritesDisplayed ? 'white':'rgba(29,31,60)',cursor:'pointer'}}>
                 {
                     propertiesData.favouritesDisplayed ?               
                     <FaHeart size={24} color={'red'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
@@ -332,16 +343,16 @@ const FiltersBar = () => {
                     device !== devices.Mobile &&
                     <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
                 }
-
             </div>
 
-            {
-                device === devices.Desktop &&
-                <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgb(112,146,191)',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
-                    <Sync/>
-                    <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'rgb(112,146,191)'}}>רענן חיפוש </span>
-                </div>
-            }
+                {
+                    device === devices.Desktop &&
+                    <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
+                        <Sync/>
+                        <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'rgba(29,31,60)'}}>רענן חיפוש </span>
+                    </div>
+                }
+            </div>
 
 
             <StyledMenu

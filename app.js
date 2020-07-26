@@ -8,7 +8,7 @@ const app = express();
 
 const client = path.join(__dirname, 'client', 'build')
 
-app.use(logger('combined'))
+app.use(logger('dev'))
 app.use(express.static(client));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

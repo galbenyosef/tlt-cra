@@ -12,7 +12,7 @@ export const searchStyle = {
         ...provided,
         // none of react-select's styles are passed to <Control />
         borderRadius: 0,
-        borderBottom:'2px solid rgb(112,146,191)',
+        borderBottom:'2px solid rgba(29,31,60,.7)',
         borderTop:0,
         borderLeft:0,
         borderRight:0,
@@ -25,7 +25,7 @@ export const searchStyle = {
     }),
     dropdownIndicator:  (provided, state)  => ({
         ...provided,
-        color:'rgb(112,146,191)',
+        color:'rgba(29,31,60,.7)',
     }),
     placeholder: (provided, state) => ({
         ...provided,

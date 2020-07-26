@@ -39,7 +39,7 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
     console.log('card render')
 
     const PropertyViewComponent = () => 
-        <div onClick={() => {console.log(property);handleClick(property.id)}}  
+        <div
           style={{
             display:'flex',
             flexDirection:'column',
@@ -49,6 +49,7 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
             backgroundColor:'white',
             boxShadow:'3px 3px 3px 0px grey',
             whiteSpace:'nowrap',
+            borderRadius:20,
             overflow:'hidden',
             justifyContent:'flex-end',
             backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
@@ -74,30 +75,28 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
             <FiHeart onClick={(event) => {toggleFavourite(id);event.stopPropagation()}} size={32} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:'10px',left:'10px',cursor:'pointer'}}/>
           }
           <div style={{textAlign:'right',display:'flex',flexDirection:'column',backgroundImage:'linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6))',justifyContent:'flex-end',alignItems:'flex-start'}}>
-            <div style={{padding:'0px 10px',fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:22}}>
+            <div style={{padding:'10px 10px',fontFamily:'Assistant',fontWeight:'bolder',color:'white',fontSize:15}}>
                 <p>
                   {`שכונת ${neighborhood_name}, רחוב ${street_name}`}
                 </p>
             </div>
-            <div style={{width:'100%',justifyContent:'space-between',display:'flex',flexDirection:'row',fontFamily:'Assistant',fontWeight:'bold',color:'white'}}>
-              <p style={{paddingRight:10}}>
+            <div style={{width:'100%',paddingBottom:10,justifyContent:'space-between',display:'flex',flexDirection:'row',fontFamily:'Assistant',fontWeight:'bold',color:'white'}}>
+              <p style={{fontSize:13,paddingRight:10}}>
                 {rooms ? `${rooms} חדרים | `: ` `}
                 {metres? `${metres} מ"ר`:` `}
-                {terrace ? `+ מרפסת`:``}
+                {terrace ? ` + מרפסת`:``}
                 {floor !== undefined ? (floor ? ` | קומה ${floor}`:` | קומת קרקע`): ' '}
               </p>
-              <p style={{fontSize:26,fontWeight:'bolder',paddingLeft:10}}>
+              <p style={{fontSize:20,paddingBottom:10,fontWeight:'bolder',paddingLeft:10}}>
                 {price ? `${price.toLocaleString()} ₪`: ` `}
               </p>
             </div>
-            <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',justifyContent:'space-between',margin:'auto'}}>
-              <div style={{display:'flex',flexDirection:'row',fontWeight:'bold',justifyContent:'space-between'}}>
-                <div style={{padding:5,display:'flex',width:project? 100 :90,borderRadius:100,border:'1px solid rgb(112,146,191)',justifyContent:'center',alignItems:'center',fontSize:14,color:'white'}}>{`${custom_id ? `#${custom_id}`:`-`}`}</div>
-                <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}} 
-                  style={{padding:5,display:'flex',width:project? 100 :90,borderRadius:100,border:'1px solid rgb(112,146,191)',justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:'rgb(112,146,191)',color:'white',}}>{`קבע פגישה`}</div>
-                <div onClick={
-                    (e) => {video__url && setSingleMediaModalOpened(video__url);e.stopPropagation()}
-                  } style={{padding:5,display:'flex',width:project? 100 :90,borderRadius:100,border:'1px solid rgb(112,146,191)',justifyContent:'center',alignItems:'center',fontSize:14,cursor:video__url?'pointer':'',color:'white'}}>{`סייר בנכס`}
+            <div style={{display:'flex',flexDirection:'row',paddingBottom:10,justifyContent:'space-between',margin:'auto'}}>
+              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                <div onClick={() => {console.log(property);handleClick(property.id)}}
+                  style={{padding:5,display:'flex',width:90,justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:'rgba(29,31,60,.7)',color:'white',}}>{`לפרטים`}</div>
+                <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:property.id}})}}
+                   style={{padding:5,display:'flex',width:90,justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:'rgba(255,255,255,0.2)',color:'white'}}>{`לפגישה`}
                 </div>
               </div>
             </div>
@@ -109,7 +108,7 @@ export const PropertyView = ({property,isFavourite,toggleFavourite,index,isAlter
         <PropertyViewComponent/>
       </div>
     ) : (
-      <Grid item xs={12} sm={index % 4 === 0 || (index+1) % 4 === 0 ? 12:6} md={index % 10 === 0 || (index-6) % 10 === 0 ? 8 : 4} >
+      <Grid item xs={12} sm={index % 4 === 0 || (index+1) % 4 === 0 ? 12:6} md={index % 21 === 1 || index % 21 === 7 || index % 21 === 16 ? 6 : 3} >
         <PropertyViewComponent/>
       </Grid>
     )
