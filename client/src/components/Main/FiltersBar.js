@@ -13,6 +13,99 @@ import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
 import {clearFilterStyle, filterBoxStyle, searchStyle} from '../../styles';
 
+const {
+  MinPrice,
+  MaxPrice,
+  MinRooms,
+  MaxRooms,
+  MinRenovation,
+  MaxRenovation,
+  MinFurniture,
+  MaxFurniture,
+  MinMetres,
+  MaxMetres,
+  MinFloor,
+  MaxFloor
+} = constants
+
+
+const filterProperties = (properties,filters) => {
+
+  const {
+    //default values
+    budgetFrom,
+    budgetTo,
+    roomsFrom,
+    roomsTo,
+    renovationFrom,
+    renovationTo,
+    addresses,
+    addressesActive,
+    address,
+    propertyNumber,
+    furnitureFrom,
+    furnitureTo,
+    metresFrom,
+    metresTo,
+    floorFrom,
+    floorTo,
+  } = filters
+
+  console.log('filters : ',filters)
+
+  let furnitureRange = range(furnitureFrom,furnitureTo)
+  let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
+
+  let filtered = properties
+    .filter(({
+               price,
+               rooms,
+               metres,
+               floor,
+               renovation,
+               furniture,
+             }) => {
+
+      return (budgetFrom <= price) && (price <= budgetTo) &&
+        (metresFrom <= metres) && (metres <= metresTo) &&
+        (roomsFrom <= rooms) && (rooms <= roomsTo) &&
+        (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
+        (renovationFrom <= renovation) && (renovation <= renovationTo) &&
+        (furnitureRangeText.some(text => furniture === text));
+
+    })
+  Object.keys(switchFilters).forEach(filter => {
+    if (filters[filter])
+      filtered = filtered.filter(prop => prop[filter])
+  })
+
+  if (addressesActive){
+    filtered = filtered.filter(({neighborhood_name}) => addresses.some(addr => neighborhood_name.includes(addr)))
+  }
+  else if (address){
+    filtered = filtered.filter(({neighborhood_name,street_name}) => {
+      let [neighborhood,street] = address.split(', ')
+      if (street)
+        return (neighborhood_name === neighborhood && street_name === street)
+      return (neighborhood_name === neighborhood)
+    })
+  }
+  else if (propertyNumber)
+    filtered = filtered.filter(({custom_id}) =>  custom_id + '' === propertyNumber)
+
+  filtered = filtered.map(({id}) => id)
+
+  let retval = [...properties]
+  for (let property of retval){
+    if (filtered.includes(property.id)){
+      property.isFiltered = true
+    }
+    else
+      property.isFiltered = false
+  }
+  return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+}
+
 const FiltersBar = () => {
 
     const [addressesData] = useGlobalState('addresses');
@@ -20,136 +113,39 @@ const FiltersBar = () => {
     const [filters, setFilters] = useGlobalState('filters');
     const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
     const [device] = useGlobalState('device')
-
+    const [propertiesNumbers] = useGlobalState('propertiesNumbers')
     const [inputValue,setInputValue] = useState('')
+
+    const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
 
     const setSideFilterVisible = val => setGlobalState('sideFiltersVisible',val)
 
-    const [propertiesData,setPropertiesData] = useGlobalState('properties')
+    const setProperties = val => setGlobalState('properties',val)
 
     const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
 
+    const changeFilters = filters => {
+
+      setFilters(filters)
+
+      setProperties(
+        properties => filterProperties(properties,filters)
+          )
+    }
+
     const {
         //default values
-        budgetFrom,
-        budgetTo,
-        roomsFrom,
-        roomsTo,
-        renovationFrom,
-        renovationTo,
-        addresses,
-        addressesActive,
-        address,
-        propertyNumber,
-        furnitureFrom,
-        furnitureTo,
-        metresFrom,
-        metresTo,
-        floorFrom,
-        floorTo,
         budgetActive,
         roomsActive,
         renovationActive,
         furnitureActive,
-        metresActive,
-        floorActive,
-        terrace,
-        bathtub,
-        landscape,
-        airconditioner,
-        parking,
-        boiler,
-        elevator,
-        warehouse,
-        garden,
-        accessibility,
-        saferoom,
-        bars,
-        nets,
-        electricshutters,
-        parentsunit,
     } = filters
 
-    useEffect(() => {
-
-        submitFilters()
-
-    },[
-        address,
-        propertyNumber,
-        addressesActive,
-        budgetActive,
-        roomsActive,
-        renovationActive,
-        furnitureActive,
-        metresActive,
-        floorActive,
-        terrace,
-        bathtub,
-        landscape,
-        airconditioner,
-        parking,
-        boiler,
-        elevator,
-        warehouse,
-        garden,
-        accessibility,
-        saferoom,
-        bars,
-        nets,
-        electricshutters,
-        parentsunit,
-    ])
-
-    const submitFilters = () => {
-
-        const {data} = propertiesData
-
-        let furnitureRange = range(furnitureFrom,furnitureTo)
-        let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
-
-        let dataFiltered = data
-            .filter(({
-                price,
-                rooms,
-                metres,
-                floor,
-                renovation,
-                furniture,
-            }) => {
-
-                return (budgetFrom <= price) && (price <= budgetTo) &&
-                  (metresFrom <= metres) && (metres <= metresTo) &&
-                  (roomsFrom <= rooms) && (rooms <= roomsTo) &&
-                  (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
-                  (renovationFrom <= renovation) && (renovation <= renovationTo) &&
-                  (furnitureRangeText.some(text => furniture === text));
-
-            })
-        Object.keys(switchFilters).forEach(filter => {
-            if (filters[filter])
-                dataFiltered = dataFiltered.filter(prop => prop[filter])
-        })
-
-        if (addressesActive){
-            dataFiltered = dataFiltered.filter(({title}) => addresses.some(addr => title.includes(addr)))
-        }
-        else if (address){
-            dataFiltered = dataFiltered.filter(({neighborhood_name,street_name}) => {
-                let [neighborhood,street] = address.split(', ')
-                return (neighborhood_name === neighborhood && street_name === street)
-            })
-        }
-        else if (propertyNumber)
-            dataFiltered = dataFiltered.filter(({custom_id}) =>  custom_id + '' === propertyNumber)
-
-        setPropertiesData({...propertiesData,dataFiltered:dataFiltered.sort(({created:createdA},{created:createdB}) => createdB - createdA)})
-
-    }
-
-    if (!addressesData.length || !propertiesData.data.length){
+    if (!addressesData.length){
         return null
     }
+
+    console.log('render filter bar')
 
     const {currentFilterName} = currentFilter
     const {currentFilterElement} = currentFilter
@@ -159,22 +155,6 @@ const FiltersBar = () => {
     };
 
     const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
-
-    const {
-        MinPrice,
-        MaxPrice,
-        MinRooms,
-        MaxRooms,
-        MinRenovation,
-        MaxRenovation,
-        MinFurniture,
-        MaxFurniture,
-        MinMetres,
-        MaxMetres,
-        MinFloor,
-        MaxFloor
-    } = constants
-
 
     return (
         <div
@@ -218,16 +198,14 @@ const FiltersBar = () => {
                     getOptionLabel={e => Number.isInteger(parseInt(inputValue)) ? `נכס מספר #${e}`:e}
                     inputValue={inputValue}
                     onInputChange={e => setInputValue(e)}
-                    options={Number.isInteger(parseInt(inputValue)) ? propertiesData.data.map(({attributes:{
-                        custom_id
-                    }}) => custom_id + '') : addressesData}
+                    options={Number.isInteger(parseInt(inputValue)) ? propertiesNumbers : addressesData}
                     placeholder="הקש כתובת/ מספר נכס"
                     value={filters.propertyNumber ? [`נכס מספר #${filters.propertyNumber}`] : [filters.address]}
                     onChange={e => {
                         !Number.isInteger(parseInt(e)) ?
-                            setFilters({...filters,address:e,addresses:[],addressesActive:0,propertyNumber:''})
+                            changeFilters({...filters,address:e,addresses:[],addressesActive:0,propertyNumber:''})
                         :
-                            setFilters({...filters,propertyNumber:e,addresses:[],addressesActive:0,address:''})
+                            changeFilters({...filters,propertyNumber:e,addresses:[],addressesActive:0,address:''})
                     }}
                 />
             </div>
@@ -248,7 +226,7 @@ const FiltersBar = () => {
                         </>
                         {
                             filters.addresses.length > 0 &&
-                            <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
+                            <div onClick={(e) => {changeFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} }
                             style={clearFilterStyle}>X</div>
                         }
                     </div>
@@ -262,7 +240,7 @@ const FiltersBar = () => {
                         </>
                         {
                             roomsActive > 0 &&
-                            <div onClick={(e) => {setFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} } 
+                            <div onClick={(e) => {changeFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
                             style={clearFilterStyle}>X</div>
                         }
                     </div>
@@ -277,7 +255,7 @@ const FiltersBar = () => {
                         {
                             budgetActive > 0 &&
                             <div onClick={(e) => {
-                                setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                              changeFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                                 e.stopPropagation()} } 
                                 style={clearFilterStyle}>X</div>
                         }
@@ -292,7 +270,7 @@ const FiltersBar = () => {
                         </>
                         {
                             renovationActive > 0 &&
-                            <div onClick={(e) => {setFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} } 
+                            <div onClick={(e) => {changeFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
                             style={clearFilterStyle}>X</div>
                         }
                     </div>
@@ -308,7 +286,7 @@ const FiltersBar = () => {
                         </>
                         {
                             furnitureActive > 0 &&
-                            <div onClick={(e) => {setFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} } 
+                            <div onClick={(e) => {changeFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
                             style={clearFilterStyle}>X</div>
                         }
                     </div>
@@ -325,16 +303,22 @@ const FiltersBar = () => {
             </div>
 
             <div onClick={() =>  {
-                if (propertiesData.favouritesDisplayed)
-                    setPropertiesData({...propertiesData,dataFiltered:propertiesData.data,favouritesDisplayed:false})
+                if (isFavouritesView){
+                  setProperties(properties => {let newProperties = [...properties]; for (let property of newProperties){property.isFiltered = true};return newProperties})
+                  setIsFavouriteView(false)
+                }
                 else{
-                    let dataFiltered = propertiesData.data.filter(prop => propertiesData.favourites.some(id => prop.id === id))
-                    setPropertiesData({...propertiesData,dataFiltered,favouritesDisplayed:true})
+                  setProperties(properties => {let newProperties = [...properties]; for (let property of newProperties){
+                    if (property.isFavourite)
+                      property.isFiltered = true
+                    else
+                      property.isFiltered = false
+                  };return newProperties})
                 }
             }}
-             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:propertiesData.favouritesDisplayed ? 'white':'rgba(29,31,60)',color:!propertiesData.favouritesDisplayed ? 'white':'rgba(29,31,60)',cursor:'pointer'}}>
+             style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:isFavouritesView ? 'white':'rgba(29,31,60)',color:!isFavouritesView ? 'white':'rgba(29,31,60)',cursor:'pointer'}}>
                 {
-                    propertiesData.favouritesDisplayed ?               
+                    isFavouritesView ?
                     <FaHeart size={24} color={'red'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
                     :
                     <FaHeart size={24} color={'white'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
@@ -347,7 +331,7 @@ const FiltersBar = () => {
 
                 {
                     device === devices.Desktop &&
-                    <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',cursor:'pointer'}} onClick={() => {submitFilters()}}>
+                    <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',cursor:'pointer'}}>
                         <Sync/>
                         <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:'rgba(29,31,60)'}}>רענן חיפוש </span>
                     </div>
@@ -404,7 +388,7 @@ const FiltersBar = () => {
                         </div>
                         <div style={filterBoxStyle}>
                             <div onClick={() => {
-                                setFilters({...filters,budgetActive:filters.budgetActive+1});
+                                changeFilters({...filters,budgetActive:filters.budgetActive+1});
                                 handleCloseFilter()}
                             } 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -457,7 +441,7 @@ const FiltersBar = () => {
                             />
                         </div>
                         <div style={filterBoxStyle}>
-                            <div onClick={() => {setFilters({...filters,roomsActive:filters.roomsActive+1});handleCloseFilter()}} 
+                            <div onClick={() => {changeFilters({...filters,roomsActive:filters.roomsActive+1});handleCloseFilter()}}
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
@@ -485,7 +469,7 @@ const FiltersBar = () => {
                         </div>
                         
                         <div style={filterBoxStyle}>
-                            <div onClick={() => {setFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}} 
+                            <div onClick={() => {changeFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}}
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
@@ -514,7 +498,7 @@ const FiltersBar = () => {
                     <div style={filterBoxStyle}>
                         <div onClick={() => {
                             let newVal = new Set(filters.addresses.concat(neighborhoodSelected))
-                            setFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
+                            changeFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
                             handleCloseFilter()
                         }} 
                             style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -549,7 +533,7 @@ const FiltersBar = () => {
                         </div>
                         
                         <div style={filterBoxStyle}>
-                            <div onClick={() => {setFilters({...filters,furnitureActive:filters.furnitureActive+1});handleCloseFilter()}} 
+                            <div onClick={() => {changeFilters({...filters,furnitureActive:filters.furnitureActive+1});handleCloseFilter()}}
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                 color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() } 
@@ -601,7 +585,7 @@ const FiltersBar = () => {
                         </div>
                         <div style={filterBoxStyle}>
                             <div onClick={() => {
-                                setFilters({...filters,metresActive:filters.metresActive+1});
+                                changeFilters({...filters,metresActive:filters.metresActive+1});
                                 handleCloseFilter()}
                             } 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -655,7 +639,7 @@ const FiltersBar = () => {
                         </div>
                         <div style={filterBoxStyle}>
                             <div onClick={() => {
-                                setFilters({...filters,floorActive:filters.floorActive+1});
+                                changeFilters({...filters,floorActive:filters.floorActive+1});
                                 handleCloseFilter()}
                             } 
                                 style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -672,6 +656,5 @@ const FiltersBar = () => {
         </div>
     )
 }
-
 
 export default FiltersBar

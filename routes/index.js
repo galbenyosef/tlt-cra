@@ -4,8 +4,9 @@ var router = express.Router();
 const axios = require('axios')
 
 const getUserUrl = id => `https://tlt.kala-crm.co.il/api/v1/user/${id}`
-const getUrl = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
-const getSingleUrl = id => `https://tlt.kala-crm.co.il/api/v1/page/${id}?get_page_assets_urls=true`
+const getPropertiesUrl = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&active=true&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
+const getPropertiesUrlTest = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
+const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page/${id}?get_page_assets_urls=true`
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
 const getLeadUrl = () => `https://tlt.kala-crm.co.il/api/v1/lead`
 
@@ -14,7 +15,7 @@ router.post('/lead', async (req,res) => {
   const {body} = req
 
   try {
-    let response = await axios.post(getLeadUrl(),
+    await axios.post(getLeadUrl(),
       body, {
         headers:{
           'Content-Type': 'application/json;charset=UTF-8',
@@ -70,7 +71,7 @@ router.get('/properties/:id', async (req,res) => {
   const {id} = req.params
 
   try{
-    let response = await axios.get(getSingleUrl(id),{
+    let response = await axios.get(getPropertyUrl(id),{
       headers: {
         "x-kala-key":"kdcG983ujtltGHtgzd"
       }
@@ -194,7 +195,7 @@ router.get('/properties/:id', async (req,res) => {
 router.get('/properties', async (req,res) => {
 
   try{
-    let response = await axios.get(getUrl(),{
+    let response = await axios.get(getPropertiesUrlTest(),{
       method: 'GET',
       headers: {
         "x-kala-key":"kdcG983ujtltGHtgzd"

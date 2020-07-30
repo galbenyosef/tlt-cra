@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
 import {useGlobalState,setGlobalState} from '../../globalState'
-import { getProperties} from '../../dataHandler'
+import { getProperties} from '../../apiHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyList } from '../PropertyList/PropertyList';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
-import { devices } from '../Utilities'
+import {devices, furnitureTypes, range, switchFilters} from '../Utilities'
 import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
 import Logo_NOTEXT from '../../assets/Logo_NOTEXT.png'
-import Logo_Trans from '../../assets/Logo_TLT_Trans.png'
-import Only_Text from '../../assets/Only_Text_Trans.png'
-
 import {Grid, Hidden} from '@material-ui/core';
-import { aboutUsText, aboutUsDetailedText } from './aboutUsText';
 import {AiFillPhone,AiOutlineYoutube} from 'react-icons/ai'
 import {BsEnvelope} from 'react-icons/bs'
 import {GiHamburgerMenu} from 'react-icons/gi'
@@ -39,7 +35,8 @@ const fetchProperties = () => {
   const setIsLoading = (val) => setGlobalState('loading',val)
   const setProperties = (val) => setGlobalState('properties',val)
   const setAddresses = (val) => setGlobalState('addresses',val)
-  const setAddressesMap = (val) => setGlobalState('neighborhoods',val)
+  const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
+  const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
 
   setIsLoading(true)
 
@@ -48,17 +45,28 @@ const fetchProperties = () => {
       const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
       let addressesMap = {}
+      let propertiesNumbers = []
 
-      for (let i=0; i<properties.length;i++){
+      let favouritesString = localStorage.getItem('favourites')
+      let favourites = JSON.parse(favouritesString) || []
+
+      for (let property of properties){
         let {
           neighborhood_name,
           street_name
-        } = properties[i]
+        } = property
 
+        property.isFiltered = true
+        if (favourites.includes(property.id))
+          property.isFavourite = true
         if (!addressesMap[neighborhood_name])
           addressesMap[neighborhood_name] = []
         if (!addressesMap[neighborhood_name].includes(street_name))
           addressesMap[neighborhood_name].push(street_name)
+
+        if (property.custom_id)
+          propertiesNumbers.push(property.custom_id + '')
+
       }
 
       let addresses = []
@@ -70,11 +78,10 @@ const fetchProperties = () => {
         }
       }
 
-      setAddressesMap(neighborhoods)
+      setNeighborhoods(neighborhoods)
       setAddresses(addresses)
-      let favouritesString = localStorage.getItem('favourites')
-      let favourites = JSON.parse(favouritesString) || []
-      setProperties({data:properties,dataFiltered:properties,favourites})
+      setProperties(properties)
+      setPropertiesNumbers(propertiesNumbers)
     })
     .catch(e => console.log(e))
     .then(() => {
@@ -207,7 +214,7 @@ const Root = () => {
               </p>
             </div>
             <FiltersBar/>
-            <PropertyList/>
+            <PropertyList />
           </>
       }
 

@@ -2,14 +2,14 @@ import React from 'react'
 import { Modal,Grid, Input, InputAdornment, Button,TextField } from '@material-ui/core'
 import { useGlobalState, setGlobalState } from '../../globalState'
 import { LeadTypes, getValueByDevice } from '../Utilities'
-import { createLead } from '../../dataHandler'
+import { createLead } from '../../apiHandler'
 import { IoMdPhonePortrait } from 'react-icons/io'
 import DatePicker from "react-datetime-picker"
 import moment from 'moment'
 
 export const LeadModal = () => {
 
-    const [opened,setOpened] = useGlobalState('newLeadModal')
+    const [opened,setOpened] = useGlobalState('lead')
 
     const {
         type,

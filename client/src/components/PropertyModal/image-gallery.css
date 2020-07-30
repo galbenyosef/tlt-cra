@@ -113,7 +113,7 @@
   .image-gallery-content.fullscreen {
     background: #000; }
   .image-gallery-content .image-gallery-slide .image-gallery-image {
-    max-height: calc(100vh - 80px); }
+    height: calc(100vh); }
   .image-gallery-content.left .image-gallery-slide .image-gallery-image, .image-gallery-content.right .image-gallery-slide .image-gallery-image {
     max-height: 100vh; }
 

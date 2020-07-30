@@ -1,80 +1,57 @@
+import {getCoordinates, getProperty, getUser} from "./apiHandler";
 
-const getSingleUrl = id => `/api/properties/${id}`
-
-const getUserUrl = id => `/api/user/${id}`
-
-const getCoordinatesUrl = (q) => `/api/coordinates/${q}`
-
-const getLeadUrl = () => `/api/lead`
-
-const getUrl = () => `/api/properties`
-
-export const getUser = async (id) => {
-
-  let response = await fetch(getUserUrl(id))
-
-  if (response && response.ok){
-    let responseJson = await response.json()
-    return responseJson
-  }
-  throw(response)
-
+export const getAlternatives = ({id,price,rooms},options = []) => {
+  return options
+    .filter(
+      ({id:_id,price:_price,rooms:_rooms}) =>
+        (_price <= price*1.10 && _price >= price*.9) &&
+        _rooms === rooms &&
+        _id !== id
+    )
 }
 
-export const getProperties = async () => {
-
-  let response = await fetch(getUrl())
-
-  if (response && response.ok){
-    let responseJson = await response.json()
-    return responseJson
-  }
-  throw(response)
-
-}
-
-export const getProperty = async id => {
-
-  let response = await fetch(getSingleUrl(id))
-
-  if (response && response.ok){
-    let responseJson = await response.json()
-    return responseJson
-  }
-  throw(response)
-}
-
-export const getCoordinates = async (q) => {
-
-  let response = await fetch(getCoordinatesUrl(q))
-
-  if (response && response.ok){
-    let responseJson = await response.json()
-    return responseJson
-  }
-  throw(response)
-  
-}
-
-export const createLead = async (body) => {
+export const fetchCoordinates = async address => {
 
   try{
-    let response = await fetch(getLeadUrl(),{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body:JSON.stringify(body),
-    })
-    return response.ok
+    let coordinates = await getCoordinates(address)
+
+    if (coordinates && Array.isArray(coordinates))
+      return coordinates[0]
   }
   catch(e){
     console.log(e)
-    return
   }
-
+  return
 }
 
 
+export const fetchProperty = async (id) => {
 
+  let property = {}
 
+  try{
+    const data = await getProperty(id)
+
+    //agent exists
+    if (data.agent_id){
+      const agentId = data.agent_id
+      const agentData = await getUser(agentId)
+
+      const {
+        first_name,
+        phone
+      } = agentData
+
+      property = {
+        ...data,
+        agentName:first_name,
+        agentPhone:phone,
+        agentId
+      }
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
+  return property
+}

@@ -63,25 +63,17 @@ const initialState = {
         currentFilterName:'',
         currentFilterElement:'',
     },
-    properties: {
-        data: [],
-        dataFiltered: [],
-        currentCount: 0,
-        totalCount: 0,
-        favourites: [],
-        favouritesDisplayed: false
-    },
-    selectedProperty: '' ,
-    newLeadModal: {
+    isFavouritesView: false,
+    lead: {
         full_name: '',
         phone: '',
         actually_when: '',
         type: '',
         comments: ''
     },
-    videoRef:null,
-    allMediaModal:false,
-    singleMediaModal:false,
+    property: null,
+    properties:[],
+    propertiesNumbers:[],
     addresses: [],
     neighborhoods: [],
     sideFiltersVisible: false,
@@ -89,7 +81,7 @@ const initialState = {
     loading: false,
     addressSearch: '',
     device:null,
-    rootRef:createRef(null)
+    rootRef:createRef()
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)
