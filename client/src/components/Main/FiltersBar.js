@@ -304,16 +304,26 @@ const FiltersBar = () => {
 
             <div onClick={() =>  {
                 if (isFavouritesView){
-                  setProperties(properties => {let newProperties = [...properties]; for (let property of newProperties){property.isFiltered = true};return newProperties})
-                  setIsFavouriteView(false)
+                  setProperties(properties => {
+                    let newProperties = [...properties]
+                    for (let property of newProperties){
+                      property.isFiltered = true
+                    }
+                    setIsFavouriteView(false)
+                    return newProperties
+                  })
                 }
                 else{
-                  setProperties(properties => {let newProperties = [...properties]; for (let property of newProperties){
-                    if (property.isFavourite)
-                      property.isFiltered = true
-                    else
-                      property.isFiltered = false
-                  };return newProperties})
+                  setProperties(properties => {
+                    let newProperties = [...properties]
+                    for (let property of newProperties){
+                      if (property.isFavourite)
+                        property.isFiltered = true
+                      else
+                        property.isFiltered = false
+                    }
+                    setIsFavouriteView(true)
+                    return newProperties})
                 }
             }}
              style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:'2px solid rgba(29,31,60)',borderRadius:10,padding:'6px',marginLeft:10,backgroundColor:isFavouritesView ? 'white':'rgba(29,31,60)',color:!isFavouritesView ? 'white':'rgba(29,31,60)',cursor:'pointer'}}>

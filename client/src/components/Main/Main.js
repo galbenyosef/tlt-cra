@@ -48,7 +48,7 @@ const fetchProperties = () => {
       let propertiesNumbers = []
 
       let favouritesString = localStorage.getItem('favourites')
-      let favourites = JSON.parse(favouritesString) || []
+      let favourites = favouritesString && JSON.parse(favouritesString) || []
 
       for (let property of properties){
         let {
@@ -57,7 +57,7 @@ const fetchProperties = () => {
         } = property
 
         property.isFiltered = true
-        if (favourites.includes(property.id))
+        if (favourites && favourites.includes(property.id))
           property.isFavourite = true
         if (!addressesMap[neighborhood_name])
           addressesMap[neighborhood_name] = []
