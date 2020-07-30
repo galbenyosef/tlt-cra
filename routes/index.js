@@ -195,7 +195,7 @@ router.get('/properties/:id', async (req,res) => {
 router.get('/properties', async (req,res) => {
 
   try{
-    let response = await axios.get(getPropertiesUrlTest(),{
+    let response = await axios.get(getPropertiesUrl(),{
       method: 'GET',
       headers: {
         "x-kala-key":"kdcG983ujtltGHtgzd"
