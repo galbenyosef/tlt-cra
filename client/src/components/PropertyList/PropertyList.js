@@ -27,7 +27,7 @@ const PropertyList = () => {
 
         setPropertiesData(properties => {
             let updatedProperties = properties.map((p,_idx) => (idx == _idx ? {...p,isFavourite:!p.isFavourite} : p ))
-            localStorage.setItem('favourites',JSON.stringify(updatedProperties.filter(p => p.isFavourite)))
+            localStorage.setItem('favourites',JSON.stringify(updatedProperties.filter(p => p.isFavourite).id))
             return updatedProperties
         })
 
