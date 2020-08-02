@@ -78,7 +78,7 @@ router.get('/properties/:id', async (req,res) => {
     })
 
     const {data:{payload}} = response
-    
+    console.log(payload)
     let  {
       title,
       attributes: {
@@ -120,15 +120,24 @@ router.get('/properties/:id', async (req,res) => {
         roomsbig,
         kitchenbig,
         salonbig,
-        video__url
+        video__url,
+        pic_living_room__url,
+        pic_living_room2__url,
+        pic_balcony__url,
+        pic_kitchen__url,
+        pic_kitchen2__url,
+        pic_main_bedroom__url,
+        pic_bedroom__url,
+        pic_bathroom__url,
+        pic_bathroom2__url,
+        pic_view__url
       },
-      position,
+
       active,
       created,
       modified,
       deleted,
       asset_id,
-      page_assets_urls
     } = payload
 
     const property = {
@@ -173,13 +182,21 @@ router.get('/properties/:id', async (req,res) => {
       roomsbig,
       kitchenbig,
       salonbig,
-      position,
       active,
       created,
       modified,
       deleted,
       asset_id,
-      page_assets_urls
+      pic_living_room__url,
+      pic_living_room2__url,
+      pic_balcony__url,
+      pic_kitchen__url,
+      pic_kitchen2__url,
+      pic_main_bedroom__url,
+      pic_bedroom__url,
+      pic_bathroom__url,
+      pic_bathroom2__url,
+      pic_view__url
     }
     
     return res.send(property)
