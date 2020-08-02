@@ -16,6 +16,9 @@ import {GiHamburgerMenu} from 'react-icons/gi'
 import {FaWhatsapp,FaFacebookF,FaTwitter,FaGooglePlusG,FaInstagram,FaPhoneAlt,FaRegHandPointer} from 'react-icons/fa'
 import {IoLogoWhatsapp} from 'react-icons/io'
 import {MainSpinner} from "./MainSpinner";
+import Logo_Trans from "../../assets/Logo_TLT_Trans.png";
+import Only_Text from "../../assets/Only_Text_Trans.png";
+import {aboutUsText} from "./aboutUsText";
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
@@ -92,10 +95,13 @@ const fetchProperties = () => {
 const Root = () => {
 
   const setProperty = (val) => setGlobalState('selectedProperty',val)
+  const [city,setCity] = useGlobalState('city')
   const [isLoading] = useGlobalState('loading')
 
   useEffect(() => {
+/*
     fetchProperties()
+*/
 
     window.addEventListener("resize",() => resize());
     if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
@@ -193,10 +199,11 @@ const Root = () => {
           </div>
         </Hidden>
       </Grid>
+      <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly'}}>
       {
-        isLoading ? <div style={{display:'flex',alignItems:'center',minHeight:'calc(100vh - 116px - 320px)'}}><MainSpinner/></div> :
+        isLoading ? <div style={{display:'flex',alignItems:'center'}}><MainSpinner/></div> :
           <>
-            <div style={{display:'flex',paddingBottom:30,alignItems:'center',marginTop:100,justifyContent:'space-evenly'}}>
+            <div style={{margin:'auto',display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
               <p style={{padding:'0px 10px'}}>
                 בחר איזור חיפוש:
               </p>
@@ -213,11 +220,39 @@ const Root = () => {
                 נשר
               </p>
             </div>
+            {
+              !city &&
+              <div style={{margin:'auto',display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'center'}}>
+                <div style={{
+                  borderRadius:50,
+                  boxShadow:'0px 0px 3px 4px grey',
+                  width:300,
+                  height:300,
+                  backgroundImage:`url(${Logo_Trans})`,
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize:'90%'
+                }}/>
+                <div style={{display:'flex',flexDirection:'column'}}>
+                  <div style={{
+                    width:'100%',
+                    height:80,
+                    backgroundImage:`url(${Only_Text})`,
+                    backgroundPosition: 'right',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize:'contain'
+                  }}/>
+                  <p style={{whiteSpace:'break-spaces',fontFamily:'Assistant'}}>
+                  {aboutUsText}
+                  </p>
+                </div>
+              </div>
+            }
             <FiltersBar/>
             <PropertyList />
           </>
       }
-
+      </div>
       <div style={{display:'flex',flexWrap:'wrap',fontFamily:'Assistant',color:'white',width:'100%'}}>
         <div style={{height:60,width:'100%',display:'flex',justifyContent:'center',
           alignItems:'center',backgroundColor:'rgb(29,31,60)',position:'relative'}}>

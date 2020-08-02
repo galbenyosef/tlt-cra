@@ -11,7 +11,7 @@ const Layout = ({children}) => {
 
     },[rootRef])
     return (
-        <div id='rootRef' ref={rootRef} style={{direction:'rtl',display:'flex',alignItems:'center',flexDirection:'column',minHeight:'100vh',justifyContent:'space-between'}}>
+        <div id='rootRef' ref={rootRef} style={{direction:'rtl',display:'flex',alignItems:'center',flexDirection:'column',minHeight:'100vh'}}>
             {
                 children
             }

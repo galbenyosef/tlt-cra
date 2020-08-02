@@ -81,6 +81,7 @@ const initialState = {
     loading: false,
     addressSearch: '',
     device:null,
+    city:null,
     rootRef:createRef()
 };
 
