@@ -168,7 +168,8 @@ const FiltersBar = () => {
         padding:getValueByDevice(20,10,10),
         borderRadius:20,
         boxShadow:'0px 0px 10px 0px grey',
-        width:'fitcontent',
+        width:'fit-content',
+        alignSelf:'center',
         marginBottom:24
       }}>
 
