@@ -33,7 +33,7 @@ const resize = () => {
     setDevice(devices.Desktop)
 }
 
-const fetchProperties = () => {
+const fetchProperties = (city) => {
 
   const setIsLoading = (val) => setGlobalState('loading',val)
   const setProperties = (val) => setGlobalState('properties',val)
@@ -43,7 +43,7 @@ const fetchProperties = () => {
 
   setIsLoading(true)
 
-  getProperties()
+  getProperties(city)
     .then(data => {
       const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
@@ -92,16 +92,20 @@ const fetchProperties = () => {
     })
 }
 
+
 const Root = () => {
 
   const setProperty = (val) => setGlobalState('selectedProperty',val)
   const [city,setCity] = useGlobalState('city')
   const [isLoading] = useGlobalState('loading')
 
+
+  const onCityClick = city => {
+    setCity(city)
+    fetchProperties(city)
+  }
+
   useEffect(() => {
-/*
-    fetchProperties()
-*/
 
     window.addEventListener("resize",() => resize());
     if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
@@ -117,7 +121,7 @@ const Root = () => {
   return (
 
     <Layout>
-      <Grid container direction={'row'} style={{width:'100%',
+      <Grid container direction={'row'} style={{
         backgroundColor:'rgb(29,31,60)'}}>
         <Hidden only={'xs'}>
           <Grid item sm={7}>
@@ -201,50 +205,58 @@ const Root = () => {
       </Grid>
       <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly'}}>
       {
-        isLoading ? <div style={{display:'flex',alignItems:'center'}}><MainSpinner/></div> :
+        isLoading ? <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}><MainSpinner/></div> :
           <>
-            <div style={{margin:'auto',display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
+            <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
               <p style={{padding:'0px 10px'}}>
                 בחר איזור חיפוש:
               </p>
-              <p style={{padding:'0px 10px',cursor:'pointer',borderLeft:'1px solid black'}}>
+              <p onClick={() => onCityClick('חיפה') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
                 חיפה
               </p>
-              <p style={{padding:'0px 10px',cursor:'pointer',borderLeft:'1px solid black'}}>
+              <p onClick={() => onCityClick('קריות') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
                 קריות
               </p>
-              <p style={{padding:'0px 10px',cursor:'pointer',borderLeft:'1px solid black'}}>
+              <p onClick={() => onCityClick('טירת הכרמל') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
                 טירת הכרמל
               </p>
-              <p style={{padding:'0px 10px',cursor:'pointer'}}>
+              <p onClick={() => onCityClick('נשר') } style={{padding:'0px 8px',cursor:'pointer'}}>
                 נשר
               </p>
             </div>
             {
               !city &&
-              <div style={{margin:'auto',display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'center'}}>
-                <div style={{
-                  borderRadius:50,
-                  boxShadow:'0px 0px 3px 4px grey',
-                  width:300,
-                  height:300,
-                  backgroundImage:`url(${Logo_Trans})`,
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize:'90%'
-                }}/>
-                <div style={{display:'flex',flexDirection:'column'}}>
+              <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'center'}}>
+
+                <div>
                   <div style={{
-                    width:'100%',
-                    height:80,
-                    backgroundImage:`url(${Only_Text})`,
-                    backgroundPosition: 'right',
+                    borderRadius:50,
+                    boxShadow:'0px 0px 3px 4px grey',
+                    width:300,
+                    height:300,
+                    backgroundImage:`url(${Logo_Trans})`,
+                    backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    backgroundSize:'contain'
+                    backgroundSize:'90%'
                   }}/>
-                  <p style={{whiteSpace:'break-spaces',fontFamily:'Assistant'}}>
-                  {aboutUsText}
-                  </p>
+                </div>
+                <Hidden xsDown>
+                  <div style={{flex:.1}}/>
+                </Hidden>
+                <div style={{maxWidth:320}}>
+                  <div style={{display:'flex',flexDirection:'column'}}>
+                    <div style={{
+                      width:'100%',
+                      height:80,
+                      backgroundImage:`url(${Only_Text})`,
+                      backgroundPosition: 'right',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize:'contain'
+                    }}/>
+                    <p style={{whiteSpace:'break-spaces',fontFamily:'Assistant'}}>
+                    {aboutUsText}
+                    </p>
+                  </div>
                 </div>
               </div>
             }
@@ -270,7 +282,7 @@ const Root = () => {
               מטרתנו היא להביא את החיבור הטוב ביותר בין השוכרים הפוטנציאלים לבין בעלי הנכסים.
             </p>
           </div>
-          <div style={{padding:20,margin:'auto',minWidth:350,maxWidth:800,minHeight:160,display:'flex',justifyContent:'space-around',alignItems:'center'}}>
+          <div style={{margin:'auto',minWidth:350,maxWidth:800,minHeight:160,display:'flex',justifyContent:'space-around',alignItems:'center'}}>
             <div style={{minHeight:160,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
               <p style={{fontSize:18,whiteSpace:'nowrap'}}>תפריט ראשי</p>
               <div>

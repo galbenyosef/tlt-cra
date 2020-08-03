@@ -7,7 +7,7 @@ const getCoordinatesUrl = (q) => `/api/coordinates/${q}`
 
 const getLeadUrl = () => `/api/lead`
 
-const getAllPropertiesUrl = () => `/api/properties`
+const getAllPropertiesUrl = (city) => '/api/properties?city=' + encodeURIComponent(city)
 
 export const getUser = async (id) => {
 
@@ -28,9 +28,9 @@ export const getUser = async (id) => {
 
 }
 
-export const getProperties = async () => {
+export const getProperties = async (city) => {
   try{
-    let response = await fetch(getAllPropertiesUrl())
+    let response = await fetch(getAllPropertiesUrl(city))
 
     if (response && response.ok){
       let responseJson = await response.json()

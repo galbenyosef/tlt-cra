@@ -1,11 +1,42 @@
 var express = require('express');
 var router = express.Router();
-
 const axios = require('axios')
 
+serialize = function(obj) {
+  var str = [];
+  for(var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
+}
+
+let getPropertiesUrl = city => {
+
+  return("https://tlt.kala-crm.co.il/api/v1/page?" + serialize({
+    'select[0]':'created',
+    'select[1]':'id',
+    'select[2]':'title',
+    'select[3]':'attributes',
+    'select[4]':'active',
+    'select[5]':'thumb_file',
+    'active':'true',
+    'page_attributes[city_id]':`${city}`,
+    'page_attributes[status]':'במאגר',
+    'page_attributes[__operators][price]':'between',
+    'page_attributes[price][0]':0,
+    'page_attributes[price][1]':99999,
+    'page_attributes[__operators][rooms]':'between',
+    'page_attributes[rooms][0]':1,
+    'page_attributes[rooms][1]':99,
+    'page_attributes[__operators][renovation]':'between',
+    'page_attributes[renovation][0]':1,
+    'page_attributes[renovation][1]':4
+  }))
+};
+
+
 const getUserUrl = id => `https://tlt.kala-crm.co.il/api/v1/user/${id}`
-const getPropertiesUrl = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&active=true&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
-const getPropertiesUrlTest = () => `https://tlt.kala-crm.co.il/api/v1/page?select[]=created&select[]=id&select[]=title&select[]=attributes&select[]=active&select[]=thumb_file&page_attributes[__operators][price]=between&%20%20%20%20page_attributes__operators%5D%5Bstatus%5D=%3D&page_attributes%5Bstatus%5D=%D7%91%D7%9E%D7%90%D7%92%D7%A8&page_attributes[__operators][price]=between&page_attributes[price][0]=0&page_attributes[price][1]=99999&page_attributes[__operators][rooms]=between&page_attributes[rooms][0]=1&page_attributes[rooms][1]=99&page_attributes[__operators][renovation]=between&page_attributes[renovation][0]=1&page_attributes[renovation][1]=4`
 const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page/${id}?get_page_assets_urls=true`
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
 const getLeadUrl = () => `https://tlt.kala-crm.co.il/api/v1/lead`
@@ -209,10 +240,12 @@ router.get('/properties/:id', async (req,res) => {
 
 })
 
-router.get('/properties', async (req,res) => {
+router.get('/properties/', async (req,res) => {
+
+  const {city} = req.query
 
   try{
-    let response = await axios.get(getPropertiesUrl(),{
+    let response = await axios.get(getPropertiesUrl(city),{
       method: 'GET',
       headers: {
         "x-kala-key":"kdcG983ujtltGHtgzd"
@@ -262,6 +295,7 @@ router.get('/properties', async (req,res) => {
   }
   catch(e){
     console.log(e)
+
     return res.sendStatus(400)
   }
 
