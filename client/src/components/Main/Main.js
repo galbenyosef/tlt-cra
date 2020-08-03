@@ -19,6 +19,7 @@ import {MainSpinner} from "./MainSpinner";
 import Logo_Trans from "../../assets/Logo_TLT_Trans.png";
 import Only_Text from "../../assets/Only_Text_Trans.png";
 import {aboutUsText} from "./aboutUsText";
+import {onPropertyClicked} from "../../dataHandler";
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
@@ -110,7 +111,7 @@ const Root = () => {
     window.addEventListener("resize",() => resize());
     if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
       console.log(window.location.pathname.split('/')[1])
-      setProperty(window.location.pathname.split('/')[1])
+      onPropertyClicked(window.location.pathname.split('/')[1])
     }
 
     resize()

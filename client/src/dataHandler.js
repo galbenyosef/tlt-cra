@@ -1,4 +1,5 @@
 import {getCoordinates, getProperty, getUser} from "./apiHandler";
+import {setGlobalState} from "./globalState";
 
 export const getAlternatives = ({id,price,rooms},options = []) => {
   return options
@@ -22,6 +23,22 @@ export const fetchCoordinates = async address => {
     console.log(e)
   }
   return
+}
+
+export const onPropertyClicked = async (id) => {
+
+  const setProperty = val => setGlobalState('property',val)
+
+
+  let property = await fetchProperty(id)
+  const {
+    street_name,neighborhood_name,city_id
+  } = property
+
+  let addressString = [street_name,neighborhood_name,city_id].join(', ')
+  let coordinates = await fetchCoordinates(addressString)
+  let alternatives = getAlternatives(property)
+  setProperty({...property,alternatives,coordinates})
 }
 
 

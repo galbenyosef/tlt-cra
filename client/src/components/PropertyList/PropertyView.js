@@ -5,6 +5,7 @@ import { FaHeart } from 'react-icons/fa';
 import { LeadTypes } from '../Utilities';
 import TLT_LOGO from '../../assets/Logo_TLT.png'
 import {setGlobalState} from "../../globalState";
+import {onPropertyClicked} from "../../dataHandler";
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
@@ -25,7 +26,7 @@ const PropertyView = React.memo(({property:{
     custom_id,
     isFavourite
 
-},index,isAlternative,toggleFavourite,onPropertyClicked}) => {
+},index,isAlternative,toggleFavourite}) => {
 
     const setLeadModal = val => setGlobalState('lead',val)
 
