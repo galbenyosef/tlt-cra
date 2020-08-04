@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Grid } from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
@@ -9,7 +9,7 @@ import {onPropertyClicked} from "../../dataHandler";
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
-const PropertyView = React.memo(({property:{
+const PropertyViewGrid = React.memo(({property:{
 
     id,
     created,
@@ -26,7 +26,7 @@ const PropertyView = React.memo(({property:{
     custom_id,
     isFavourite
 
-},index,isAlternative,toggleFavourite}) => {
+},index,toggleFavourite}) => {
 
     const setLeadModal = val => setGlobalState('lead',val)
 
@@ -42,8 +42,8 @@ const PropertyView = React.memo(({property:{
           style={{
             display:'flex',
             flexDirection:'column',
-            height:isAlternative ? 320*.8 : 320,
-            width:isAlternative ? 300 : 'auto',
+            height:320,
+            width:'auto',
             margin:'auto',
             backgroundColor:'white',
             boxShadow:'3px 3px 3px 0px grey',
@@ -102,11 +102,7 @@ const PropertyView = React.memo(({property:{
           </div>
         </div>
 
-    return isAlternative ? (
-      <div style={{padding:20}}>
-        <PropertyViewComponent/>
-      </div>
-    ) : (
+    return  (
       <Grid item xs={12} sm={index % 4 === 0 || (index+1) % 4 === 0 ? 12:6} md={index % 21 === 1 || index % 21 === 7 || index % 21 === 16 ? 6 : 3} >
         <PropertyViewComponent/>
       </Grid>
@@ -116,6 +112,101 @@ const PropertyView = React.memo(({property:{
   return prevProps.property.isFavourite === nextProps.property.isFavourite
 })
 
-PropertyView.whyDidYouRender = false
 
-export {PropertyView}
+const PropertyViewList = React.memo(({property:{
+
+  id,
+  created,
+  thumb_file,
+  video__url,
+  project,
+  neighborhood_name,
+  street_name,
+  rooms,
+  metres,
+  terrace,
+  floor,
+  price,
+  custom_id,
+  city_id,
+  propertytype,
+  isFavourite
+
+},index,toggleFavourite}) => {
+
+  const setLeadModal = val => setGlobalState('lead',val)
+  const [isCollapsed,setIsCollapsed] = useState(false)
+  let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
+  isNew.setDate(isNew.getDate() + 7);
+
+  isNew = Date.now() < isNew
+
+  console.log('card render')
+
+  const PropertyViewComponent = () =>
+    <>
+      <div onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey'}}>
+        <div
+          style={{
+            borderRadius:10,
+            display:'flex',
+            height:66,
+            width:110,
+            backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize:thumb_file  ? 'cover' : '66px'
+          }}>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',padding:'0px 10px',width:250}}>
+          <span style={{fontSize:16}}>{street_name}</span>
+          <span style={{fontSize:14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
+        </div>
+        <div style={{textAlign:'center',justifyContent:"space-between",width:150,padding:'0px 10px',alignItems:'center',display:'flex',height:'100%',borderLeft:'1px solid rgba(0,0,0,.1)',borderRight:'1px solid rgba(0,0,0,.1)'}}>
+          <div style={{display:'flex',flexDirection:'column'}}>
+            <span style={{fontSize:16}}>{rooms}</span>
+            <span style={{fontSize:14}}>חדרים</span>
+          </div>
+          <div style={{display:'flex',flexDirection:'column'}}>
+            <span style={{fontSize:16}}>{floor ? floor:'קרקע'}</span>
+            <span style={{fontSize:14}}>קומה</span>
+          </div>
+          <div style={{display:'flex',flexDirection:'column'}}>
+            <span style={{fontSize:16}}>{metres}</span>
+            <span style={{fontSize:14}}>מ"ר</span>
+          </div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',padding:'0px 10px',width:150}}>
+          <span style={{textAlign:'left'}}>
+            {`${price.toLocaleString()} ₪`}
+          </span>
+          <span style={{fontSize:10,textAlign:'left'}}>
+            {isNew? 'חדש' : ''}
+          </span>
+        </div>
+      </div>
+      {
+        isCollapsed ?
+          <div style={{display:'flex',backgroundColor:'white',height:50}}>
+            <div style={{display:'flex',flexDirection:'column'}}>
+              <span>תיאור הנכס</span>
+              <span></span>
+            </div>
+          </div>
+          : null
+      }
+    </>
+  return  (
+      <PropertyViewComponent/>
+  )
+
+},(prevProps,nextProps) => {
+  return(
+    (prevProps.property.isFavourite === nextProps.property.isFavourite) ||
+    (prevProps.property.isCollapsed === nextProps.property.isCollapsed)
+  )
+
+
+})
+
+export {PropertyViewGrid,PropertyViewList}

@@ -82,7 +82,8 @@ const initialState = {
     addressSearch: '',
     device:null,
     city:null,
-    rootRef:createRef()
+    rootRef:createRef(),
+    listDisplay:0
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

@@ -1,15 +1,17 @@
 import React, {useRef, useState} from 'react'
 import { Modal,Grid } from '@material-ui/core'
 import { useGlobalState } from '../../globalState'
-import { isMobile } from 'react-device-detect'
+
 import ImageGallery from 'react-image-gallery';
 import "./image-gallery.css";
 import {PropertyDetailGrid} from "./PropertyDetailGrid";
+import {devices} from "../Utilities";
 
 export const PropertyModal = () => {
 
   const [property,setProperty] = useGlobalState('property')
   const videoRef = useRef(0)
+  const [device] = useGlobalState('device')
   if (!property)
     return null
   console.log('rendering PropertyModal')
@@ -72,7 +74,7 @@ export const PropertyModal = () => {
   console.log(property)
 
   return (
-    <Modal open={!!property} style={{direction:'rtl',overflow:isMobile?'auto':'none',maxHeight:isMobile?'':'calc(100vh)'}} onBackdropClick={() => setProperty(null)}>
+    <Modal open={!!property} style={{direction:'rtl',overflow:device == devices.Mobile?'auto':'none',maxHeight:device == devices.Mobile?'':'calc(100vh)'}} onBackdropClick={() => setProperty(null)}>
       <Grid container style={{
         right: '50%',
         maxWidth:'900px',

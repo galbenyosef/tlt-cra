@@ -5,7 +5,7 @@ import { getProperties} from '../../apiHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyList } from '../PropertyList/PropertyList';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
-import {devices, furnitureTypes, range, switchFilters} from '../Utilities'
+import {devices} from '../Utilities'
 import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
 import Logo_NOTEXT from '../../assets/Logo_NOTEXT.png'
@@ -96,10 +96,8 @@ const fetchProperties = (city) => {
 
 const Root = () => {
 
-  const setProperty = (val) => setGlobalState('selectedProperty',val)
   const [city,setCity] = useGlobalState('city')
   const [isLoading] = useGlobalState('loading')
-
 
   const onCityClick = city => {
     setCity(city)
