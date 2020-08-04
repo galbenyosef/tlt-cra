@@ -37,14 +37,14 @@ const PropertyList = () => {
 
   return (
     <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
-      <div style={{flexDirection:'column',display:'flex',maxWidth:window.innerWidth > 1000 ? '1300px': window.innerWidth > 660 ? '670px' : '320px' ,alignItems:'center'}}>
+      <div style={{flexDirection:'column',display:'flex',width:'100%',maxWidth:window.innerWidth > 1000 ? '1300px': window.innerWidth > 660 ? '670px' : '320px' ,alignItems:'center'}}>
         <PropertyListLoading/>
         <div style={{display:'flex',padding:20}}>
-          <FiGrid onClick={() => setListDisplay(0)}/>
-          <FiList onClick={() => setListDisplay(1)}/>
+          <FiGrid size={40} style={{cursor:'pointer'}} onClick={() => setListDisplay(0)}/>
+          <FiList size={40} style={{paddingRight:20,cursor:'pointer'}} onClick={() => setListDisplay(1)}/>
         </div>
         {
-          listDisplay ? <div style={{fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:'#fdf9c5'}}>
+          listDisplay ? <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:'#fdf9c5',width:'100%'}}>
               {
                 propertiesData.length > 0 && propertiesData.filter(p => p.isFiltered).map((prop,idx) =>
                   <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>

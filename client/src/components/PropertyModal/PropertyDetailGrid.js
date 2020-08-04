@@ -39,9 +39,6 @@ export const PropertyDetailGrid = ({
    }) =>
 
   <Grid container>
-    <Grid item xs={12}>
-      <p style={{textAlign:'center'}}>מפרט הדירה</p>
-    </Grid>
     {
       airconditioner?.length &&
       <Grid style={MifratItemStyle} item xs={4}>

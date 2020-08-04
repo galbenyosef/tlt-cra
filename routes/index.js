@@ -272,7 +272,27 @@ router.get('/properties/', async (req,res) => {
         renovation,
         floor,
         price,
-        custom_id
+        custom_id,
+        airconditioner,
+        boiler,
+        shower,
+        bathtub,
+        structure,
+        parking,
+        warehouse,
+        garden,
+        accessibility,
+        saferoom,
+        bars,
+        nets,
+        electricshutters,
+        parentsunit,
+        stairs,
+        landscape,
+        elevator,
+        entrance,
+        committee,
+        totalfloors
       }
     }) => ({
       id,
@@ -292,7 +312,27 @@ router.get('/properties/', async (req,res) => {
       price,
       furniture,
       renovation,
-      custom_id
+      custom_id,
+      airconditioner,
+      boiler,
+      shower,
+      bathtub,
+      structure,
+      parking,
+      warehouse,
+      garden,
+      accessibility,
+      saferoom,
+      bars,
+      nets,
+      electricshutters,
+      parentsunit,
+      stairs,
+      landscape,
+      elevator,
+      entrance,
+      committee,
+      totalfloors
     }))
 
     return res.send(properties)

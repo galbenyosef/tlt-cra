@@ -1,3 +1,5 @@
+import {colors} from "./colors";
+
 export const searchStyle = {
     option: (provided, state) => { return({
       ...provided,
@@ -12,7 +14,7 @@ export const searchStyle = {
         ...provided,
         // none of react-select's styles are passed to <Control />
         borderRadius: 0,
-        borderBottom:'2px solid rgba(29,31,60,.7)',
+        borderBottom:`2px solid ${colors.darkblue}`,
         borderTop:0,
         borderLeft:0,
         borderRight:0,

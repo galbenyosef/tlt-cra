@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
-import { Grid } from '@material-ui/core';
+import {Grid, Hidden} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LeadTypes } from '../Utilities';
-import TLT_LOGO from '../../assets/Logo_TLT.png'
+import TLT_LOGO from '../../assets/YellowLogoTrans_TLT.png'
 import {setGlobalState} from "../../globalState";
 import {onPropertyClicked} from "../../dataHandler";
+import {PropertyDetailGrid} from "../PropertyModal/PropertyDetailGrid";
+import {colors} from "../../colors";
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
@@ -64,8 +66,8 @@ const PropertyViewGrid = React.memo(({property:{
             textAlign: 'center',
             right: -35,
             fontSize:22,
-            backgroundColor: 'rgb(112, 146, 191)',
-            transform: 'rotate(45deg)',color:'white',fontWeight:'bolder',zIndex:1}}>{`חדש !`}</p>
+            backgroundColor: colors.darkblue,
+            transform: 'rotate(45deg)',fontWeight:'bolder',zIndex:1}}>{`חדש !`}</p>
           }
           {
             isFavourite ?
@@ -93,7 +95,7 @@ const PropertyViewGrid = React.memo(({property:{
             <div style={{display:'flex',flexDirection:'row',paddingBottom:10,justifyContent:'space-between',margin:'auto'}}>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
                 <div onClick={() => onPropertyClicked(id)}
-                  style={{padding:5,display:'flex',width:90,justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:'rgba(29,31,60,.7)',color:'white',}}>{`לפרטים`}</div>
+                  style={{padding:5,display:'flex',width:90,justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:colors.darkblue}}>{`לפרטים`}</div>
                 <div onClick={(e) => {e.stopPropagation();setLeadModal({type:LeadTypes.MeetingRequest,attributes:{kala_property_id:id}})}}
                    style={{padding:5,display:'flex',width:90,justifyContent:'center',alignItems:'center',fontSize:14,cursor:'pointer',backgroundColor:'rgba(255,255,255,0.2)',color:'white'}}>{`לפגישה`}
                 </div>
@@ -113,7 +115,7 @@ const PropertyViewGrid = React.memo(({property:{
 })
 
 
-const PropertyViewList = React.memo(({property:{
+const PropertyViewList = React.memo(({property,property:{
 
   id,
   created,
@@ -130,7 +132,11 @@ const PropertyViewList = React.memo(({property:{
   custom_id,
   city_id,
   propertytype,
-  isFavourite
+  isFavourite,
+  entrance,
+  committee,
+  totalfloors,
+  parking
 
 },index,toggleFavourite}) => {
 
@@ -145,24 +151,26 @@ const PropertyViewList = React.memo(({property:{
 
   const PropertyViewComponent = () =>
     <>
-      <div onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey'}}>
-        <div
-          style={{
-            borderRadius:10,
-            display:'flex',
-            height:66,
-            width:110,
-            backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize:thumb_file  ? 'cover' : '66px'
-          }}>
-        </div>
-        <div style={{display:'flex',flexDirection:'column',padding:'0px 10px',width:250}}>
-          <span style={{fontSize:16}}>{street_name}</span>
-          <span style={{fontSize:14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
-        </div>
-        <div style={{textAlign:'center',justifyContent:"space-between",width:150,padding:'0px 10px',alignItems:'center',display:'flex',height:'100%',borderLeft:'1px solid rgba(0,0,0,.1)',borderRight:'1px solid rgba(0,0,0,.1)'}}>
+      <Grid container onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
+        <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
+          <div
+            style={{
+              borderRadius:10,
+              display:'flex',
+              height:66,
+              width:110,
+              backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize:thumb_file  ? 'cover' : '66px'
+            }}>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',paddingRight:20}}>
+            <span style={{fontSize:16}}>{street_name}</span>
+            <span style={{fontSize:14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
+          </div>
+        </Grid>
+        <Grid item xs={4} sm={4} style={{textAlign:'center',justifyContent:"space-around",alignItems:'center',display:'flex',height:'100%',borderLeft:'1px solid rgba(0,0,0,.1)',borderRight:'1px solid rgba(0,0,0,.1)'}}>
           <div style={{display:'flex',flexDirection:'column'}}>
             <span style={{fontSize:16}}>{rooms}</span>
             <span style={{fontSize:14}}>חדרים</span>
@@ -175,26 +183,50 @@ const PropertyViewList = React.memo(({property:{
             <span style={{fontSize:16}}>{metres}</span>
             <span style={{fontSize:14}}>מ"ר</span>
           </div>
-        </div>
-        <div style={{display:'flex',flexDirection:'column',padding:'0px 10px',width:150}}>
-          <span style={{textAlign:'left'}}>
-            {`${price.toLocaleString()} ₪`}
-          </span>
-          <span style={{fontSize:10,textAlign:'left'}}>
-            {isNew? 'חדש' : ''}
-          </span>
-        </div>
-      </div>
+        </Grid>
+        <Hidden only={'xs'}>
+          <Grid item sm={3} style={{display:'flex',flexDirection:'column',paddingLeft:20}}>
+            <span style={{textAlign:'left'}}>
+              {`${price.toLocaleString()} ₪`}
+            </span>
+            <span style={{fontSize:10,textAlign:'left'}}>
+              {isNew? 'חדש' : ''}
+            </span>
+          </Grid>
+        </Hidden>
+      </Grid>
+      <Hidden only={'xs'}>
       {
         isCollapsed ?
-          <div style={{display:'flex',backgroundColor:'white',height:50}}>
-            <div style={{display:'flex',flexDirection:'column'}}>
-              <span>תיאור הנכס</span>
-              <span></span>
-            </div>
-          </div>
+          <Grid onClick={() => console.log(property)} container style={{display:'flex',backgroundColor:'white'}}>
+            <Grid item xs={8} sm={5} style={{display:'flex',flexDirection:'column',justifyContent:'space-between',padding:20,paddingBottom:55}}>
+              <div style={{display:'flex',flexDirection:'column'}}>
+                <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>תיאור הנכס</span>
+                <span style={{fontSize:12}}>דירה מושקעת משופצת. רהיטים... שולחן.... כריים גז... ארון הזזה 4 דלתות דלתות פנדור מיזוג חלונות אנטי סן ונגד רעשים מתאים לשתי שותפים דירה שחבל לפספס חנייה במפרץ השכונה על בסיס מקום פנוי</span>
+              </div>
+              <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מרפסות <span style={{fontSize:12}}>לא צוין</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מס תשלומים <span style={{fontSize:12}}>לא צוין</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{committee ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>חניות <span style={{fontSize:12}}>{(parking && parking[0] == 2 ? 2 :1) || 'לא צוין'}</span></span>
+              </div>
+            </Grid>
+            <Grid item xs={4} sm={4} style={{display:'flex',flexDirection:'column',textAlign:'center',padding:20}}>
+              <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>מה יש בנכס?</span>
+              <PropertyDetailGrid {...property}/>
+            </Grid>
+            <Grid item sm={3} style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',alignItems:'center',color:'white',textAlign:'center'}}>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue}}>לפגישה</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey'}}>סיור בנכס</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey'}}>התקשר</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue}}>מפה</span>
+            </Grid>
+          </Grid>
           : null
       }
+      </Hidden>
     </>
   return  (
       <PropertyViewComponent/>

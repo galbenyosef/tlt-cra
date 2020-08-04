@@ -1,6 +1,6 @@
 import React from 'react'
-import Logo_NOTEXT from '../../assets/Logo_NOTEXT.png'
-import {useGlobalState} from '../../globalState'
+import Logo_NOTEXT from '../../assets/YellowLogoNoTextTrans_TLT.png'
+
 import './spin.css'
 
 export const MainSpinner = () => {

@@ -8,7 +8,6 @@ import { PropertyModal } from '../PropertyModal/PropertyModal';
 import {devices} from '../Utilities'
 import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
-import Logo_NOTEXT from '../../assets/Logo_NOTEXT.png'
 import {Grid, Hidden} from '@material-ui/core';
 import {AiFillPhone,AiOutlineYoutube} from 'react-icons/ai'
 import {BsEnvelope} from 'react-icons/bs'
@@ -16,10 +15,12 @@ import {GiHamburgerMenu} from 'react-icons/gi'
 import {FaWhatsapp,FaFacebookF,FaTwitter,FaGooglePlusG,FaInstagram,FaPhoneAlt,FaRegHandPointer} from 'react-icons/fa'
 import {IoLogoWhatsapp} from 'react-icons/io'
 import {MainSpinner} from "./MainSpinner";
-import Logo_Trans from "../../assets/Logo_TLT_Trans.png";
-import Only_Text from "../../assets/Only_Text_Trans.png";
+import smallLogo from '../../assets/YellowLogoSideTextTrans_TLT.png'
+import bigLogo from '../../assets/YellowLogoTrans_TLT.png'
+import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
 import {onPropertyClicked} from "../../dataHandler";
+import {colors} from "../../colors";
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
@@ -121,32 +122,32 @@ const Root = () => {
 
     <Layout>
       <Grid container direction={'row'} style={{
-        backgroundColor:'rgb(29,31,60)'}}>
+        backgroundColor:colors.darkblue}}>
         <Hidden only={'xs'}>
           <Grid item sm={7}>
             <div style={{display:'flex',justifyContent:'center'}}>
                 <div style={{display:'flex',padding:10}}>
-                  <AiFillPhone style={{color:'yellow'}}/>
-                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10,color:'white'}}>054-552-5456</p>
+                  <AiFillPhone/>
+                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-552-5456</p>
                 </div>
                 <div style={{display:'flex',padding:10}}>
-                  <BsEnvelope style={{color:'yellow'}}/>
-                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10,color:'white'}}>tlthaifa@gmail.com</p>
+                  <BsEnvelope/>
+                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>tlthaifa@gmail.com</p>
                 </div>
                 <div style={{display:'flex',padding:10}}>
-                  <FaWhatsapp style={{color:'yellow'}}/>
-                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10,color:'white'}}>054-552-5456</p>
+                  <FaWhatsapp/>
+                  <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-552-5456</p>
                 </div>
             </div>
           </Grid>
         </Hidden>
         <Grid item xs={12} sm={5}>
           <div style={{display:'flex',justifyContent:'center'}}>
-              <FaFacebookF style={{padding:10,color:'white'}}/>
-              <FaTwitter style={{padding:10,color:'white'}}/>
-              <FaGooglePlusG style={{padding:10,color:'white'}}/>
-              <FaInstagram style={{padding:10,color:'white'}}/>
-              <AiOutlineYoutube style={{padding:10,color:'white'}}/>
+              <FaFacebookF style={{padding:10}}/>
+              <FaTwitter style={{padding:10}}/>
+              <FaGooglePlusG style={{padding:10}}/>
+              <FaInstagram style={{padding:10}}/>
+              <AiOutlineYoutube style={{padding:10}}/>
           </div>
         </Grid>
       </Grid>
@@ -164,35 +165,31 @@ const Root = () => {
       }}>
         <div style={{display:'flex',alignItems:'center'}}>
           <div style={{
-            width:100,
+            width:200,
             height:80,
-            backgroundImage:`url(${Logo_NOTEXT})`,
+            backgroundImage:`url(${smallLogo})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize:'100%'
           }}/>
-          <div style={{display:'flex',flexDirection:'column',paddingRight:10}}>
-            <p style={{whiteSpace:'nowrap',fontSize:22,fontWeight:'bolder',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>TLT - תיווך ללא תיווך</p>
-            <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>דירות להשכרה ללא תיווך</p>
-          </div>
         </div>
         <Hidden smDown>
           <div style={{display:'flex',flexWrap:'wrap'}}>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>ראשי</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant',color:'rgb(29,31,60)'}}>צור קשר</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>ראשי</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>צור קשר</p>
           </div>
           <div style={{display:'flex',alignItems:'center'}}>
-            <div style={{display:'flex',backgroundColor:'rgb(29,31,60)',padding:10}}>
-              <p style={{color:'white',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>התקשר</p>
-              <FaPhoneAlt style={{color:'white',paddingRight:10}}/>
+            <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10}}>
+              <p style={{textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>התקשר</p>
+              <FaPhoneAlt style={{paddingRight:10}}/>
             </div>
-            <div style={{display:'flex',backgroundColor:'rgb(29,31,60)',padding:10,marginRight:10}}>
-              <p style={{whiteSpace:'nowrap',color:'white',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח לווטסאפ</p>
-              <IoLogoWhatsapp style={{color:'white',paddingRight:10}}/>
+            <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10,marginRight:10}}>
+              <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח לווטסאפ</p>
+              <IoLogoWhatsapp style={{color:'greenlime',paddingRight:10}}/>
             </div>
           </div>
         </Hidden>
@@ -233,7 +230,7 @@ const Root = () => {
                     boxShadow:'0px 0px 3px 4px grey',
                     width:300,
                     height:300,
-                    backgroundImage:`url(${Logo_Trans})`,
+                    backgroundImage:`url(${bigLogo})`,
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize:'90%'
@@ -264,24 +261,24 @@ const Root = () => {
           </>
       }
       </div>
-      <div style={{display:'flex',flexWrap:'wrap',fontFamily:'Assistant',color:'white',width:'100%'}}>
+      <div style={{display:'flex',flexWrap:'wrap',fontFamily:'Assistant',width:'100%'}}>
         <div style={{height:60,width:'100%',display:'flex',justifyContent:'center',
-          alignItems:'center',backgroundColor:'rgb(29,31,60)',position:'relative'}}>
+          alignItems:'center',backgroundColor:colors.darkblue,position:'relative'}}>
           <p style={{padding:'0px 20px',textAlign:'center'}}>צריך עזרה? לא מוצא את הנכס שאתה מחפש? חייג עכשיו *4567 !</p>
           <div style={{bottom: -20,
             borderLeft: '20px solid transparent',
             borderRight: '20px solid transparent',
-            borderTop: '20px solid rgb(29,31,60)',
+            borderTop: `20px solid ${colors.darkblue}`,
             position: 'absolute'}}></div>
         </div>
         <div style={{minHeight:160,padding:'30px 0px',width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',backgroundColor:'black',flexWrap:'wrap'}}>
-          <div style={{padding:20,margin:'auto',minHeight:160,maxWidth:250,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+          <div style={{color:colors.darkblue,padding:20,margin:'auto',minHeight:160,maxWidth:250,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
             <p style={{fontSize:24}}>קצת עלינו</p>
             <p style={{fontSize:14}}>חברת תיווך ללא תיווך נוסדה בשנת 2014 ושינתה את כללי המשחק מקצה לקצה.
               מטרתנו היא להביא את החיבור הטוב ביותר בין השוכרים הפוטנציאלים לבין בעלי הנכסים.
             </p>
           </div>
-          <div style={{margin:'auto',minWidth:350,maxWidth:800,minHeight:160,display:'flex',justifyContent:'space-around',alignItems:'center'}}>
+          <div style={{color:colors.darkblue,margin:'auto',minWidth:350,maxWidth:800,minHeight:160,display:'flex',justifyContent:'space-around',alignItems:'center'}}>
             <div style={{minHeight:160,display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
               <p style={{fontSize:18,whiteSpace:'nowrap'}}>תפריט ראשי</p>
               <div>
@@ -313,7 +310,7 @@ const Root = () => {
               </div>
             </div>
           </div>
-          <div style={{padding:20,margin:'auto',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
+          <div style={{color:colors.darkblue,padding:20,margin:'auto',display:'flex',flexDirection:'column',justifyContent:'space-between',alignItems:'flex-start'}}>
             <p style={{fontSize:14,paddingBottom:15}}>הרשם לקבלת נכסים חדשים המתאימים לך !</p>
             <input style={{margin:'auto'}} placeholder='שם מלא'/>
             <input style={{margin:'auto'}} placeholder='אימייל'/>
