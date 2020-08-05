@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core';
 import {PropertyViewGrid, PropertyViewList} from './PropertyView'
 import {PropertyListLoading} from './PropertyListLoading'
 import { FiGrid,FiList } from "react-icons/fi";
+import {colors} from "../../colors";
 
 const PropertyList = () => {
 
@@ -44,7 +45,7 @@ const PropertyList = () => {
           <FiList size={40} style={{paddingRight:20,cursor:'pointer'}} onClick={() => setListDisplay(1)}/>
         </div>
         {
-          listDisplay ? <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:'#fdf9c5',width:'100%'}}>
+          listDisplay ? <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 propertiesData.length > 0 && propertiesData.filter(p => p.isFiltered).map((prop,idx) =>
                   <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
@@ -65,6 +66,4 @@ const PropertyList = () => {
   )
 }
 
-PropertyList.whyDidYouRender = true
-
-export {PropertyList}
+export default PropertyList

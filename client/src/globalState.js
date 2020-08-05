@@ -83,7 +83,7 @@ const initialState = {
     device:null,
     city:null,
     rootRef:createRef(),
-    listDisplay:0
+    listDisplay:1
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

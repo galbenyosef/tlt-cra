@@ -162,7 +162,8 @@ const PropertyViewList = React.memo(({property,property:{
               backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              backgroundSize:thumb_file  ? 'cover' : '66px'
+              backgroundSize:thumb_file  ? 'cover' : '66px',
+              backgroundColor:'white'
             }}>
           </div>
           <div style={{display:'flex',flexDirection:'column',paddingRight:20}}>

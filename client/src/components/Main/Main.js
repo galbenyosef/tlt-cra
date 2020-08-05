@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+
+import React, {Suspense, useEffect, useState} from 'react'
 import Layout from '../Layout'
 import {useGlobalState,setGlobalState} from '../../globalState'
 import { getProperties} from '../../apiHandler'
 import FiltersBar from './FiltersBar';
-import { PropertyList } from '../PropertyList/PropertyList';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
 import {devices} from '../Utilities'
 import { LeadModal } from '../PropertyModal/LeadModal';
@@ -21,6 +21,9 @@ import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
 import {onPropertyClicked} from "../../dataHandler";
 import {colors} from "../../colors";
+
+const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
+
 
 const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
@@ -257,7 +260,10 @@ const Root = () => {
               </div>
             }
             <FiltersBar/>
-            <PropertyList />
+            <Suspense fallback={<div>Loading...</div>}>
+              <PropertyList />
+            </Suspense>
+
           </>
       }
       </div>
