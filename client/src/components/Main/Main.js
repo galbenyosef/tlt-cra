@@ -21,6 +21,7 @@ import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
 import {onPropertyClicked} from "../../dataHandler";
 import {colors} from "../../colors";
+import {MediaModal} from "../PropertyList/MediaModal";
 
 const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
 
@@ -328,6 +329,7 @@ const Root = () => {
           </div>
         </div>
       </div>
+      <MediaModal/>
       <PropertyModal/>
       <LeadModal/>
       <SideFilters/>

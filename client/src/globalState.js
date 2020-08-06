@@ -2,6 +2,11 @@ import { createGlobalState } from 'react-hooks-global-state';
 import {constants} from './components/Utilities'
 import { createRef } from 'react';
 
+export const MediaModalTypes = {
+    Images: 1,
+    Videos: 2,
+}
+
 const {
     MinPrice,
     MaxPrice,
@@ -83,7 +88,12 @@ const initialState = {
     device:null,
     city:null,
     rootRef:createRef(),
-    listDisplay:1
+    listDisplay:1,
+    media:{
+        images:[],
+        videos:[],
+        type:0,
+    }
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

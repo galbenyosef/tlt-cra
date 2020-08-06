@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { LeadTypes } from '../Utilities';
 import TLT_LOGO from '../../assets/YellowLogoTrans_TLT.png'
-import {setGlobalState} from "../../globalState";
+import {MediaModalTypes, setGlobalState} from "../../globalState";
 import {onPropertyClicked} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyModal/PropertyDetailGrid";
 import {colors} from "../../colors";
@@ -141,28 +141,87 @@ const PropertyViewList = React.memo(({property,property:{
 },index,toggleFavourite}) => {
 
   const setLeadModal = val => setGlobalState('lead',val)
+  const setMediaModal = val => setGlobalState('media',val)
   const [isCollapsed,setIsCollapsed] = useState(false)
+  const videoRef = useRef(0)
+
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
   isNew.setDate(isNew.getDate() + 7);
 
   isNew = Date.now() < isNew
 
-  console.log('card render')
+  const {
+    pic_living_room__url,
+    pic_living_room2__url,
+    pic_balcony__url,
+    pic_kitchen__url,
+    pic_kitchen2__url,
+    pic_main_bedroom__url,
+    pic_bedroom__url,
+    pic_bathroom__url,
+    pic_bathroom2__url,
+    pic_view__url
+  } = property
 
+  let pictures = [pic_living_room__url,
+    pic_living_room2__url,
+    pic_balcony__url,
+    pic_kitchen__url,
+    pic_kitchen2__url,
+    pic_main_bedroom__url,
+    pic_bedroom__url,
+    pic_bathroom__url,
+    pic_bathroom2__url,
+    pic_view__url].filter(img => !!img)
+
+  let propertyImages = pictures.map(image => ({
+    original:`https://tlt.kala-crm.co.il/${image}`,
+    thumbnail:`https://tlt.kala-crm.co.il/${image}`,
+  }))
+
+  let media = {
+    images:propertyImages,
+    videos:[]
+  }
+
+  if (video__url){
+    media.videos.push({
+      original:'',
+      renderItem:() => (<div>
+        <video ref={videoRef} onClick={(e) => {if (e.target.paused)e.target.play();else e.target.pause()}} muted className={"image-gallery-image"}>
+          <source src={`https://tlt.kala-crm.co.il/${video__url}`} type="video/mp4"/>
+        </video>
+      </div>),
+      description: 'Render custom slides within the gallery',
+    })
+  }
+
+
+  console.log('card render')
+  console.log(media)
   const PropertyViewComponent = () =>
     <>
       <Grid container onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
         <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
           <div
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setMediaModal({
+                type:MediaModalTypes.Images,
+                ...media
+                })
+              }
+            }
             style={{
               borderRadius:10,
               display:'flex',
               height:66,
               width:110,
-              backgroundImage:`${thumb_file? `url(${imageUrl}${thumb_file?.sm})` : `url(${TLT_LOGO})`}`,
+              backgroundImage:`url(${media.images[0]?.original})`,
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              backgroundSize:thumb_file  ? 'cover' : '66px',
+              backgroundSize:'cover',
               backgroundColor:'white'
             }}>
           </div>
@@ -209,7 +268,7 @@ const PropertyViewList = React.memo(({property,property:{
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מרפסות <span style={{fontSize:12}}>לא צוין</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מס תשלומים <span style={{fontSize:12}}>לא צוין</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{committee ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>חניות <span style={{fontSize:12}}>{(parking && parking[0] == 2 ? 2 :1) || 'לא צוין'}</span></span>
               </div>

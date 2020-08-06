@@ -292,7 +292,17 @@ router.get('/properties/', async (req,res) => {
         elevator,
         entrance,
         committee,
-        totalfloors
+        totalfloors,
+        pic_living_room__url,
+        pic_living_room2__url,
+        pic_balcony__url,
+        pic_kitchen__url,
+        pic_kitchen2__url,
+        pic_main_bedroom__url,
+        pic_bedroom__url,
+        pic_bathroom__url,
+        pic_bathroom2__url,
+        pic_view__url
       }
     }) => ({
       id,
@@ -332,7 +342,17 @@ router.get('/properties/', async (req,res) => {
       elevator,
       entrance,
       committee,
-      totalfloors
+      totalfloors,
+      pic_living_room__url,
+      pic_living_room2__url,
+      pic_balcony__url,
+      pic_kitchen__url,
+      pic_kitchen2__url,
+      pic_main_bedroom__url,
+      pic_bedroom__url,
+      pic_bathroom__url,
+      pic_bathroom2__url,
+      pic_view__url
     }))
 
     return res.send(properties)
