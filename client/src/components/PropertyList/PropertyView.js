@@ -198,7 +198,7 @@ const PropertyViewList = React.memo(({property,property:{
 
 
   console.log('card render')
-  console.log(media)
+
   const PropertyViewComponent = () =>
     <>
       <Grid container onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
