@@ -93,6 +93,10 @@ const initialState = {
         images:[],
         videos:[],
         type:0,
+    },
+    map:{
+        lon:0,
+        lat:0
     }
 };
 

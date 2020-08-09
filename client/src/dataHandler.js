@@ -1,6 +1,6 @@
 import {getCoordinates, getProperty, getUser} from "./apiHandler";
 import {setGlobalState} from "./globalState";
-import {furnitureTypes, range, switchFilters} from "./components/Utilities";
+import {furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
 
 export const getAlternatives = ({id,price,rooms},options = []) => {
   return options
@@ -24,6 +24,33 @@ export const fetchCoordinates = async address => {
     console.log(e)
   }
   return
+}
+
+export const createPropertyDescription = property => {
+
+  const {
+    neighborhood_name,
+    street_name,
+    rooms,
+    metres,
+    city_id,
+    propertytype,
+    furniture,
+    renovation,
+    floor,
+    price,
+    structure,
+    totalfloors,
+  } = property
+
+  let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
+${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
+${furniture} במבנה ${structure} במחיר של ${price.toLocaleString()} ₪
+  `
+/*  let string = `${propertytype} ${renovationTypes[renovation]} ב${neighborhood_name}, ${street_name}, ${city_id}
+  ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors}קומות
+  ${furniture} ב${structure} במחיר של ${price}`*/
+  return string
 }
 
 export const filterProperties = (properties,filters) => {

@@ -22,6 +22,7 @@ import {aboutUsText} from "./aboutUsText";
 import {filterProperties, onPropertyClicked} from "../../dataHandler";
 import {colors} from "../../colors";
 import {MediaModal} from "../PropertyList/MediaModal";
+import {MapModal} from "../PropertyModal/MapModal";
 
 const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
 
@@ -356,6 +357,7 @@ const Root = () => {
         </div>
       </div>
       <MediaModal/>
+      <MapModal/>
 {/*      <PropertyModal/>
       <LeadModal/>*/}
       <SideFilters/>

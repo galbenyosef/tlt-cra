@@ -5,7 +5,7 @@ import { FaHeart } from 'react-icons/fa';
 import { LeadTypes } from '../Utilities';
 import TLT_LOGO from '../../assets/YellowLogoTrans_TLT.png'
 import {MediaModalTypes, setGlobalState} from "../../globalState";
-import {onPropertyClicked} from "../../dataHandler";
+import {createPropertyDescription, fetchCoordinates, onPropertyClicked} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyModal/PropertyDetailGrid";
 import {colors} from "../../colors";
 
@@ -121,23 +121,24 @@ const PropertyViewList = React.memo(({property,property:{
   created,
   thumb_file,
   video__url,
-  project,
   neighborhood_name,
   street_name,
   rooms,
   metres,
-  terrace,
   floor,
   price,
   custom_id,
   city_id,
   propertytype,
   isFavourite,
+  description,
   entrance,
+  tax,
+  furniture,
   committee,
   totalfloors,
-  parking,
-  isCollapsedOut
+  isCollapsedOut,
+  requirements
 
 },index,toggleFavourite}) => {
 
@@ -145,9 +146,10 @@ const PropertyViewList = React.memo(({property,property:{
     console.log(id)
   const setLeadModal = val => setGlobalState('lead',val)
   const setMediaModal = val => setGlobalState('media',val)
+  const setMapModal = val => setGlobalState('map',val)
+
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const videoRef = useRef(0)
-
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
   isNew.setDate(isNew.getDate() + 7);
 
@@ -191,12 +193,25 @@ const PropertyViewList = React.memo(({property,property:{
     media.videos.push({
       original:'',
       renderItem:() => (<div>
-        <video ref={videoRef} onClick={(e) => {if (e.target.paused)e.target.play();else e.target.pause()}} muted className={"image-gallery-image"}>
+        <video ref={videoRef} controls muted className={"image-gallery-image"}>
           <source src={`https://tlt.kala-crm.co.il/${video__url}`} type="video/mp4"/>
         </video>
       </div>),
-      description: 'Render custom slides within the gallery',
     })
+  }
+
+  const onExploreClicked = async () => {
+    let myPromise = () => new Promise((resolve,reject) => {
+      setMediaModal({
+        type:MediaModalTypes.Videos,
+        ...media
+      })
+      resolve()
+    })
+
+    await myPromise()
+    videoRef.current && videoRef.current.play()
+
   }
 
   console.log('card render')
@@ -264,15 +279,16 @@ const PropertyViewList = React.memo(({property,property:{
             <Grid item xs={8} sm={5} style={{display:'flex',flexDirection:'column',justifyContent:'space-between',padding:20,paddingBottom:55}}>
               <div style={{display:'flex',flexDirection:'column'}}>
                 <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>תיאור הנכס</span>
-                <span style={{fontSize:12}}>דירה מושקעת משופצת. רהיטים... שולחן.... כריים גז... ארון הזזה 4 דלתות דלתות פנדור מיזוג חלונות אנטי סן ונגד רעשים מתאים לשתי שותפים דירה שחבל לפספס חנייה במפרץ השכונה על בסיס מקום פנוי</span>
+                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{createPropertyDescription((property))}</span>
+                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{description}</span>
               </div>
               <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מרפסות <span style={{fontSize:12}}>לא צוין</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>מס תשלומים <span style={{fontSize:12}}>לא צוין</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>דרישות בחוזה <span style={{fontSize:12}}>{requirements || 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ריהוט <span style={{fontSize:12}}>{furniture.replace('ריהוט','') || 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ארנונה <span style={{fontSize:12}}>{parseInt(tax) ? `${tax.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>חניות <span style={{fontSize:12}}>{(parking && parking[0] == 2 ? 2 :1) || 'לא צוין'}</span></span>
               </div>
             </Grid>
             <Grid item xs={4} sm={4} style={{display:'flex',flexDirection:'column',textAlign:'center',padding:20}}>
@@ -280,10 +296,24 @@ const PropertyViewList = React.memo(({property,property:{
               <PropertyDetailGrid {...property}/>
             </Grid>
             <Grid item sm={3} style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',alignItems:'center',color:'white',textAlign:'center'}}>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue}}>לפגישה</span>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey'}}>סיור בנכס</span>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey'}}>התקשר</span>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue}}>מפה</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}>לפגישה</span>
+              {
+                media.videos.length ? <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
+                      onClick={() => onExploreClicked()}>סיור בנכס</span>
+                  :
+                  <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
+                        >לא קיים וידאו</span>
+              }
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}>התקשר</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
+                onClick={async () => {
+                  let coords = await fetchCoordinates([street_name,neighborhood_name,city_id].join(', '))
+                  if (coords ){
+                    console.log(coords)
+                    const {lon,lat} = coords
+                    setMapModal({lon,lat})
+                  }
+                }}>מפה</span>
             </Grid>
           </Grid>
           : null

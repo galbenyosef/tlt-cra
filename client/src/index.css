@@ -31,5 +31,13 @@ code {
 ::-webkit-scrollbar {
   display: none;
 }
+video::-webkit-media-controls-volume-slider {
+  display: none;
+}
+
+video::-webkit-media-controls-mute-button {
+  display: none;
+}
+
 @import url('https://fonts.googleapis.com/css?family=Assistant&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
