@@ -38,7 +38,7 @@ const PropertyList = () => {
 
   return (
     <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
-      <div style={{flexDirection:'column',display:'flex',width:'100%',maxWidth:window.innerWidth > 1000 ? '1300px': 'auto' /*window.innerWidth > 660 ? '670px' : '320px'*/ ,alignItems:'center'}}>
+      <div style={{flexDirection:'column',display:'flex',width:'100%',maxWidth:window.innerWidth > 1000 ? '1300px': 'auto' ,alignItems:'center'}}>
         <PropertyListLoading/>
         <div style={{display:'flex',padding:20}}>
           <FiGrid size={40} style={{cursor:'pointer'}} onClick={() => setListDisplay(0)}/>

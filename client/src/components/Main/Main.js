@@ -19,7 +19,7 @@ import smallLogo from '../../assets/YellowLogoSideTextTrans_TLT.png'
 import bigLogo from '../../assets/YellowLogoTrans_TLT.png'
 import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
-import {onPropertyClicked} from "../../dataHandler";
+import {filterProperties, onPropertyClicked} from "../../dataHandler";
 import {colors} from "../../colors";
 import {MediaModal} from "../PropertyList/MediaModal";
 
@@ -39,63 +39,56 @@ const resize = () => {
     setDevice(devices.Desktop)
 }
 
-const fetchProperties = (city) => {
+const fetchProperties = async (city) => {
 
-  const setIsLoading = (val) => setGlobalState('loading',val)
   const setProperties = (val) => setGlobalState('properties',val)
   const setAddresses = (val) => setGlobalState('addresses',val)
   const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
   const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
 
-  setIsLoading(true)
+  const data = await getProperties(city)
 
-  getProperties(city)
-    .then(data => {
-      const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+  const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
-      let addressesMap = {}
-      let propertiesNumbers = []
+  let addressesMap = {}
+  let propertiesNumbers = []
 
-      let favouritesString = localStorage.getItem('favourites')
-      let favourites = favouritesString && JSON.parse(favouritesString) || []
+  let favouritesString = localStorage.getItem('favourites')
+  let favourites = favouritesString && JSON.parse(favouritesString) || []
 
-      for (let property of properties){
-        let {
-          neighborhood_name,
-          street_name
-        } = property
+  for (let property of properties){
+    let {
+      neighborhood_name,
+      street_name
+    } = property
 
-        property.isFiltered = true
-        if (favourites && favourites.includes(property.id))
-          property.isFavourite = true
-        if (!addressesMap[neighborhood_name])
-          addressesMap[neighborhood_name] = []
-        if (!addressesMap[neighborhood_name].includes(street_name))
-          addressesMap[neighborhood_name].push(street_name)
+    property.isFiltered = true
+    if (favourites && favourites.includes(property.id))
+      property.isFavourite = true
+    if (!addressesMap[neighborhood_name])
+      addressesMap[neighborhood_name] = []
+    if (!addressesMap[neighborhood_name].includes(street_name))
+      addressesMap[neighborhood_name].push(street_name)
 
-        if (property.custom_id)
-          propertiesNumbers.push(property.custom_id + '')
+    if (property.custom_id)
+      propertiesNumbers.push(property.custom_id + '')
 
-      }
+  }
 
-      let addresses = []
-      let neighborhoods = Object.keys(addressesMap).sort()
-      for (let i=0; i<neighborhoods.length;i++){
-        addresses.push(neighborhoods[i])
-        for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
-          addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
-        }
-      }
+  let addresses = []
+  let neighborhoods = Object.keys(addressesMap).sort()
+  for (let i=0; i<neighborhoods.length;i++){
+    addresses.push(neighborhoods[i])
+    for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
+      addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
+    }
+  }
 
-      setNeighborhoods(neighborhoods)
-      setAddresses(addresses)
-      setProperties(properties)
-      setPropertiesNumbers(propertiesNumbers)
-    })
-    .catch(e => console.log(e))
-    .then(() => {
-      setIsLoading(false)
-    })
+  setNeighborhoods(neighborhoods)
+  setAddresses(addresses)
+  setProperties(properties)
+  setPropertiesNumbers(propertiesNumbers)
+
 }
 
 
@@ -103,18 +96,51 @@ const Root = () => {
 
   const [city,setCity] = useGlobalState('city')
   const [isLoading] = useGlobalState('loading')
+  const setIsLoading = (val) => setGlobalState('loading',val)
+  const [filters,setFilters] = useGlobalState('filters')
+  const setProperties = (val) => setGlobalState('properties',val)
 
-  const onCityClick = city => {
+  const onCityClick = async city => {
+    setIsLoading(true)
     setCity(city)
-    fetchProperties(city)
+    await fetchProperties(city)
+    setIsLoading(false)
+  }
+
+  const showSingleProperty = async (propertyId) => {
+
+    setIsLoading(true)
+    let property = await onPropertyClicked(propertyId)
+    console.log(property)
+    let {city_id:city,custom_id} = property
+    setCity(city)
+    await fetchProperties(city)
+
+    setFilters({...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
+    setProperties(
+      properties => {
+        let selectedProperty = filterProperties(properties,{...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
+        if (selectedProperty.length){
+          return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
+        }
+      }
+    )
+    setIsLoading(false)
+
   }
 
   useEffect(() => {
 
     window.addEventListener("resize",() => resize());
-    if (window.location.pathname.includes('/') && window.location.pathname.length > 1 && Number.isInteger(parseInt(window.location.pathname.split('/')[1]))){
-      console.log(window.location.pathname.split('/')[1])
-      onPropertyClicked(window.location.pathname.split('/')[1])
+    let isRoute = window.location.pathname.includes('/')
+    let idCandidate = isRoute && window.location.pathname.split('/')[1]
+    let isPropertyId = idCandidate && Number.isInteger(parseInt(idCandidate)) && idCandidate.length == 5
+    let propertyId = isPropertyId && parseInt(idCandidate)
+    if (propertyId){
+      console.log(propertyId)
+
+      showSingleProperty(propertyId)
+
     }
 
     resize()
@@ -209,7 +235,7 @@ const Root = () => {
           <>
             <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
               <p style={{padding:'0px 10px'}}>
-                בחר איזור חיפוש:
+                בחר עיר מבוקשת:
               </p>
               <p onClick={() => onCityClick('חיפה') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
                 חיפה
@@ -330,8 +356,8 @@ const Root = () => {
         </div>
       </div>
       <MediaModal/>
-      <PropertyModal/>
-      <LeadModal/>
+{/*      <PropertyModal/>
+      <LeadModal/>*/}
       <SideFilters/>
     </Layout>
 

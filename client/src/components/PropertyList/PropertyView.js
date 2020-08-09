@@ -136,13 +136,16 @@ const PropertyViewList = React.memo(({property,property:{
   entrance,
   committee,
   totalfloors,
-  parking
+  parking,
+  isCollapsedOut
 
 },index,toggleFavourite}) => {
 
+  if (isCollapsedOut)
+    console.log(id)
   const setLeadModal = val => setGlobalState('lead',val)
   const setMediaModal = val => setGlobalState('media',val)
-  const [isCollapsed,setIsCollapsed] = useState(false)
+  const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const videoRef = useRef(0)
 
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
@@ -196,12 +199,11 @@ const PropertyViewList = React.memo(({property,property:{
     })
   }
 
-
   console.log('card render')
 
   const PropertyViewComponent = () =>
     <>
-      <Grid container onClick={() => setIsCollapsed(isCollapsed => !isCollapsed)} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
+      <Grid container onClick={() => {console.log(property);setIsCollapsed(isCollapsed => !isCollapsed)}} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
         <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
           <div
             onClick={(e) => {
@@ -257,7 +259,7 @@ const PropertyViewList = React.memo(({property,property:{
       </Grid>
       <Hidden only={'xs'}>
       {
-        isCollapsed ?
+        isCollapsed?
           <Grid onClick={() => console.log(property)} container style={{display:'flex',backgroundColor:'white'}}>
             <Grid item xs={8} sm={5} style={{display:'flex',flexDirection:'column',justifyContent:'space-between',padding:20,paddingBottom:55}}>
               <div style={{display:'flex',flexDirection:'column'}}>

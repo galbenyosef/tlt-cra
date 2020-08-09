@@ -13,6 +13,7 @@ import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
 import {clearFilterStyle, filterBoxStyle, searchStyle} from '../../styles';
 import {colors} from "../../colors";
+import {filterProperties} from "../../dataHandler";
 
 const {
   MinPrice,
@@ -28,84 +29,6 @@ const {
   MinFloor,
   MaxFloor
 } = constants
-
-
-const filterProperties = (properties,filters) => {
-
-  const {
-    //default values
-    budgetFrom,
-    budgetTo,
-    roomsFrom,
-    roomsTo,
-    renovationFrom,
-    renovationTo,
-    addresses,
-    addressesActive,
-    address,
-    propertyNumber,
-    furnitureFrom,
-    furnitureTo,
-    metresFrom,
-    metresTo,
-    floorFrom,
-    floorTo,
-  } = filters
-
-  console.log('filters : ',filters)
-
-  let furnitureRange = range(furnitureFrom,furnitureTo)
-  let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
-
-  let filtered = properties
-    .filter(({
-               price,
-               rooms,
-               metres,
-               floor,
-               renovation,
-               furniture,
-             }) => {
-
-      return (budgetFrom <= price) && (price <= budgetTo) &&
-        (metresFrom <= metres) && (metres <= metresTo) &&
-        (roomsFrom <= rooms) && (rooms <= roomsTo) &&
-        (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
-        (renovationFrom <= renovation) && (renovation <= renovationTo) &&
-        (furnitureRangeText.some(text => furniture === text));
-
-    })
-  Object.keys(switchFilters).forEach(filter => {
-    if (filters[filter])
-      filtered = filtered.filter(prop => prop[filter])
-  })
-
-  if (addressesActive){
-    filtered = filtered.filter(({neighborhood_name}) => addresses.some(addr => neighborhood_name.includes(addr)))
-  }
-  else if (address){
-    filtered = filtered.filter(({neighborhood_name,street_name}) => {
-      let [neighborhood,street] = address.split(', ')
-      if (street)
-        return (neighborhood_name === neighborhood && street_name === street)
-      return (neighborhood_name === neighborhood)
-    })
-  }
-  else if (propertyNumber)
-    filtered = filtered.filter(({custom_id}) =>  custom_id + '' === propertyNumber)
-
-  filtered = filtered.map(({id}) => id)
-
-  let retval = [...properties]
-  for (let property of retval){
-    if (filtered.includes(property.id)){
-      property.isFiltered = true
-    }
-    else
-      property.isFiltered = false
-  }
-  return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
-}
 
 const FiltersBar = () => {
 

@@ -40,9 +40,10 @@ export const MediaModal = () => {
           top: '50%',
           transform: 'translate(-50%, -50%)',
           position: 'absolute'}}>
+          <div style={{display:'flex',justifyContent:'center',width:'100vw',maxWidth:660}}>
           <ImageGallery renderCustomControls={_renderCustomControls} indexSeparator={' מתוך '} thumbnailPosition={isVideos? 'bottom' : device === devices.Desktop ? 'right' : 'bottom'} showPlayButton={false} showThumbnails={isVideos ? false :true} showIndex={
             isVideos ? false : true
-          } showBullets={isVideos?false:true} isRTL items={items} />
+          } showBullets={isVideos?false:true} isRTL items={items} /></div>
         </div>
 
       </Modal>
