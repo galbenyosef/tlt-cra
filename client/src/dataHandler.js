@@ -1,6 +1,7 @@
-import {getCoordinates, getProperty, getUser} from "./apiHandler";
+import {createLead, getCoordinates, getProperty, getUser} from "./apiHandler";
 import {setGlobalState} from "./globalState";
 import {furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
+import moment from "moment";
 
 export const getAlternatives = ({id,price,rooms},options = []) => {
   return options
@@ -45,7 +46,7 @@ export const createPropertyDescription = property => {
 
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
-${furniture} במבנה ${structure} במחיר של ${price.toLocaleString()} ₪
+${furniture} ${structure != 'ישן' ? `בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
   `
 /*  let string = `${propertytype} ${renovationTypes[renovation]} ב${neighborhood_name}, ${street_name}, ${city_id}
   ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors}קומות
@@ -133,7 +134,6 @@ export const onPropertyClicked = async (id) => {
 
   const setProperty = val => setGlobalState('property',val)
 
-
   let property = await fetchProperty(id)
   const {
     street_name,neighborhood_name,city_id
@@ -143,7 +143,7 @@ export const onPropertyClicked = async (id) => {
   let coordinates = await fetchCoordinates(addressString)
   let alternatives = getAlternatives(property)
   setProperty({...property,alternatives,coordinates})
-
+  console.log(property)
   return property
 }
 
@@ -177,4 +177,31 @@ export const fetchProperty = async (id) => {
     console.log(e)
   }
   return property
+}
+
+
+export const createLeadKala = async (data) => {
+
+  const setLoading = val => setGlobalState('loading',val)
+
+  setLoading(true)
+
+  try {
+
+    let body = {
+      ...data,
+      attributes:{
+        ...data.attributes,
+        actual_when: moment(data.attributes.actual_when).format("DD-MM-YYYY HH:mm")
+      }
+    }
+
+    if (await createLead(body))
+      console.log('ok sent')
+
+  }
+  catch(e){
+    console.log(e)
+  }
+  setLoading(false)
 }

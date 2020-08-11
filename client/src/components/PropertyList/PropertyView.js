@@ -2,9 +2,9 @@ import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
 import { FiHeart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
-import { LeadTypes } from '../Utilities';
+import {devices, LeadTypes} from '../Utilities';
 import TLT_LOGO from '../../assets/YellowLogoTrans_TLT.png'
-import {MediaModalTypes, setGlobalState} from "../../globalState";
+import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
 import {createPropertyDescription, fetchCoordinates, onPropertyClicked} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyModal/PropertyDetailGrid";
 import {colors} from "../../colors";
@@ -138,7 +138,8 @@ const PropertyViewList = React.memo(({property,property:{
   committee,
   totalfloors,
   isCollapsedOut,
-  requirements
+  requirements,
+  agent_id
 
 },index,toggleFavourite}) => {
 
@@ -147,7 +148,7 @@ const PropertyViewList = React.memo(({property,property:{
   const setLeadModal = val => setGlobalState('lead',val)
   const setMediaModal = val => setGlobalState('media',val)
   const setMapModal = val => setGlobalState('map',val)
-
+  const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const videoRef = useRef(0)
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
@@ -168,7 +169,12 @@ const PropertyViewList = React.memo(({property,property:{
     pic_view__url
   } = property
 
-  let pictures = [pic_living_room__url,
+  let pictures =[]
+
+  if (thumb_file)
+    pictures.push(`/common/assets/748/724/${thumb_file.lg}`)
+
+  pictures = pictures.concat([pic_living_room__url,
     pic_living_room2__url,
     pic_balcony__url,
     pic_kitchen__url,
@@ -177,7 +183,7 @@ const PropertyViewList = React.memo(({property,property:{
     pic_bedroom__url,
     pic_bathroom__url,
     pic_bathroom2__url,
-    pic_view__url].filter(img => !!img)
+    pic_view__url]).filter(img => !!img)
 
   let propertyImages = pictures.map(image => ({
     original:`https://tlt.kala-crm.co.il/${image}`,
@@ -218,13 +224,16 @@ const PropertyViewList = React.memo(({property,property:{
 
   const PropertyViewComponent = () =>
     <>
-      <Grid container onClick={() => {console.log(property);setIsCollapsed(isCollapsed => !isCollapsed)}} style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
+      <Grid container onClick={() => {
+        console.log(property);(device == devices.Mobile) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}
+      } style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
         <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
           <div
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
               setMediaModal({
+                opened:true,
                 type:MediaModalTypes.Images,
                 ...media
                 })
@@ -296,7 +305,14 @@ const PropertyViewList = React.memo(({property,property:{
               <PropertyDetailGrid {...property}/>
             </Grid>
             <Grid item sm={3} style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',alignItems:'center',color:'white',textAlign:'center'}}>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}>לפגישה</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
+                onClick={() => {
+                  setLeadModal(modal => {
+                    let user_id = agent_id
+                    let kala_property_id = id
+                    return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id}})
+                  })
+                }}>לפגישה</span>
               {
                 media.videos.length ? <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
                       onClick={() => onExploreClicked()}>סיור בנכס</span>
@@ -304,7 +320,7 @@ const PropertyViewList = React.memo(({property,property:{
                   <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
                         >לא קיים וידאו</span>
               }
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}>התקשר</span>
+              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}>צור קשר</span>
               <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
                 onClick={async () => {
                   let coords = await fetchCoordinates([street_name,neighborhood_name,city_id].join(', '))

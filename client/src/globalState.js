@@ -24,30 +24,39 @@ const {
 
 const initialState = {
     filters:{
-        //default values
+        modalOpened:false,
+        //budget default values
         budgetFrom:MinPrice,
         budgetTo:MaxPrice,
         budgetActive:0,
+        //rooms default values
         roomsFrom:MinRooms,
         roomsTo:MaxRooms,
         roomsActive:0,
+        //renovation default values
         renovationFrom:MinRenovation,
         renovationTo:MaxRenovation,
         renovationActive:0,
+        //free search default values
         addresses:[],
         addressesActive:0,
         address:'',
         propertyNumber:'',
+        //furniture default values
         furnitureFrom:MinFurniture,
         furnitureTo:MaxFurniture,
         furnitureActive:0,
+
         propertyTypes:[],
+        //metres default values
         metresFrom:MinMetres,
         metresTo:MaxMetres,
         metresActive:0,
+        //floor default values
         floorFrom:MinFloor,
         floorTo:MaxFloor,
         floorActive:0,
+        //extended grid default values
         terrace:false,
         bathtub:false,
         landscape:false,
@@ -64,40 +73,54 @@ const initialState = {
         electricshutters:false,
         parentsunit:false,
     },
+    //filter element default values
     currentFilter:{
         currentFilterName:'',
         currentFilterElement:'',
     },
     isFavouritesView: false,
-    lead: {
-        full_name: '',
-        phone: '',
-        actually_when: '',
-        type: '',
-        comments: ''
-    },
     property: null,
+    //data
     properties:[],
     propertiesNumbers:[],
     addresses: [],
     neighborhoods: [],
+    city:null,
+
+    //elementary
     sideFiltersVisible: false,
     listRef: null,
     loading: false,
     addressSearch: '',
     device:null,
-    city:null,
     rootRef:createRef(),
     listDisplay:1,
+
+    //modals
     media:{
         images:[],
         videos:[],
         type:0,
+        opened:false
     },
     map:{
         lon:0,
         lat:0
-    }
+    },
+    lead: {
+        opened: false,
+        attributes:{
+            actual_when: '',
+            kala_property_id: '',
+        },
+        user_id: '',
+        subject: '',
+        full_name: '',
+        phone: '',
+        email: '',
+        comments: '',
+
+    },
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)

@@ -1,122 +1,83 @@
 import React from 'react'
-import { Modal,Grid, Input, InputAdornment, Button,TextField } from '@material-ui/core'
+import { Modal, Input, InputAdornment, Button,TextField } from '@material-ui/core'
 import { useGlobalState, setGlobalState } from '../../globalState'
-import { LeadTypes, getValueByDevice } from '../Utilities'
 import { createLead } from '../../apiHandler'
 import { IoMdPhonePortrait } from 'react-icons/io'
 import DatePicker from "react-datetime-picker"
 import moment from 'moment'
+import {createLeadKala} from "../../dataHandler";
 
 export const LeadModal = () => {
 
-    const [opened,setOpened] = useGlobalState('lead')
+  const [leadModalData,setLeadModalData] = useGlobalState('lead')
 
-    const {
-        type,
-        actually_when,
-        comments
-    } = opened
 
-    if (!type)
-        return null
 
-    const setLoading = val => setGlobalState('loading',val)
-
-    const createLeadKala = async (data) => {
-        setLoading(true)
-    
-        try {
-        
-            let body = {
-                ...data,
-                attributes:{
-                    ...data.attributes,
-                    comments,
-                    actual_when:moment(actually_when).format("DD-MM-YYYY HH:mm")
-                },
-                status_id:type === LeadTypes.MeetingRequest ? 3077:3124
-            }
-
-            if (await createLead(body))
-                setOpened(false)
-
-        }
-        catch(e){
-            console.log(e)
-        }
-        setLoading(false)
+  const {
+    opened,
+    user_id,
+    subject,
+    full_name,
+    phone,
+    email,
+    comments,
+    attributes:{
+      actual_when,
+      kala_property_id,
     }
+  } = leadModalData
 
-    return (
-        <Modal open={!!opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setOpened(false)}>
-            <div style={{
-               right: '50%',
-               maxWidth: '90%',
-               top: '50%',
-               transform: 'translate(50%, -50%)',
-               position: 'absolute',
-               display:'flex',
-            }} >
-                <div style={{backgroundColor:'white'}}>
-                    <Grid container spacing={getValueByDevice(3,2,0)} style={{padding:30}}>
-                        <Grid item xs={12} md={6} style={{paddingBottom:15,display:'flex',justifyContent:'center',alignItems:'center'}}>
-                            <Input
-                                placeholder="שם מלא"
-                                margin="dense"
-                                variant="outlined"
-                                value={opened?.full_name || ''}
-                                onChange={
-                                    e => setOpened({...opened,full_name:e.currentTarget.value})
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6} style={{paddingBottom:15,display:'flex',justifyContent:'center',alignItems:'center'}}>
-                            <Input
-                                endAdornment={
-                                    <InputAdornment position={'start'}>
-                                        <IoMdPhonePortrait/>
-                                    </InputAdornment>
-                                }
-                                placeholder="נייד"
-                                margin="dense"
-                                variant="outlined"
-                                value={opened?.phone || ''}
-                                onChange={
-                                    e => setOpened({...opened,phone:e.currentTarget.value})
-                                }
-                            />
-                        </Grid>
-                        {
-                            type === LeadTypes.MeetingRequest &&
-                            <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',paddingBottom:15}}>
-                                <p>בחר תאריך ושעה</p>
-                                <DatePicker
-                                    value={actually_when}
-                                    className={'datetimepicker'}
-                                    onChange={actually_when => {setOpened({...opened,actually_when})}}
-                                    format={"dd/MM/yyyy HH:mm"}
-                                    locale={"he-IL"}
-                                    minDate={new Date()}
-                                />
-                            </Grid>
-                        }
-                        <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',paddingBottom:15}}>
-                            <p>הערות נוספות</p>
-                            <TextField multiline onChange={e => setOpened({...opened,comments:e.currentTarget.value})} value={opened.comments}/>
-                        </Grid>
-                        <Grid item xs={12} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-                            <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
-                                const {full_name,phone,actually_when} = opened
-                                if (full_name && full_name.length > 2 && phone.replace('-','').length === 10 && ((actually_when && type === LeadTypes.MeetingRequest) || type !== LeadTypes.MeetingRequest))
-                                    createLeadKala(opened)
-                                else{
-                                    alert('התגלתה שגיאה באחד מן השדות')
-                                }
-                            }}>שלח</Button>
-                        </Grid>
-                    </Grid>
-                </div>
-            </div>
-        </Modal>
-    )
+  if (!opened)
+    return null
+
+  const setLoading = val => setGlobalState('loading',val)
+  const setModalProp = (prop,value) => setLeadModalData(data => ({...data,[prop]:value}))
+
+  return (
+    <Modal open={opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setLeadModalData(data => ({...data,opened:false}))}>
+      <div style={{
+        right: '50%',
+        maxWidth: '90%',
+        top: '50%',
+        transform: 'translate(50%, -50%)',
+        position: 'absolute',
+        display:'flex',
+      }} >
+        <div style={{backgroundColor:'white'}}>
+          <div style={{padding:30}}>
+            <form style={{display:'flex',flexDirection:'column'}}>
+              <label htmlFor='nameInput'>
+                שם מלא (חובה)
+              </label>
+              <input style={{border:'0.5px solid black'}} id='nameInput' type='text' value={full_name} onChange={e => setModalProp('full_name',e.currentTarget.value)}/>
+              <label htmlFor='phoneInput'>
+                טלפון (חובה)
+              </label>
+              <input style={{border:'0.5px solid black'}} id='phoneInput' type='text' value={full_name} onChange={e => setModalProp('full_name',e.currentTarget.value)}/>
+              <label htmlFor='mailInput'>
+                מייל (חובה)
+              </label>
+              <input style={{border:'0.5px solid black'}} id='mailInput' type='text' value={full_name} onChange={e => setModalProp('email',e.currentTarget.value)}/>
+              <p>בחר תאריך ושעה</p>
+              <DatePicker
+                value={actual_when}
+                className={'datetimepicker'}
+                onChange={actually_when => setModalProp('attributes.actual_when',actually_when)}
+                format={"dd/MM/yyyy HH:mm"}
+                locale={"he-IL"}
+                minDate={new Date()}
+              />
+              <Button style={{border:'1px solid blue'}} color='primary' onClick={() => {
+                if (full_name && full_name.length > 2 && phone.replace('-','').length === 10)
+                  createLeadKala(leadModalData)
+                else{
+                  alert('התגלתה שגיאה באחד מן השדות')
+                }
+              }}>שלח</Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  )
 }

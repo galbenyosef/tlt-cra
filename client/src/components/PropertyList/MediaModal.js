@@ -31,10 +31,10 @@ export const MediaModal = () => {
   else if (mediaModal.type == MediaModalTypes.Videos)
     items = mediaModal.videos
 
-
+  const {opened} = mediaModal
   console.log(items)
   return(
-      <Modal open={!!mediaModal.type} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setMediaModal({type:0,images:[],videos:[]})}>
+      <Modal open={opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setMediaModal({type:0,images:[],videos:[],opened:false})}>
         <div style={{
           left: '50%',
           top: '50%',

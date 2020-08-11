@@ -81,9 +81,6 @@ const FiltersBar = () => {
   const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
   return (
-    <>
-      <p style={{fontWeight:'bolder',paddingBottom:10,color:colors.darkblue,textDecoration:'underline',margin:'auto',fontSize:32}}>חיפוש מתקדם:</p>
-
       <div
         style={{
           border:'2px solid grey',
@@ -97,7 +94,7 @@ const FiltersBar = () => {
           boxShadow:'0px 0px 10px 0px grey',
           width:'fit-content',
           alignSelf:'center',
-          marginBottom:24
+          margin:'24px 0px'
         }}>
 
         <div
@@ -221,13 +218,13 @@ const FiltersBar = () => {
             </div>
           }
 
-          <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
+{/*          <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
             <TuneOutlined/>
             {
               device !== devices.Mobile &&
               <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
             }
-          </div>
+          </div>*/}
 
           <div onClick={() =>  {
             if (isFavouritesView){
@@ -591,7 +588,6 @@ const FiltersBar = () => {
           }
         </StyledMenu>
       </div>
-    </>
   )
 }
 

@@ -5,14 +5,24 @@ import {useGlobalState,setGlobalState} from '../../globalState'
 import { getProperties} from '../../apiHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
-import {devices} from '../Utilities'
+import {devices, getValueByDevice} from '../Utilities'
 import { LeadModal } from '../PropertyModal/LeadModal';
 import { SideFilters } from '../SideFilters';
 import {Grid, Hidden} from '@material-ui/core';
 import {AiFillPhone,AiOutlineYoutube} from 'react-icons/ai'
 import {BsEnvelope} from 'react-icons/bs'
 import {GiHamburgerMenu} from 'react-icons/gi'
-import {FaWhatsapp,FaFacebookF,FaTwitter,FaGooglePlusG,FaInstagram,FaPhoneAlt,FaRegHandPointer} from 'react-icons/fa'
+import {
+  FaSearch,
+  FaWhatsapp,
+  FaFacebookF,
+  FaTwitter,
+  FaGooglePlusG,
+  FaInstagram,
+  FaPhoneAlt,
+  FaRegHandPointer,
+  FaHeart
+} from 'react-icons/fa'
 import {IoLogoWhatsapp} from 'react-icons/io'
 import {MainSpinner} from "./MainSpinner";
 import smallLogo from '../../assets/YellowLogoSideTextTrans_TLT.png'
@@ -23,6 +33,8 @@ import {filterProperties, onPropertyClicked} from "../../dataHandler";
 import {colors} from "../../colors";
 import {MediaModal} from "../PropertyList/MediaModal";
 import {MapModal} from "../PropertyModal/MapModal";
+import {FiltersModal} from "../FiltersModal";
+import {NewPropertyModal} from "../NewPropertyModal";
 
 const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
 
@@ -100,6 +112,9 @@ const Root = () => {
   const setIsLoading = (val) => setGlobalState('loading',val)
   const [filters,setFilters] = useGlobalState('filters')
   const setProperties = (val) => setGlobalState('properties',val)
+  const [isFavouritesView] = useGlobalState('isFavouritesView')
+  const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
+  const {modalOpened:filtersModalOpened} = filters
 
   const onCityClick = async city => {
     setIsLoading(true)
@@ -183,78 +198,108 @@ const Root = () => {
         </Grid>
       </Grid>
       <Grid container direction={'row'} style={{
-        width:'100%',
-        display:'flex',
-        justifyContent:'space-around',
-        flexWrap:'nowrap',
-        alignItems:'center',
         backgroundColor:'white',
         boxShadow: '0px 10px 10px 0px grey',
         position:'sticky',
         top:0,
         zIndex:2,
       }}>
-        <div style={{display:'flex',alignItems:'center'}}>
-          <div style={{
-            width:200,
-            height:80,
-            backgroundImage:`url(${smallLogo})`,
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize:'100%'
-          }}/>
-        </div>
-        <Hidden smDown>
-          <div style={{display:'flex',flexWrap:'wrap'}}>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>ראשי</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>צור קשר</p>
-          </div>
+        <div style={{width:'100%',
+          display:'flex',
+          justifyContent:'space-around',
+          alignItems:'center',
+          backgroundColor:'white',borderBottom:'2px solid black'}}>
           <div style={{display:'flex',alignItems:'center'}}>
-            <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10}}>
-              <p style={{textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>התקשר</p>
-              <FaPhoneAlt style={{paddingRight:10}}/>
-            </div>
-            <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10,marginRight:10}}>
-              <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח לווטסאפ</p>
-              <IoLogoWhatsapp style={{color:'greenlime',paddingRight:10}}/>
-            </div>
+            <div style={{
+              width:200,
+              height:80,
+              backgroundImage:`url(${smallLogo})`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize:'100%'
+            }}/>
           </div>
-        </Hidden>
-        <Hidden mdUp>
-          <div>
-            <GiHamburgerMenu size={40}/>
-          </div>
-        </Hidden>
+          <Hidden smDown>
+            <div style={{display:'flex',flexWrap:'wrap'}}>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>ראשי</p>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+              <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>צור קשר</p>
+            </div>
+            <div style={{display:'flex',alignItems:'center'}}>
+              <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10}}>
+                <p style={{textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>התקשר</p>
+                <FaPhoneAlt style={{paddingRight:10}}/>
+              </div>
+              <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10,marginRight:10}}>
+                <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח לווטסאפ</p>
+                <IoLogoWhatsapp style={{color:'greenlime',paddingRight:10}}/>
+              </div>
+            </div>
+          </Hidden>
+          <Hidden mdUp>
+            <div>
+              <GiHamburgerMenu size={40}/>
+            </div>
+          </Hidden>
+        </div>
+        {
+          city &&
+          <Hidden mdUp>
+            <div style={{width: '100%',display:'flex',alignItems:'center',padding:'0px 10px',border:'2px solid black',borderTop:0,height:30,justifyContent:'space-between'}}>
+              <span onClick={() => setFiltersModal(filtersModalOpened?false:true)} style={{cursor:'pointer',width:'100%'}}>
+                {
+                  filtersModalOpened ? 'סגור' : 'לחץ כאן לחיפוש מתקדם'
+                }
+              </span>
+              {
+                filtersModalOpened ?
+                  <div style={{width:20}}/>:
+                  <div style={{display:'flex',alignItems:'center'}}>
+                    {
+                      <FaSearch size={30} color={'black'} style={{paddingLeft:getValueByDevice(5,5,5)}} />
+                    }
+                    {
+                      isFavouritesView ?
+                        <FaHeart size={30} color={'red'}  />
+                        :
+                        <FaHeart size={30}  />
+                    }
+                  </div>
+              }
+            </div>
+          </Hidden>
+        }
       </Grid>
-      <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly'}}>
-      {
+      <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly',position:'relative'}}>
+        {
         isLoading ? <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}><MainSpinner/></div> :
           <>
-            <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
-              <p style={{padding:'0px 10px'}}>
-                בחר עיר מבוקשת:
-              </p>
-              <p onClick={() => onCityClick('חיפה') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
-                חיפה
-              </p>
-              <p onClick={() => onCityClick('קריות') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
-                קריות
-              </p>
-              <p onClick={() => onCityClick('טירת הכרמל') } style={{padding:'0px 8px',cursor:'pointer',borderLeft:'1px solid black'}}>
-                טירת הכרמל
-              </p>
-              <p onClick={() => onCityClick('נשר') } style={{padding:'0px 8px',cursor:'pointer'}}>
-                נשר
-              </p>
-            </div>
+            {
+              !city &&
+              <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
+                <p style={{padding:'0px 10px'}}>
+                  בחר עיר מבוקשת:
+                </p>
+                <p onClick={() => onCityClick('חיפה') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+                  חיפה
+                </p>
+                <p onClick={() => onCityClick('קריות') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+                  קריות
+                </p>
+                <p onClick={() => onCityClick('טירת הכרמל') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+                  טירת הכרמל
+                </p>
+                <p onClick={() => onCityClick('נשר') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue}}>
+                  נשר
+                </p>
+              </div>
+            }
             {
               !city &&
               <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'center'}}>
-
                 <div>
                   <div style={{
                     borderRadius:50,
@@ -287,11 +332,12 @@ const Root = () => {
                 </div>
               </div>
             }
-            <FiltersBar/>
+            <Hidden smDown>
+              <FiltersBar/>
+            </Hidden>
             <Suspense fallback={<div>Loading...</div>}>
               <PropertyList />
             </Suspense>
-
           </>
       }
       </div>
@@ -358,8 +404,9 @@ const Root = () => {
       </div>
       <MediaModal/>
       <MapModal/>
-{/*      <PropertyModal/>
-      <LeadModal/>*/}
+      <FiltersModal/>
+      <NewPropertyModal/>
+      <LeadModal/>
       <SideFilters/>
     </Layout>
 
