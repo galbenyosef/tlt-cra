@@ -35,9 +35,20 @@ let getPropertiesUrl = city => {
   }))
 };
 
-
+const getUsersUrl = () => `https://tlt.kala-crm.co.il/api/v1/user/`
 const getUserUrl = id => `https://tlt.kala-crm.co.il/api/v1/user/${id}`
+/*
 const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page/${id}?get_page_assets_urls=true`
+*/
+const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page?${serialize({
+  'select[0]':'created',
+  'select[1]':'id',
+  'select[2]':'title',
+  'select[3]':'attributes',
+  'select[4]':'active',
+  'select[5]':'thumb_file',
+})}&id=${id}`
+
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
 const getLeadUrl = () => `https://tlt.kala-crm.co.il/api/v1/lead`
 
@@ -97,6 +108,37 @@ router.get('/user/:id',async (req,res) => {
 
 })
 
+router.get('/user/',async (req,res) => {
+
+  const {id} = req.params
+
+  try{
+    let response = await axios.get(getUsersUrl(id),{
+      method: 'GET',
+      headers: {
+        "x-users-key":"asGgtlt6q2bgsdF"
+      }
+    })
+    const {data:{payload}} = response
+
+    let {
+      first_name,
+      last_name,
+      phone
+    } = payload
+
+    return res.send({first_name,
+      last_name,
+      phone})
+  }
+  catch(e){
+    console.log(e)
+    return res.sendStatus(400)
+  }
+
+
+})
+
 router.get('/properties/:id', async (req,res) => {
 
   const {id} = req.params
@@ -112,6 +154,8 @@ router.get('/properties/:id', async (req,res) => {
     console.log(payload)
     let  {
       title,
+      thumb_file,
+
       attributes: {
         custom_id,
         agent_id,
@@ -170,10 +214,11 @@ router.get('/properties/:id', async (req,res) => {
       modified,
       deleted,
       asset_id,
-    } = payload
+    } = payload[0]
 
     const property = {
       id,
+      thumb_file,
       title,
       custom_id,
       agent_id,

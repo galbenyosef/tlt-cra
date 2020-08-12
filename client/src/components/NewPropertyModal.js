@@ -1,7 +1,6 @@
 import React from 'react'
 import {Modal} from "@material-ui/core";
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../globalState";
-import smallLogo from "../assets/YellowLogoSideTextTrans_TLT.png";
 import {devices} from "./Utilities";
 import {createPropertyDescription} from "../dataHandler";
 import {PropertyDetailGrid} from "./PropertyModal/PropertyDetailGrid";
@@ -103,19 +102,21 @@ export const NewPropertyModal = () => {
           height: 32,
           width: 32}}>X</div>
         <div style={{height:'calc(100vh - 148px)',overflow:'auto'}}>
-          <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center'}}>
-            <span>{`${propertytype} להשכרה ב${city_id}`}</span>
-            <span>עודכן היום</span>
+          <div>
+            <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center'}}>
+              <span>{`${propertytype} להשכרה ב${city_id}`}</span>
+              <span>עודכן היום</span>
+            </div>
+            <div onClick={() => setMediaModal({...media,opened:true,type:MediaModalTypes.Images})} style={{
+              width:'100%',
+              height:'calc(90vw * 3 / 4)',
+              backgroundImage:`url(${propertyImages[0] ? propertyImages[0].original : ''})`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize:'90%',
+              backgroundColor:'lightgrey'
+            }}/>
           </div>
-          <div onClick={() => setMediaModal({...media,opened:true,type:MediaModalTypes.Images})} style={{
-            width:'100%',
-            height:'calc(90vw * 3 / 4)',
-            backgroundImage:`url(${propertyImages[0].original})`,
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize:'90%',
-            backgroundColor:'lightgrey'
-          }}/>
           <div style={{display:'flex',width:'100%',flexDirection:'column',borderTop:'1px solid grey',borderBottom:'1px solid grey',marginTop:20,paddingTop:20,paddingBottom:20}}>
             <span style={{fontSize:20,fontWeight:'bold'}}>{`${price.toLocaleString()} ₪`}</span>
             <span>{street_name}</span>

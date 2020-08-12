@@ -12,9 +12,9 @@ const range = (min, max , step = 1) => {
 }
 
 const devices = {
-  Desktop:1,
+  Mobile:1,
   Tablet:2,
-  Mobile:3
+  Desktop:3
 }
 
 const constants = {

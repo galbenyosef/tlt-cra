@@ -7,6 +7,11 @@ export const MediaModalTypes = {
     Videos: 2,
 }
 
+export const ListDisplays = {
+    List:1,
+    Grid:2,
+}
+
 const {
     MinPrice,
     MaxPrice,
@@ -94,7 +99,7 @@ const initialState = {
     addressSearch: '',
     device:null,
     rootRef:createRef(),
-    listDisplay:1,
+    listDisplay:ListDisplays.List,
 
     //modals
     media:{

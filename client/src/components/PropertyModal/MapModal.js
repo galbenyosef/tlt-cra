@@ -2,6 +2,7 @@ import React from 'react'
 import {LocationMap} from "./Map";
 import {Modal} from "@material-ui/core";
 import {useGlobalState} from "../../globalState";
+import "leaflet/dist/leaflet.css";
 
 export const MapModal = () => {
 

@@ -1,7 +1,7 @@
 
 import React, {Suspense, useEffect, useState} from 'react'
 import Layout from '../Layout'
-import {useGlobalState,setGlobalState} from '../../globalState'
+import {useGlobalState, setGlobalState, ListDisplays} from '../../globalState'
 import { getProperties} from '../../apiHandler'
 import FiltersBar from './FiltersBar';
 import { PropertyModal } from '../PropertyModal/PropertyModal';
@@ -105,7 +105,7 @@ const fetchProperties = async (city) => {
 }
 
 
-const Root = () => {
+const Main = ({id}) => {
 
   const [city,setCity] = useGlobalState('city')
   const [isLoading] = useGlobalState('loading')
@@ -115,6 +115,8 @@ const Root = () => {
   const [isFavouritesView] = useGlobalState('isFavouritesView')
   const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
   const {modalOpened:filtersModalOpened} = filters
+  const [device] = useGlobalState('device')
+  const [listDisplay] = useGlobalState('listDisplay')
 
   const onCityClick = async city => {
     setIsLoading(true)
@@ -146,23 +148,15 @@ const Root = () => {
   }
 
   useEffect(() => {
-
     window.addEventListener("resize",() => resize());
-    let isRoute = window.location.pathname.includes('/')
-    let idCandidate = isRoute && window.location.pathname.split('/')[1]
-    let isPropertyId = idCandidate && Number.isInteger(parseInt(idCandidate)) && idCandidate.length == 5
-    let propertyId = isPropertyId && parseInt(idCandidate)
-    if (propertyId){
-      console.log(propertyId)
-
-      showSingleProperty(propertyId)
-
-    }
+    if (id)
+      showSingleProperty(id)
 
     resize()
   },[])
 
   console.log('root rendered')
+  console.log(device , listDisplay)
 
   return (
 
@@ -404,8 +398,20 @@ const Root = () => {
       </div>
       <MediaModal/>
       <MapModal/>
-      <FiltersModal/>
-      <NewPropertyModal/>
+      {
+        device !== devices.Desktop &&
+        <FiltersModal/>
+      }
+      }
+      {
+        (device > devices.Mobile && listDisplay == ListDisplays.Grid) ?
+          <PropertyModal/>
+          :
+          (device != devices.Desktop && listDisplay != ListDisplays.List) ?
+          <NewPropertyModal/>
+          :
+        null
+      }
       <LeadModal/>
       <SideFilters/>
     </Layout>
@@ -413,4 +419,4 @@ const Root = () => {
   )
 }
 
-export default Root
+export default Main

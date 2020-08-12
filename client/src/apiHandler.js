@@ -45,19 +45,12 @@ export const getProperties = async (city) => {
 }
 
 export const getProperty = async id => {
-  try{
     let response = await fetch(getPropertyUrl(id))
 
     if (response && response.ok){
       let responseJson = await response.json()
       return responseJson
     }
-    throw(response)
-  }
-  catch(e){
-    console.log(e)
-    return
-  }
 }
 
 export const getCoordinates = async (q) => {

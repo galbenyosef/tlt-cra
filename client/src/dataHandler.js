@@ -130,6 +130,9 @@ export const filterProperties = (properties,filters) => {
   return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
 
+export const validateId = id => id && Number.isInteger(parseInt(id)) && id.length == 5
+
+
 export const onPropertyClicked = async (id) => {
 
   const setProperty = val => setGlobalState('property',val)
@@ -139,6 +142,8 @@ export const onPropertyClicked = async (id) => {
     street_name,neighborhood_name,city_id
   } = property
 
+  if (!street_name || !neighborhood_name || !city_id)
+    alert('לא נמצא נכס')
   let addressString = [street_name,neighborhood_name,city_id].join(', ')
   let coordinates = await fetchCoordinates(addressString)
   let alternatives = getAlternatives(property)
