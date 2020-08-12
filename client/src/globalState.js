@@ -99,6 +99,7 @@ const initialState = {
     addressSearch: '',
     device:null,
     rootRef:createRef(),
+    headerHeight:118,
     listDisplay:ListDisplays.List,
 
     //modals

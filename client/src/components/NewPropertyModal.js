@@ -7,10 +7,11 @@ import {PropertyDetailGrid} from "./PropertyModal/PropertyDetailGrid";
 
 export const NewPropertyModal = () => {
 
-  const [device] = useGlobalState('device')
+  const [headerHeight] = useGlobalState('headerHeight')
   const [property,setProperty] = useGlobalState('property')
   const setMediaModal = val => setGlobalState('media',val)
 
+  console.log(property)
   if (!property)
     return null
 
@@ -79,11 +80,14 @@ export const NewPropertyModal = () => {
     })
   }
 
+  let top = headerHeight
+
+  console.log('ahah')
   return (
     <Modal
       hideBackdrop
       BackdropProps={{style:{top:150}}}
-      open={true} style={{direction:'rtl',maxHeight:'calc(100vh - 118px)',backgroundColor:'white',top:118,fontFamily:'Rubik'}}>
+      open={true} style={{direction:'rtl',maxHeight:`calc(100vh - ${top}px)`,backgroundColor:'white',top:headerHeight,fontFamily:'Rubik'}}>
       <div style={{position:'relative',display:'flex',flexDirection:'column',padding:'0px 10px',paddingTop:30}}>
         <div onClick={
           () => setProperty(null)

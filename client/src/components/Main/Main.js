@@ -1,5 +1,5 @@
 
-import React, {Suspense, useEffect, useState} from 'react'
+import React, {Suspense, useEffect, useRef, useState} from 'react'
 import Layout from '../Layout'
 import {useGlobalState, setGlobalState, ListDisplays} from '../../globalState'
 import { getProperties} from '../../apiHandler'
@@ -117,6 +117,7 @@ const Main = ({id}) => {
   const {modalOpened:filtersModalOpened} = filters
   const [device] = useGlobalState('device')
   const [listDisplay] = useGlobalState('listDisplay')
+  const setHeaderHeight = val => setGlobalState('headerHeight',val)
 
   const onCityClick = async city => {
     setIsLoading(true)
@@ -147,8 +148,15 @@ const Main = ({id}) => {
 
   }
 
+  const handleScroll = (e) => {console.log(e.currentTarget.scrollY);setHeaderHeight(118 - (e.currentTarget.scrollY > 36 ? 36 : e.currentTarget.scrollY))}
+
   useEffect(() => {
-    window.addEventListener("resize",() => resize());
+    window.addEventListener("resize",resize);
+    window.addEventListener('scroll',handleScroll)
+    return () => {
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('scroll', handleScroll)
+    }
     if (id)
       showSingleProperty(id)
 
@@ -181,15 +189,18 @@ const Main = ({id}) => {
             </div>
           </Grid>
         </Hidden>
-        <Grid item xs={12} sm={5}>
-          <div style={{display:'flex',justifyContent:'center'}}>
+        {
+
+          <Grid item xs={12} sm={5}>
+            <div style={{display:'flex',justifyContent:'center'}}>
               <FaFacebookF style={{padding:10}}/>
               <FaTwitter style={{padding:10}}/>
               <FaGooglePlusG style={{padding:10}}/>
               <FaInstagram style={{padding:10}}/>
               <AiOutlineYoutube style={{padding:10}}/>
-          </div>
-        </Grid>
+            </div>
+          </Grid>
+        }
       </Grid>
       <Grid container direction={'row'} style={{
         backgroundColor:'white',
@@ -404,7 +415,7 @@ const Main = ({id}) => {
       }
       }
       {
-        (device > devices.Mobile && listDisplay == ListDisplays.List) ?
+        (device >= devices.Tablet && listDisplay == ListDisplays.List) ?
           null:
           (device > devices.Mobile && listDisplay == ListDisplays.Grid) ?
           <PropertyModal/>

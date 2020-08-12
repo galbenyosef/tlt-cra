@@ -225,7 +225,7 @@ const PropertyViewList = React.memo(({property,property:{
   const PropertyViewComponent = () =>
     <>
       <Grid container onClick={() => {
-        console.log(property);(device == devices.Mobile) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}
+        console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}
       } style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
         <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
           <div
