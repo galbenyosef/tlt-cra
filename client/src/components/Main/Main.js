@@ -404,13 +404,13 @@ const Main = ({id}) => {
       }
       }
       {
-        (device > devices.Mobile && listDisplay == ListDisplays.Grid) ?
+        (device > devices.Mobile && listDisplay == ListDisplays.List) ?
+          null:
+          (device > devices.Mobile && listDisplay == ListDisplays.Grid) ?
           <PropertyModal/>
           :
-          (device != devices.Desktop && listDisplay != ListDisplays.List) ?
           <NewPropertyModal/>
-          :
-        null
+
       }
       <LeadModal/>
       <SideFilters/>
