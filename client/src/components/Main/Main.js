@@ -44,6 +44,7 @@ const scrollToBottom = element => element?.current?.scrollIntoView({ block: 'end
 const resize = () => {
   const setDevice = (val) => setGlobalState('device',val)
 
+  console.log(window.innerWidth)
   if (window.innerWidth < 600)
     setDevice(devices.Mobile)
   else if (window.innerWidth < 1280)
@@ -153,18 +154,21 @@ const Main = ({id}) => {
   useEffect(() => {
     window.addEventListener("resize",resize);
     window.addEventListener('scroll',handleScroll)
-    return () => {
-      window.removeEventListener('resize', resize)
-      window.removeEventListener('scroll', handleScroll)
-    }
+
+
     if (id)
       showSingleProperty(id)
 
     resize()
+
+    return () => {
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('scroll', handleScroll)
+    }
   },[])
 
   console.log('root rendered')
-  console.log(device , listDisplay)
+  console.log(device)
 
   return (
 
