@@ -85,6 +85,7 @@ export const NewPropertyModal = () => {
   console.log('ahah')
   return (
     <Modal
+      disableAutoFocus={true}
       hideBackdrop
       BackdropProps={{style:{top:150}}}
       open={true} style={{direction:'rtl',maxHeight:`calc(100vh - ${top}px)`,backgroundColor:'white',top:headerHeight,fontFamily:'Rubik'}}>

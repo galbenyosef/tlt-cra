@@ -210,6 +210,7 @@ const PropertyViewList = React.memo(({property,property:{
     let myPromise = () => new Promise((resolve,reject) => {
       setMediaModal({
         type:MediaModalTypes.Videos,
+        opened:true,
         ...media
       })
       resolve()
