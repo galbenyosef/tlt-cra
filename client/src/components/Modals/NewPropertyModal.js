@@ -1,15 +1,15 @@
 import React from 'react'
 import {Modal} from "@material-ui/core";
-import {MediaModalTypes, setGlobalState, useGlobalState} from "../globalState";
-import {devices} from "./Utilities";
-import {createPropertyDescription} from "../dataHandler";
-import {PropertyDetailGrid} from "./PropertyModal/PropertyDetailGrid";
+import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
+import {createPropertyDescription, getAgentById} from "../../dataHandler";
+import {PropertyDetailGrid} from "../PropertyDetailGrid";
 
-export const NewPropertyModal = () => {
+export default () => {
 
   const [headerHeight] = useGlobalState('headerHeight')
   const [property,setProperty] = useGlobalState('property')
   const setMediaModal = val => setGlobalState('media',val)
+  const [agents] = useGlobalState('agents')
 
   console.log(property)
   if (!property)
@@ -17,6 +17,7 @@ export const NewPropertyModal = () => {
 
   const {
     thumb_file,
+    agent_id,
     pic_living_room__url,
     pic_living_room2__url,
     pic_balcony__url,
@@ -43,6 +44,9 @@ export const NewPropertyModal = () => {
     committee
   } = property
 
+  const agent = getAgentById(agents,agent_id)
+  const agentPhone = agent.phone
+
   let pictures =[]
 
   if (thumb_file)
@@ -63,7 +67,7 @@ export const NewPropertyModal = () => {
     original:`https://tlt.kala-crm.co.il/${image}`,
     thumbnail:`https://tlt.kala-crm.co.il/${image}`,
   }))
-  console.log('pictures '+ propertyImages)
+
   let media = {
     images:propertyImages,
     videos:[]
@@ -82,14 +86,12 @@ export const NewPropertyModal = () => {
 
   let top = headerHeight
 
-  console.log('ahah')
   return (
     <Modal
-      disableAutoFocus={true}
       hideBackdrop
       BackdropProps={{style:{top:150}}}
-      open={true} style={{direction:'rtl',maxHeight:`calc(100vh - ${top}px)`,backgroundColor:'white',top:headerHeight,fontFamily:'Rubik'}}>
-      <div style={{position:'relative',display:'flex',flexDirection:'column',padding:'0px 10px',paddingTop:30}}>
+      open={true} style={{direction:'rtl',backgroundColor:'white',top:headerHeight,fontFamily:'Rubik'}}>
+      <div style={{position:'relative',display:'flex',flexDirection:'column',padding:'0px 10px',paddingTop:30,outline:'none'}}>
         <div onClick={
           () => setProperty(null)
         } style={{fontSize: 32,
@@ -106,7 +108,7 @@ export const NewPropertyModal = () => {
           borderRadius: 100,
           height: 32,
           width: 32}}>X</div>
-        <div style={{height:'calc(100vh - 148px)',overflow:'auto'}}>
+        <div style={{maxHeight:`calc(100vh - ${top}px - 60px)`,overflow:'auto'}}>
           <div>
             <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center'}}>
               <span>{`${propertytype} להשכרה ב${city_id}`}</span>
@@ -138,7 +140,7 @@ export const NewPropertyModal = () => {
           </div>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>על הנכס</span>
-            <span>{createPropertyDescription(property)}</span>
+            <span style={{whiteSpace:'break-spaces'}}>{createPropertyDescription(property)}</span>
           </div>
           <span>{`תאריך כניסה: ${entrance}`}</span>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
@@ -162,8 +164,8 @@ export const NewPropertyModal = () => {
             </div>
           </div>
         </div>
-        <div style={{width:'100%',backgroundColor:'lime',textAlign:'center',position:'fixed',bottom:0,right:0,left:0}}>
-          <span>התקשר 054-4420-229</span>
+        <div style={{width:'100%',backgroundColor:'lime',textAlign:'center',position:'fixed',bottom:0,right:0,left:0,height:30}}>
+          <span onClick={() => window.open(`tel:${agentPhone}`,`_blank`)}>{`התקשר ${agentPhone}`}</span>
         </div>
       </div>
     </Modal>

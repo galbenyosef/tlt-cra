@@ -3,8 +3,8 @@ import { Modal,Grid } from '@material-ui/core'
 import { useGlobalState } from '../../globalState'
 
 import ImageGallery from 'react-image-gallery';
-import "./image-gallery.css";
-import {PropertyDetailGrid} from "./PropertyDetailGrid";
+import "../image-gallery.css";
+import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {devices} from "../Utilities";
 
 export const PropertyModal = () => {

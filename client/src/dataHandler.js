@@ -1,7 +1,25 @@
-import {createLead, getCoordinates, getProperty, getUser} from "./apiHandler";
-import {setGlobalState} from "./globalState";
-import {furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
+import {createLead, getAgents, getCoordinates, getProperties, getProperty, getUser} from "./apiHandler";
+import {getGlobalState, setGlobalState} from "./globalState";
+import {devices, furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
 import moment from "moment";
+
+const setProperties = (val) => setGlobalState('properties',val)
+const setAddresses = (val) => setGlobalState('addresses',val)
+const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
+const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
+const setIsLoading = (val) => setGlobalState('loading',val)
+const setProperty = val => setGlobalState('property',val)
+const setCity = val => setGlobalState('city',val)
+const setFilters = val => setGlobalState('filters',val)
+const setAgents = val => setGlobalState('agents',val)
+const filters = () => getGlobalState('filters')
+const setActionFeedback = (val) => setGlobalState('feedback',val)
+const setLead = (val) => setGlobalState('lead',val)
+
+
+const feedback = (result,message,timer) => {
+  setActionFeedback( {result,message,timer})
+}
 
 export const getAlternatives = ({id,price,rooms},options = []) => {
   return options
@@ -135,8 +153,6 @@ export const validateId = id => id && Number.isInteger(parseInt(id)) && id.lengt
 
 export const onPropertyClicked = async (id) => {
 
-  const setProperty = val => setGlobalState('property',val)
-
   let property = await fetchProperty(id)
   const {
     street_name,neighborhood_name,city_id
@@ -152,61 +168,137 @@ export const onPropertyClicked = async (id) => {
   return property
 }
 
+export const resize = () => {
+  const setDevice = (val) => setGlobalState('device',val)
 
-export const fetchProperty = async (id) => {
+  if (window.innerWidth < 600)
+    setDevice(devices.Mobile)
+  else if (window.innerWidth < 1280)
+    setDevice(devices.Tablet)
+  else
+    setDevice(devices.Desktop)
+}
 
-  let property = {}
-
+export const fetchAgents = async () => {
+  let data
   try{
-    const data = await getProperty(id)
-
-    //agent exists
-    if (data.agent_id){
-      const agentId = data.agent_id
-      const agentData = await getUser(agentId)
-
-      const {
-        first_name,
-        phone
-      } = agentData
-
-      property = {
-        ...data,
-        agentName:first_name,
-        agentPhone:phone,
-        agentId
-      }
-    }
+    data = await getAgents()
+    console.log(data)
   }
   catch(e){
     console.log(e)
   }
-  return property
+  return data
+}
+
+export const getAgentById = (agents,id) => agents.find(agent => agent.id == id)
+
+export const fetchProperty = async (id) => {
+
+  let data
+  try{
+    data = await getProperty(id)
+  }
+  catch(e){
+    console.log(e)
+  }
+  return data
+}
+
+export const onCityClick = async city => {
+  setIsLoading(true)
+  setCity(city)
+  await fetchProperties(city)
+  setIsLoading(false)
+}
+
+export const showSingleProperty = async (propertyId) => {
+
+  setIsLoading(true)
+  let property = await onPropertyClicked(propertyId)
+  console.log(property)
+  let {city_id:city,custom_id} = property
+  setCity(city)
+  await fetchProperties(city)
+
+  setFilters(filters => ({...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''}))
+  setProperties(
+    properties => {
+      let selectedProperty = filterProperties(properties,{...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
+      if (selectedProperty.length){
+        return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
+      }
+    }
+  )
+  setIsLoading(false)
+
+}
+
+export const fetchProperties = async (city) => {
+
+  const data = await getProperties(city)
+  const agents = await fetchAgents()
+  const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+
+  let addressesMap = {}
+  let propertiesNumbers = []
+
+  let favouritesString = localStorage.getItem('favourites')
+  let favourites = favouritesString && JSON.parse(favouritesString) || []
+
+  for (let property of properties){
+    let {
+      neighborhood_name,
+      street_name
+    } = property
+
+    property.isFiltered = true
+    if (favourites && favourites.includes(property.id))
+      property.isFavourite = true
+    if (!addressesMap[neighborhood_name])
+      addressesMap[neighborhood_name] = []
+    if (!addressesMap[neighborhood_name].includes(street_name))
+      addressesMap[neighborhood_name].push(street_name)
+
+    if (property.custom_id)
+      propertiesNumbers.push(property.custom_id + '')
+
+  }
+
+  let addresses = []
+  let neighborhoods = Object.keys(addressesMap).sort()
+  for (let i=0; i<neighborhoods.length;i++){
+    addresses.push(neighborhoods[i])
+    for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
+      addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
+    }
+  }
+
+  setAgents(agents)
+  setNeighborhoods(neighborhoods)
+  setAddresses(addresses)
+  setProperties(properties)
+  setPropertiesNumbers(propertiesNumbers)
+
 }
 
 
 export const createLeadKala = async (data) => {
 
-  const setLoading = val => setGlobalState('loading',val)
-
-  setLoading(true)
-
   try {
 
-    let body = {
-      ...data,
-      attributes:{
-        ...data.attributes,
-        actual_when: moment(data.attributes.actual_when).format("DD-MM-YYYY HH:mm")
-      }
+    if (await createLead(data)) {
+      feedback(true, 'בקשתך הוזנה במערכתינו, תודה', 5)
+      setLead(lead => ({...lead,opened:false}))
     }
-
-    if (await createLead(body))
-      console.log('ok sent')
 
   }
   catch(e){
     console.log(e)
   }
-  setLoading(false)
+}
+
+export const validateEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
 }

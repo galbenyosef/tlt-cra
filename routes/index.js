@@ -51,6 +51,8 @@ const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page?${serialize
 
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
 const getLeadUrl = () => `https://tlt.kala-crm.co.il/api/v1/lead`
+const getAgents = () => `https://tlt.kala-crm.co.il/api/v1/user?site_id=724&active=1&select[]=first_name&select[]=last_name&select[]=phone&select[]=id`
+
 
 router.post('/lead', async (req,res) => {
 
@@ -60,7 +62,6 @@ router.post('/lead', async (req,res) => {
     await axios.post(getLeadUrl(),
       body, {
         headers:{
-          'Content-Type': 'application/json;charset=UTF-8',
           "X-Leads-Key":"nGb3tltbJr4ew6k",
         }
       })
@@ -68,13 +69,13 @@ router.post('/lead', async (req,res) => {
     return res.sendStatus(200)
   }
   catch(e){
-/*
     console.log(e)
-*/
     return res.sendStatus(400)
 
   }
 })
+
+
 
 
 router.get('/user/:id',async (req,res) => {
@@ -99,6 +100,27 @@ router.get('/user/:id',async (req,res) => {
     return res.send({first_name,
       last_name,
       phone})
+  }
+  catch(e){
+    console.log(e)
+    return res.sendStatus(400)
+  }
+
+
+})
+
+router.get('/agents/',async (req,res) => {
+
+  try{
+    let response = await axios.get(getAgents(),{
+      method: 'GET',
+      headers: {
+        "x-users-key":"asGgtlt6q2bgsdF"
+      }
+    })
+    const {data:{payload}} = response
+
+    return res.send(payload)
   }
   catch(e){
     console.log(e)

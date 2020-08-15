@@ -1,9 +1,9 @@
 import React from 'react'
 import {Modal} from "@material-ui/core";
-import {useGlobalState} from "../globalState";
+import {useGlobalState} from "../../globalState";
 
 
-export const FiltersModal = () => {
+export default () => {
 
   const [filters, setFilters] = useGlobalState('filters');
   const {modalOpened} = filters

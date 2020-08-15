@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
 import { AccountCircleOutlined, TuneOutlined, Hotel, LocationCity, Sync, Weekend } from '@material-ui/icons';
-import {useGlobalState, setGlobalState} from '../../globalState';
+import {useGlobalState, setGlobalState} from '../globalState';
 import { IoIosConstruct } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { FaShekelSign, FaHeart } from 'react-icons/fa';
-import StyledMenu from './StyledMenu'
+import StyledMenu from './Main/StyledMenu'
 import {Range} from 'rc-slider';
-import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from '../Utilities'
-import { NeighborhoodsFilterView } from './NeighborhoodFilterView';
+import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from './Utilities'
+import { NeighborhoodsFilterView } from './Main/NeighborhoodFilterView';
 import WindowedSelect from "react-windowed-select";
 import 'rc-slider/assets/index.css';
-import {clearFilterStyle, filterBoxStyle, searchStyle} from '../../styles';
-import {colors} from "../../colors";
-import {filterProperties} from "../../dataHandler";
+import {clearFilterStyle, filterBoxStyle, searchStyle} from '../styles';
+import {colors} from "../colors";
+import {filterProperties} from "../dataHandler";
 
 const {
   MinPrice,

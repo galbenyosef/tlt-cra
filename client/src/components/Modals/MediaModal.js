@@ -1,21 +1,23 @@
 import ImageGallery from "react-image-gallery";
-import React, {useRef} from "react";
+import React from "react";
 import {Modal} from "@material-ui/core";
 import {MediaModalTypes, useGlobalState} from "../../globalState";
 import {devices} from "../Utilities";
 
-
-
-export const MediaModal = () => {
+export default () => {
 
   const [mediaModal,setMediaModal] = useGlobalState('media')
   const setMediaModalType = type => setMediaModal(data => ({...data,type}))
+  const [device] = useGlobalState('device')
+  const {opened,images,videos} = mediaModal
+
   const handleClick = () => {
     if (mediaModal.type == MediaModalTypes.Images)
       setMediaModalType(MediaModalTypes.Videos)
     else
       setMediaModalType(MediaModalTypes.Images)
   }
+
   let isVideos = mediaModal.type == MediaModalTypes.Videos
 
   const _renderCustomControls = () => {
@@ -23,16 +25,17 @@ export const MediaModal = () => {
       return <a style={{backgroundColor:'white',position:'absolute',left:0,padding:20,zIndex:5}} onClick={handleClick}>{isVideos? 'תמונות':'וידאו'}</a>
   }
 
-  const [device] = useGlobalState('device')
   let items = []
 
-  if (mediaModal.type == MediaModalTypes.Images)
-    items = mediaModal.images
-  else if (mediaModal.type == MediaModalTypes.Videos)
-    items = mediaModal.videos
+  if (mediaModal.type === MediaModalTypes.Images)
+    items = images
+  else if (mediaModal.type === MediaModalTypes.Videos)
+    items = videos
 
-  const {opened} = mediaModal
-  console.log(items)
+  if (!opened)
+    return null
+
+  console.log('render Media modal')
   return(
       <Modal open={opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setMediaModal({type:0,images:[],videos:[],opened:false})}>
         <div style={{
@@ -45,11 +48,11 @@ export const MediaModal = () => {
                           indexSeparator={' מתוך '}
                           thumbnailPosition={isVideos? 'bottom' : device === devices.Desktop ? 'right' : 'bottom'}
                           showPlayButton={false}
-                          showThumbnails={isVideos ? false :true}
-                          showIndex={isVideos ? false : true}
-                          showBullets={isVideos?false:true}
+                          showThumbnails={!isVideos}
+                          showIndex={!isVideos}
+                          showBullets={!isVideos}
                           isRTL
-                          showFullscreenButton={isVideos ? false :true}
+                          showFullscreenButton={!isVideos}
                           items={items} />
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useGlobalState } from '../../globalState';
 import { CircularProgress } from '@material-ui/core';
 
 
-export const PropertyListLoading = props => {
+export const LoadingModal = props => {
 
     const [loading] = useGlobalState('loading');
 

@@ -1,15 +1,18 @@
 import React from 'react'
-import {LocationMap} from "./Map";
+import {LocationMap} from "../Map";
 import {Modal} from "@material-ui/core";
 import {useGlobalState} from "../../globalState";
 import "leaflet/dist/leaflet.css";
 
-export const MapModal = () => {
+export default () => {
 
   const [map,setMap] = useGlobalState('map')
-  console.log(map)
+  const {opened,lat,lon} = map
+  if (!opened)
+    return null
+  console.log('map rendered')
   return (
-    <Modal open={!!(map.lon && map.lat)} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setMap({lon:0,lat:0})}>
+    <Modal open={opened} style={{direction:'rtl',maxHeight:'calc(100vh)'}} onBackdropClick={() => setMap({...map,opened:false})}>
       <div style={{
         left: '50%',
         top: '50%',
@@ -17,7 +20,7 @@ export const MapModal = () => {
         position: 'absolute'}}>
         <div style={{display:'flex',justifyContent:'center',width:'100vw',maxWidth:660,padding:20,minHeight:320}}>
             {/* property location */}
-            <LocationMap lat={map.lat} lon={map.lon}/>
+            <LocationMap lat={lat} lon={lon}/>
           </div>
         </div>
     </Modal>

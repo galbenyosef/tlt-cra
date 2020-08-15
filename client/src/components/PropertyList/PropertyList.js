@@ -2,10 +2,10 @@
 import React, { useEffect } from 'react'
 import {useGlobalState, setGlobalState, ListDisplays} from '../../globalState';
 import { Grid } from '@material-ui/core';
-import {PropertyViewGrid, PropertyViewList} from './PropertyView'
-import {PropertyListLoading} from './PropertyListLoading'
 import { FiGrid,FiList } from "react-icons/fi";
 import {colors} from "../../colors";
+import PropertyViewList from "./PropertyViewList";
+import PropertyViewGrid from "./PropertyViewGrid";
 
 const PropertyList = () => {
 
@@ -39,13 +39,13 @@ const PropertyList = () => {
   return (
     <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',}}>
       <div style={{flexDirection:'column',display:'flex',width:'100%',maxWidth:window.innerWidth > 1000 ? '1300px': 'auto' ,alignItems:'center'}}>
-        <PropertyListLoading/>
         <div style={{display:'flex',padding:20}}>
           <FiGrid size={40} style={{cursor:'pointer'}} onClick={() => setListDisplay(ListDisplays.Grid)}/>
           <FiList size={40} style={{paddingRight:20,cursor:'pointer'}} onClick={() => setListDisplay(ListDisplays.List)}/>
         </div>
         {
-          listDisplay == ListDisplays.List ? <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
+          listDisplay == ListDisplays.List ?
+            <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 propertiesData.length > 0 && propertiesData.filter(p => p.isFiltered).map((prop,idx) =>
                   <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
@@ -60,7 +60,6 @@ const PropertyList = () => {
               }
             </Grid>
         }
-
       </div>
     </div>
   )

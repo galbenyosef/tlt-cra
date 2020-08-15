@@ -1,7 +1,7 @@
 
 const getPropertyUrl = id => `/api/properties/${id}`
 
-const getUserUrl = id => `/api/user/${id}`
+const getUserUrl = id => `/api/agents`
 
 const getCoordinatesUrl = (q) => `/api/coordinates/${q}`
 
@@ -9,22 +9,14 @@ const getLeadUrl = () => `/api/lead`
 
 const getAllPropertiesUrl = (city) => '/api/properties?city=' + encodeURIComponent(city)
 
-export const getUser = async (id) => {
+export const getAgents = async () => {
 
-  try{
-    let response = await fetch(getUserUrl(id))
+    let response = await fetch(getUserUrl())
 
     if (response && response.ok){
       let responseJson = await response.json()
       return responseJson
     }
-    throw(response)
-  }
-  catch(e){
-    console.log(e)
-    return
-  }
-
 
 }
 

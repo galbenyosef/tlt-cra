@@ -1,6 +1,7 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import {constants} from './components/Utilities'
 import { createRef } from 'react';
+import moment from "moment";
 
 export const MediaModalTypes = {
     Images: 1,
@@ -86,9 +87,11 @@ const initialState = {
     isFavouritesView: false,
     property: null,
     //data
+    agents:[],
     properties:[],
     propertiesNumbers:[],
     addresses: [],
+    areas: [],
     neighborhoods: [],
     city:null,
 
@@ -110,13 +113,14 @@ const initialState = {
         opened:false
     },
     map:{
+        opened:false,
         lon:0,
         lat:0
     },
     lead: {
         opened: false,
         attributes:{
-            actual_when: '',
+            actual_when: moment().format("YYYY-MM-DDTHH:mm"),
             kala_property_id: '',
         },
         user_id: '',
@@ -125,8 +129,14 @@ const initialState = {
         phone: '',
         email: '',
         comments: '',
+        status_id: 3124
 
     },
+    feedback:{
+        result:'',
+        message:'',
+        timer:0
+    }
 };
 
 export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)
