@@ -28,6 +28,7 @@ export default React.memo(({property,property:{
   entrance,
   tax,
   furniture,
+  furniture_items,
   committee,
   totalfloors,
   isCollapsedOut,
@@ -45,12 +46,14 @@ export default React.memo(({property,property:{
   const [agents] = useGlobalState('agents')
 
   const videoRef = useRef(0)
-
+  console.log(furniture_items)
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
   isNew.setDate(isNew.getDate() + 7);
   isNew = Date.now() < isNew
 
   const agent = getAgentById(agents,agent_id)
+  const agentName = [agent.first_name,agent.last_name].join(' ')
+  const propertyName = [city_id,neighborhood_name,street_name].join(', ')
 
   const {
     pic_living_room__url,
@@ -187,6 +190,9 @@ export default React.memo(({property,property:{
                 <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>תיאור הנכס</span>
                 <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{createPropertyDescription((property))}</span>
                 <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{description}</span>
+                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{furniture_items && furniture_items.length ?
+                  `פירוט ריהוט: ${furniture_items.join(', ')}`:``}</span>
+
               </div>
               <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
@@ -207,7 +213,7 @@ export default React.memo(({property,property:{
                   setLeadModal(modal => {
                     let user_id = agent_id
                     let kala_property_id = id
-                    return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id}})
+                    return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id,propertyName,agentName,agentPhone:agent.phone}})
                   })
                 }}>לפגישה</span>
               {

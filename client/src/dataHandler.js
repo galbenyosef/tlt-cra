@@ -160,7 +160,7 @@ export const onPropertyClicked = async (id) => {
   let coordinates = await fetchCoordinates(addressString)
   let alternatives = getAlternatives(property)
   setProperty({...property,alternatives,coordinates})
-  console.log(property)
+
   return property
 }
 
@@ -211,7 +211,7 @@ export const showSingleProperty = async (propertyId) => {
 
   setIsLoading(true)
   let property = await onPropertyClicked(propertyId)
-  console.log(property)
+
   let {city_id:city,custom_id} = property
   setCity(city)
   await fetchProperties(city)
