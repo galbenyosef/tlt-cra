@@ -190,11 +190,11 @@ export default React.memo(({property,property:{
               </div>
               <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>דרישות בחוזה <span style={{fontSize:12}}>{requirements || 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ריהוט <span style={{fontSize:12}}>{furniture.replace('ריהוט','') || 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ארנונה <span style={{fontSize:12}}>{parseInt(tax) ? `${tax.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>
+                <span style={{width:'55%',margin:'auto',paddingTop:10,fontWeight:'bold'}}>דרישות בחוזה <span style={{fontSize:12}}>{requirements || 'לא צוין'}</span></span>
+
               </div>
             </Grid>
             <Grid item xs={4} sm={4} style={{display:'flex',flexDirection:'column',textAlign:'center',padding:20}}>
@@ -231,6 +231,7 @@ export default React.memo(({property,property:{
                   }
                 }}>מפה</span>
             </Grid>
+            <div style={{margin:'auto'}}><span>{`נכס מספר ${custom_id}`}</span></div>
           </Grid>
           : null
       }

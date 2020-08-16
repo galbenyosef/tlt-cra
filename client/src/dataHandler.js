@@ -1,5 +1,5 @@
 import {createLead, getAgents, getCoordinates, getProperties, getProperty, getUser} from "./apiHandler";
-import {getGlobalState, setGlobalState} from "./globalState";
+import {getGlobalState, setGlobalState, useGlobalState} from "./globalState";
 import {devices, furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
 import moment from "moment";
 
@@ -12,7 +12,6 @@ const setProperty = val => setGlobalState('property',val)
 const setCity = val => setGlobalState('city',val)
 const setFilters = val => setGlobalState('filters',val)
 const setAgents = val => setGlobalState('agents',val)
-const filters = () => getGlobalState('filters')
 const setActionFeedback = (val) => setGlobalState('feedback',val)
 const setLead = (val) => setGlobalState('lead',val)
 
@@ -64,11 +63,8 @@ export const createPropertyDescription = property => {
 
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
-${furniture} ${structure != 'ישן' ? `בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
+${furniture}${structure != 'ישן' ? ` בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
   `
-/*  let string = `${propertytype} ${renovationTypes[renovation]} ב${neighborhood_name}, ${street_name}, ${city_id}
-  ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors}קומות
-  ${furniture} ב${structure} במחיר של ${price}`*/
   return string
 }
 
@@ -93,8 +89,7 @@ export const filterProperties = (properties,filters) => {
     floorTo,
   } = filters
 
-  console.log('filters : ',filters)
-
+  console.log(filters)
   let furnitureRange = range(furnitureFrom,furnitureTo)
   let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
 
@@ -108,14 +103,16 @@ export const filterProperties = (properties,filters) => {
                furniture,
              }) => {
 
-      return (budgetFrom <= price) && (price <= budgetTo) &&
+      return (
+        (budgetFrom <= price) && (price <= budgetTo) &&
         (metresFrom <= metres) && (metres <= metresTo) &&
         (roomsFrom <= rooms) && (rooms <= roomsTo) &&
         (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
         (renovationFrom <= renovation) && (renovation <= renovationTo) &&
-        (furnitureRangeText.some(text => furniture === text));
-
+        (furnitureRangeText.some(text => furniture === text))
+      );
     })
+
   Object.keys(switchFilters).forEach(filter => {
     if (filters[filter])
       filtered = filtered.filter(prop => prop[filter])
@@ -136,7 +133,6 @@ export const filterProperties = (properties,filters) => {
     filtered = filtered.filter(({custom_id}) =>  custom_id + '' == propertyNumber)
 
   filtered = filtered.map(({id}) => id)
-
   let retval = [...properties]
   for (let property of retval){
     if (filtered.includes(property.id)){
@@ -183,7 +179,6 @@ export const fetchAgents = async () => {
   let data
   try{
     data = await getAgents()
-    console.log(data)
   }
   catch(e){
     console.log(e)
@@ -221,17 +216,18 @@ export const showSingleProperty = async (propertyId) => {
   setCity(city)
   await fetchProperties(city)
 
-  setFilters(filters => ({...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''}))
+  let _filters
+
+  setFilters(filters => {_filters=filters;return ({...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})})
   setProperties(
     properties => {
-      let selectedProperty = filterProperties(properties,{...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
+      let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
       if (selectedProperty.length){
         return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
       }
     }
   )
   setIsLoading(false)
-
 }
 
 export const fetchProperties = async (city) => {
@@ -249,7 +245,8 @@ export const fetchProperties = async (city) => {
   for (let property of properties){
     let {
       neighborhood_name,
-      street_name
+      street_name,
+      area
     } = property
 
     property.isFiltered = true
