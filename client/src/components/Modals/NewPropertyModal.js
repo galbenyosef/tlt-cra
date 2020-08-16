@@ -45,7 +45,7 @@ export default () => {
   } = property
 
   const agent = getAgentById(agents,agent_id)
-  const agentPhone = agent.phone
+  const agentPhone = agent && agent.phone
 
   let pictures =[]
 
