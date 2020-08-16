@@ -46,7 +46,7 @@ export default React.memo(({property,property:{
   const [agents] = useGlobalState('agents')
 
   const videoRef = useRef(0)
-  console.log(furniture_items)
+
   let isNew = new Date(created * 1000); // The 0 there is the key, which sets the date to the epoch
   isNew.setDate(isNew.getDate() + 7);
   isNew = Date.now() < isNew

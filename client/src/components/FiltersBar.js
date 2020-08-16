@@ -218,13 +218,13 @@ const FiltersBar = () => {
             </div>
           }
 
-{/*          <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
+          <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
             <TuneOutlined/>
             {
               device !== devices.Mobile &&
               <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
             }
-          </div>*/}
+          </div>
 
           <div onClick={() =>  {
             if (isFavouritesView){

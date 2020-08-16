@@ -7,6 +7,7 @@ import { FaShekelSign } from 'react-icons/fa';
 import { IoIosConstruct,IoIosResize } from 'react-icons/io';
 import { Hotel, LocationCity, Weekend } from '@material-ui/icons';
 import Switch from "react-switch";
+import {filterProperties} from "../dataHandler";
 
 const xStyle = {fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
 borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
@@ -21,6 +22,17 @@ const filterItemStyle = {
     height:36,borderBottom:'2px solid rgb(112,146,191)',
     position:'relative',
     marginBottom:10
+}
+const setProperties = val => setGlobalState('properties',val)
+const setFilters = val => setGlobalState('filters',val)
+
+const changeFilters = filters => {
+
+    setFilters(filters)
+
+    setProperties(
+      properties => filterProperties(properties,filters)
+    )
 }
 
 export const SideFilters = () => {
@@ -85,7 +97,7 @@ export const SideFilters = () => {
                             {
                                 budgetActive > 0 &&
                                 <div onClick={(e) => {
-                                    setFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                                    changeFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                                     e.stopPropagation()} } 
                                     style={xStyle}>X</div>
                             }
@@ -100,7 +112,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 roomsActive > 0 &&
-                                <div onClick={(e) => {setFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} } 
+                                <div onClick={(e) => {changeFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -114,7 +126,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 renovationActive > 0 &&
-                                <div onClick={(e) => {setFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} } 
+                                <div onClick={(e) => {changeFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -128,7 +140,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 filters.addresses.length > 0 &&
-                                <div onClick={(e) => {setFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} } 
+                                <div onClick={(e) => {changeFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -142,7 +154,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 furnitureActive > 0 &&
-                                <div onClick={(e) => {setFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} } 
+                                <div onClick={(e) => {changeFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -160,7 +172,7 @@ export const SideFilters = () => {
                         {
                             floorActive > 0 &&
                             <div onClick={(e) => {
-                                setFilters({...filters,floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
+                                changeFilters({...filters,floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
                                 e.stopPropagation()} } 
                                 style={xStyle}>X</div>
                         }
@@ -175,7 +187,7 @@ export const SideFilters = () => {
                         {
                             metresActive > 0 &&
                             <div onClick={(e) => {
-                                setFilters({...filters,metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
+                                changeFilters({...filters,metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
                                 e.stopPropagation()} } 
                                 style={xStyle}>X</div>
                         }
@@ -185,8 +197,11 @@ export const SideFilters = () => {
                             Object.keys(switchFilters).map(filter => <Grid key={filter} item xs={4}>
                                     <label style={{height:'100%',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'center',fontSize:14,textAlign:'center'}}>
                                         <p>{switchFilters[filter]}</p>
-                                        <Switch onChange={checked => {console.log(checked,filter);setFilters({...filters,[filter]:checked})}}
-                                            checked={filters[filter]}/>
+                                        <Switch onChange={checked => {
+                                                console.log(checked,filter);
+                                                changeFilters({...filters,[filter]:checked})}
+                                            }
+                                        checked={filters[filter]}/>
                                     </label>
                                 </Grid>
                             )
