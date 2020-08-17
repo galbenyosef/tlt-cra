@@ -136,7 +136,7 @@ const FiltersBar = () => {
               onChange={e => {
                 console.log(e)
                 !Number.isInteger(parseInt(e)) ?
-                  changeFilters({...filters,address:e ? [e] : [],addresses:[],addressesActive:0,propertyNumber:''})
+                  changeFilters({...filters,address:e ? [e] : [],addresses:[],addressesActive:0,propertyNumber:[]})
                   :
                   changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
               }}
@@ -150,7 +150,7 @@ const FiltersBar = () => {
 
 
 
-              <div style={{width:'200px',marginLeft:20}}>
+             {/* <div style={{width:'200px',marginLeft:20}}>
                 <WindowedSelect
                   styles={searchStyle}
                   isClearable={true}
@@ -168,16 +168,16 @@ const FiltersBar = () => {
                   onChange={e => {
                     console.log(e)
                     if (!e)
-                      changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:''})
+                      changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
                     else{
                       if (address.includes(e))
-                        changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:''})
+                        changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
                       else
-                        changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:''})
+                        changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
                     }
                   }}
                 />
-              </div>
+              </div>*/}
 
               <div id='rooms' onClick={e => handleClickFilter(e)}
                    style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:`2px solid ${colors.darkblue}`,position:'relative',marginLeft:5}}>

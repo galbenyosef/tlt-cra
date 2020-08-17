@@ -111,10 +111,12 @@ export const filterProperties = (properties,filters) => {
       }
     })
   }
-  else if (propertyNumber)
-    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.includes(num =>  custom_id + '' == num))
+  else if (propertyNumber.length) {
+    console.log(propertyNumber)
+    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.some(num => custom_id == num))
+  }
 
-
+  console.log(primeFilters)
   let filtered = primeFilters
     .filter(({
                price,
@@ -227,10 +229,10 @@ export const showSingleProperty = async (propertyId) => {
 
   let _filters
 
-  setFilters(filters => {_filters=filters;return ({...filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})})
+  setFilters(filters => {_filters=filters;return ({...filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})})
   setProperties(
     properties => {
-      let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:custom_id,addresses:[],addressesActive:0,address:''})
+      let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})
       if (selectedProperty.length){
         return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
       }
