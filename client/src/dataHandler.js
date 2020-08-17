@@ -92,8 +92,30 @@ export const filterProperties = (properties,filters) => {
   console.log(filters)
   let furnitureRange = range(furnitureFrom,furnitureTo)
   let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
+  let primeFilters = [...properties]
 
-  let filtered = properties
+  if (addressesActive){
+    primeFilters = primeFilters.filter(({neighborhood_name}) => addresses.some(addr => neighborhood_name.includes(addr)))
+  }
+  else if (address.length) {
+    primeFilters = primeFilters.filter(({neighborhood_name, street_name}) => {
+      for (let addr of address) {
+        console.log(addr)
+        let [neighborhood, street] = addr.split(', ')
+        if (neighborhood_name === neighborhood && street_name === street)
+          return true
+        else if (!street){
+          if (neighborhood_name === neighborhood)
+            return true
+        }
+      }
+    })
+  }
+  else if (propertyNumber)
+    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.includes(num =>  custom_id + '' == num))
+
+
+  let filtered = primeFilters
     .filter(({
                price,
                rooms,
@@ -118,19 +140,6 @@ export const filterProperties = (properties,filters) => {
       filtered = filtered.filter(prop => prop[filter])
   })
 
-  if (addressesActive){
-    filtered = filtered.filter(({neighborhood_name}) => addresses.some(addr => neighborhood_name.includes(addr)))
-  }
-  else if (address){
-    filtered = filtered.filter(({neighborhood_name,street_name}) => {
-      let [neighborhood,street] = address.split(', ')
-      if (street)
-        return (neighborhood_name === neighborhood && street_name === street)
-      return (neighborhood_name === neighborhood)
-    })
-  }
-  else if (propertyNumber)
-    filtered = filtered.filter(({custom_id}) =>  custom_id + '' == propertyNumber)
 
   filtered = filtered.map(({id}) => id)
   let retval = [...properties]
@@ -252,27 +261,32 @@ export const fetchProperties = async (city) => {
     property.isFiltered = true
     if (favourites && favourites.includes(property.id))
       property.isFavourite = true
-    if (!addressesMap[neighborhood_name])
-      addressesMap[neighborhood_name] = []
-    if (!addressesMap[neighborhood_name].includes(street_name))
-      addressesMap[neighborhood_name].push(street_name)
+    if (!addressesMap[area])
+      addressesMap[area] = {}
+    if (!addressesMap[area][neighborhood_name])
+      addressesMap[area][neighborhood_name] = []
+    if (!addressesMap[area][neighborhood_name].includes(street_name))
+      addressesMap[area][neighborhood_name].push(street_name)
 
     if (property.custom_id)
       propertiesNumbers.push(property.custom_id + '')
 
   }
 
+  console.log(addressesMap)
   let addresses = []
-  let neighborhoods = Object.keys(addressesMap).sort()
-  for (let i=0; i<neighborhoods.length;i++){
-    addresses.push(neighborhoods[i])
-    for (let j=0;j<addressesMap[neighborhoods[i]].sort().length;j++){
-      addresses.push(`${neighborhoods[i]}, ${addressesMap[neighborhoods[i]][j]}`)
+  let areas = Object.keys(addressesMap).sort()
+  for (let _area of areas){
+    addresses.push(_area)
+    let neighborhoods =  Object.keys(addressesMap[_area]).sort()
+    for (let neighb of neighborhoods){
+      addresses.push(neighb)
+      for (let street of addressesMap[_area][neighb])
+        addresses.push(`${neighb}, ${street}`)
     }
   }
 
   setAgents(agents)
-  setNeighborhoods(neighborhoods)
   setAddresses(addresses)
   setProperties(properties)
   setPropertiesNumbers(propertiesNumbers)

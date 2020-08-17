@@ -52,7 +52,7 @@ export default React.memo(({property,property:{
   isNew = Date.now() < isNew
 
   const agent = getAgentById(agents,agent_id)
-  const agentName = [agent.first_name,agent.last_name].join(' ')
+  const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
 
   const {

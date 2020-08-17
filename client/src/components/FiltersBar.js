@@ -9,7 +9,7 @@ import StyledMenu from './Main/StyledMenu'
 import {Range} from 'rc-slider';
 import {constants, renovationTypes, range, furnitureTypes, devices, switchFilters, getValueByDevice} from './Utilities'
 import { NeighborhoodsFilterView } from './Main/NeighborhoodFilterView';
-import WindowedSelect from "react-windowed-select";
+import WindowedSelect, { components } from "react-windowed-select";
 import 'rc-slider/assets/index.css';
 import {clearFilterStyle, filterBoxStyle, searchStyle} from '../styles';
 import {colors} from "../colors";
@@ -63,6 +63,7 @@ const FiltersBar = () => {
     roomsActive,
     renovationActive,
     furnitureActive,
+    address
   } = filters
 
   if (!addressesData.length){
@@ -77,6 +78,13 @@ const FiltersBar = () => {
   const handleClickFilter = (event) => {
     setCurrentFilter({currentFilterName:event.currentTarget.id,currentFilterElement:event.currentTarget})
   };
+
+  const ControlComponent = props => (
+    <div>
+      {<p>Custom Control</p>}
+      <components.Control {...props} />
+    </div>
+  );
 
   const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
@@ -112,7 +120,7 @@ const FiltersBar = () => {
             </IconButton>
           }
 
-          <div style={{width:'190px'}}>
+          <div style={{width:'200px'}}>
             <WindowedSelect
               styles={searchStyle}
               isClearable={true}
@@ -124,12 +132,13 @@ const FiltersBar = () => {
               onInputChange={e => setInputValue(e)}
               options={Number.isInteger(parseInt(inputValue)) ? propertiesNumbers : addressesData}
               placeholder="הקש כתובת/ מספר נכס"
-              value={filters.propertyNumber ? [`נכס מספר #${filters.propertyNumber}`] : [filters.address]}
+              value={filters.propertyNumber.length ? [`נכס מספר #${filters.propertyNumber[0]}`] : [filters.address[0]]}
               onChange={e => {
+                console.log(e)
                 !Number.isInteger(parseInt(e)) ?
-                  changeFilters({...filters,address:e,addresses:[],addressesActive:0,propertyNumber:''})
+                  changeFilters({...filters,address:e ? [e] : [],addresses:[],addressesActive:0,propertyNumber:''})
                   :
-                  changeFilters({...filters,propertyNumber:e,addresses:[],addressesActive:0,address:''})
+                  changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
               }}
             />
           </div>
@@ -141,18 +150,33 @@ const FiltersBar = () => {
 
 
 
-              <div id='addresses' onClick={e => handleClickFilter(e)}
-                   style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:`2px solid ${colors.darkblue}`,position:'relative',marginLeft:5}}>
-                <>
-                  <LocationCity style={{paddingLeft:5}}/>
-                  <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>שכונות</span>
-                  <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-                </>
-                {
-                  filters.addresses.length > 0 &&
-                  <div onClick={(e) => {changeFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} }
-                       style={clearFilterStyle}>X</div>
-                }
+              <div style={{width:'200px',marginLeft:20}}>
+                <WindowedSelect
+                  styles={searchStyle}
+                  isClearable={true}
+                  isRtl={true}
+                  closeMenuOnSelect={false}
+                  isMulti={false}
+                  getOptionValue={e => e}
+                  getOptionLabel={e => e}
+                  inputValue={inputValue}
+                  components={{ SingleValue: () => <div>{`נבחרו ${filters.address.length} פריטים`}</div> }}
+                  onInputChange={e => setInputValue(e)}
+                  options={addressesData}
+                  placeholder="חיפוש חדש"
+                  value={filters.address}
+                  onChange={e => {
+                    console.log(e)
+                    if (!e)
+                      changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:''})
+                    else{
+                      if (address.includes(e))
+                        changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:''})
+                      else
+                        changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:''})
+                    }
+                  }}
+                />
               </div>
 
               <div id='rooms' onClick={e => handleClickFilter(e)}

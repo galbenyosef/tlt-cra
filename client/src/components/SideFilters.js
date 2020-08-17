@@ -198,7 +198,6 @@ export const SideFilters = () => {
                                     <label style={{height:'100%',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'center',fontSize:14,textAlign:'center'}}>
                                         <p>{switchFilters[filter]}</p>
                                         <Switch onChange={checked => {
-                                                console.log(checked,filter);
                                                 changeFilters({...filters,[filter]:checked})}
                                             }
                                         checked={filters[filter]}/>

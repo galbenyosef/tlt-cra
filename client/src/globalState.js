@@ -46,8 +46,8 @@ const initialState = {
         //free search default values
         addresses:[],
         addressesActive:0,
-        address:'',
-        propertyNumber:'',
+        address:[],
+        propertyNumber:[],
         //furniture default values
         furnitureFrom:MinFurniture,
         furnitureTo:MaxFurniture,
