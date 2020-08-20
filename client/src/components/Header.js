@@ -23,6 +23,14 @@ import {changeFilters} from "../dataHandler";
 import WindowedSelect, { components } from "react-windowed-select";
 import {newSearchStyle} from "../styles";
 
+const customFilterOption = (option, rawInput) => {
+  const words = rawInput.split(' ');
+  return words.reduce(
+    (acc, cur) => acc && option.label.toLowerCase().includes(cur.toLowerCase()),
+    true,
+  );
+};
+
 export default () => {
 
   const [city] = useGlobalState('city')
@@ -127,12 +135,12 @@ export default () => {
       </div>
       {
         city &&
-        <Hidden mdUp>
+        <Hidden lgUp>
           <div style={{width:'100%',display:'flex'}}>
             <WindowedSelect
+              filterOption={customFilterOption}
               styles={newSearchStyle}
               ref={selectRef}
-              onFocus={() => {console.log('focused');console.log(selectRef.current);selectRef.current.select.focus()}}
               isClearable={true}
               isRtl={true}
               closeMenuOnSelect={false}
@@ -141,7 +149,7 @@ export default () => {
               openMenuOnFocus={false}
               openMenuOnClick={true}
               getOptionValue={e => e}
-              getOptionLabel={e => Number.isInteger(parseInt(inputValue)) ? `נכס מספר #${e}`:e}
+              getOptionLabel={e => e}
               inputValue={inputValue}
               components={{ SingleValue: () => <div>{`מוצגים ${filteredCount} פריטים`}</div>}}
               onInputChange={e => setInputValue(e)}

@@ -122,7 +122,7 @@ const Main = ({id}) => {
             <div style={{display:'flex',flexDirection:'column'}}>
               <CitySelection/>
               <AboutUs/>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <FiltersBar/>
               </Hidden>
               <Suspense fallback={<div>Loading...</div>}>

@@ -85,6 +85,8 @@ export default () => {
 
   let top = headerHeight
 
+  let innerH = window.innerHeight
+
   return (
     <Modal
       hideBackdrop
@@ -107,7 +109,7 @@ export default () => {
           borderRadius: 100,
           height: 32,
           width: 32}}>X</div>
-        <div style={{maxHeight:`calc(100vh - ${top}px - 60px)`,overflow:'auto'}}>
+        <div style={{maxHeight:`calc(${innerH}px - ${top}px - 60px)`,overflow:'auto'}}>
           <div>
             <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center'}}>
               <span>{`${propertytype} להשכרה ב${city_id}`}</span>

@@ -36,7 +36,6 @@ const FiltersBar = () => {
   const [addressSearch, setAddressSearch] = useGlobalState('addressSearch');
   const [filters, setFilters] = useGlobalState('filters');
   const [neighborhoodSelected,setNeighborhoodSelected] = useState([])
-  const [device] = useGlobalState('device')
   const [propertiesNumbers] = useGlobalState('propertiesNumbers')
   const [inputValue,setInputValue] = useState('')
 
@@ -86,7 +85,7 @@ const FiltersBar = () => {
           flexDirection:'column',
           justifyContent:'space-between',
           alignItems:'center',
-          padding:getValueByDevice(20,10,10),
+          padding:10,
           borderRadius:20,
           boxShadow:'0px 0px 10px 0px grey',
           width:'fit-content',
@@ -102,12 +101,10 @@ const FiltersBar = () => {
             alignItems:'center',
           }}>
 
-          {
-            device === devices.Desktop &&
-            <IconButton onClick={() => {window.open('http://109.207.78.24/app',"_self")}}>
-              <AccountCircleOutlined/>
-            </IconButton>
-          }
+
+          <IconButton onClick={() => {window.open('http://109.207.78.24/app',"_self")}}>
+            <AccountCircleOutlined/>
+          </IconButton>
 
           <div style={{width:'200px'}}>
             <WindowedSelect
@@ -133,8 +130,6 @@ const FiltersBar = () => {
           </div>
 
           {
-            device === devices.Desktop &&
-
             <div style={{display:'flex',justifyContent:'space-around',paddingRight:20,height:38}}>
 
 
@@ -238,7 +233,6 @@ const FiltersBar = () => {
           <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',marginLeft:10,marginRight:10}} onClick={() => {setSideFilterVisible(true)}}>
             <TuneOutlined/>
             {
-              device !== devices.Mobile &&
               <span style={{fontFamily:'Assistant',fontSize:'1rem'}}>סננים נוספים</span>
             }
           </div>
@@ -275,13 +269,11 @@ const FiltersBar = () => {
                 <FaHeart size={24} color={'white'} style={{paddingLeft:getValueByDevice(5,0,0)}} />
             }
             {
-              device !== devices.Mobile &&
               <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold'}}>נכסים שאהבתי </span>
             }
           </div>
 
           {
-            device === devices.Desktop &&
             <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',border:`2px solid ${colors.darkblue}`,borderRadius:10,padding:'6px',cursor:'pointer'}}>
               <Sync/>
               <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',color:colors.darkblue}}>רענן חיפוש </span>

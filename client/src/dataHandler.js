@@ -59,6 +59,9 @@ export const fetchCoordinates = async address => {
 export const createPropertyDescription = property => {
 
   const {
+    airdirections,
+    toiletamount,
+    bathroomamount,
     neighborhood_name,
     street_name,
     rooms,
@@ -75,6 +78,7 @@ export const createPropertyDescription = property => {
 
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
+${airdirections} כיווני אוויר, ${bathroomamount} חדרי רחצה, ${toiletamount} חדרי שירותים
 ${furniture}${structure != 'ישן' ? ` בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
   `
   return string
