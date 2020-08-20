@@ -11,9 +11,9 @@ import {constants, renovationTypes, range, furnitureTypes, devices, switchFilter
 import { NeighborhoodsFilterView } from './Main/NeighborhoodFilterView';
 import WindowedSelect, { components } from "react-windowed-select";
 import 'rc-slider/assets/index.css';
-import {clearFilterStyle, filterBoxStyle, searchStyle} from '../styles';
+import {clearFilterStyle, filterBoxStyle, newSearchStyle, searchStyle} from '../styles';
 import {colors} from "../colors";
-import {filterProperties} from "../dataHandler";
+import {changeFilters, filterProperties, handleCloseFilter} from "../dataHandler";
 
 const {
   MinPrice,
@@ -48,15 +48,6 @@ const FiltersBar = () => {
 
   const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
 
-  const changeFilters = filters => {
-
-    setFilters(filters)
-
-    setProperties(
-      properties => filterProperties(properties,filters)
-    )
-  }
-
   const {
     //default values
     budgetActive,
@@ -85,8 +76,6 @@ const FiltersBar = () => {
       <components.Control {...props} />
     </div>
   );
-
-  const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
   return (
       <div
@@ -150,17 +139,21 @@ const FiltersBar = () => {
 
 
 
-             {/* <div style={{width:'200px',marginLeft:20}}>
+            {/*  <div style={{width:'200px',marginLeft:20}}>
                 <WindowedSelect
-                  styles={searchStyle}
+                  styles={newSearchStyle}
                   isClearable={true}
                   isRtl={true}
                   closeMenuOnSelect={false}
                   isMulti={false}
+                  menuIsOpen={!!inputValue}
+                  openMenuOnClick={false}
                   getOptionValue={e => e}
                   getOptionLabel={e => e}
                   inputValue={inputValue}
-                  components={{ SingleValue: () => <div>{`נבחרו ${filters.address.length} פריטים`}</div> }}
+                  components={{ SingleValue: () => <div>{`נבחרו ${filters.address.length} פריטים`}</div>,
+                                Option: props => {console.log(props);return <div>{props.value}</div>}
+                  }}
                   onInputChange={e => setInputValue(e)}
                   options={addressesData}
                   placeholder="חיפוש חדש"

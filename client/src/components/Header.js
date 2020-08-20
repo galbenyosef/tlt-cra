@@ -10,14 +10,18 @@ import {
   FaPhoneAlt,
   FaSearch,
   FaTwitter,
-  FaWhatsapp
+  FaWhatsapp,
+  FaFilter
 } from "react-icons/fa";
 import smallLogo from "../assets/YellowLogoSideTextTrans_TLT.png";
 import {IoLogoWhatsapp} from "react-icons/io";
 import {GiHamburgerMenu} from "react-icons/gi";
 import {getValueByDevice} from "./Utilities";
-import React from "react";
+import React, {useRef, useState} from "react";
 import {useGlobalState} from "../globalState";
+import {changeFilters} from "../dataHandler";
+import WindowedSelect, { components } from "react-windowed-select";
+import {newSearchStyle} from "../styles";
 
 export default () => {
 
@@ -26,7 +30,10 @@ export default () => {
   const [isFavouritesView] = useGlobalState('isFavouritesView')
   const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
   const {modalOpened:filtersModalOpened} = filters
-
+  const [addressesData] = useGlobalState('addresses');
+  const selectRef = useRef(0)
+  const [inputValue,setInputValue] = useState('')
+  const {address} = filters
   return (
     <>
     <Grid container direction={'row'} style={{backgroundColor:colors.darkblue,width:'100%'}}>
@@ -105,14 +112,58 @@ export default () => {
         </Hidden>
         <Hidden mdUp>
           <div>
-            <GiHamburgerMenu size={40}/>
+            <GiHamburgerMenu onClick={()=>console.log('menu clicked')} size={40}/>
           </div>
         </Hidden>
       </div>
       {
         city &&
         <Hidden mdUp>
-          <div style={{width: '100%',display:'flex',alignItems:'center',padding:'0px 10px',border:'2px solid black',borderTop:0,height:30,justifyContent:'space-between'}}>
+          <div style={{width:'100%',display:'flex'}}>
+            <WindowedSelect
+              styles={newSearchStyle}
+              ref={selectRef}
+              onFocus={() => {console.log('focused');console.log(selectRef.current);selectRef.current.select.focus()}}
+              isClearable={true}
+              isRtl={true}
+              closeMenuOnSelect={false}
+              isMulti={false}
+              menuIsOpen={!!inputValue}
+              openMenuOnFocus={false}
+              openMenuOnClick={true}
+              getOptionValue={e => e}
+              getOptionLabel={e => e}
+              inputValue={inputValue}
+              components={{ SingleValue: () => <div>{`נבחרו ${filters.address.length} פריטים`}</div>}}
+              onInputChange={e => setInputValue(e)}
+              options={addressesData}
+              placeholder="חיפוש חדש"
+              value={filters.address}
+              onChange={e => {
+                console.log(e)
+                if (!e)
+                  changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
+                else{
+                  if (address.includes(e))
+                    changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
+                  else
+                    changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
+                }
+              }}
+            />
+            <div style={{display:'flex',alignItems:'center',paddingLeft:20}}>
+              {
+                <FaFilter onClick={() => setFiltersModal(filtersModalOpened?false:true)} size={30} color={'black'} style={{paddingLeft:getValueByDevice(5,5,5)}} />
+              }
+              {
+                isFavouritesView ?
+                  <FaHeart size={30} color={'red'}  />
+                  :
+                  <FaHeart size={30}  />
+              }
+            </div>
+          </div>
+         {/* <div style={{width: '100%',display:'flex',alignItems:'center',padding:'0px 10px',border:'2px solid black',borderTop:0,height:30,justifyContent:'space-between'}}>
                 <span onClick={() => setFiltersModal(filtersModalOpened?false:true)} style={{cursor:'pointer',width:'100%'}}>
                   {
                     filtersModalOpened ? 'סגור' : 'לחץ כאן לחיפוש מתקדם'
@@ -133,7 +184,7 @@ export default () => {
                   }
                 </div>
             }
-          </div>
+          </div>*/}
         </Hidden>
       }
     </Grid>

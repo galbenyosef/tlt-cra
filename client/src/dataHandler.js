@@ -14,6 +14,7 @@ const setFilters = val => setGlobalState('filters',val)
 const setAgents = val => setGlobalState('agents',val)
 const setActionFeedback = (val) => setGlobalState('feedback',val)
 const setLead = (val) => setGlobalState('lead',val)
+const setCurrentFilter = (val) => setGlobalState('currentFilter',val)
 
 
 const feedback = (result,message,timer) => {
@@ -30,11 +31,22 @@ export const getAlternatives = ({id,price,rooms},options = []) => {
     )
 }
 
+export const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
+
+
+export const changeFilters = filters => {
+
+  setFilters(filters)
+
+  setProperties(
+    properties => filterProperties(properties,filters)
+  )
+}
+
 export const fetchCoordinates = async address => {
 
   try{
     let coordinates = await getCoordinates(address)
-
     if (coordinates && Array.isArray(coordinates))
       return coordinates[0]
   }

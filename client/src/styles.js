@@ -39,6 +39,53 @@ export const searchStyle = {
     }),
 }
 
+export const newSearchStyle = {
+    option: (provided, state) => { return({
+        ...provided,
+        direction:'rtl',
+        borderBottom: '1px dotted pink',
+        color: state.isSelected ? 'red' : 'blue',
+        padding: 10,
+        fontSize: state.value?.includes(',') ? 14:18,
+        fontWeight: state.value?.includes(',') ? null:'bolder'
+    })},
+    control: (provided, state) => ({
+        ...provided,
+        // none of react-select's styles are passed to <Control />
+        borderRadius: 0,
+        borderTop:0,
+        borderLeft:0,
+        borderRight:0,
+        borderBottom:0,
+        color:'black',
+        fontFamily:'Assistant',
+        fontWeight:'bold',
+        boxShadow: state.isFocused ? 0 : 0,
+        '&:hover': {
+            border: state.isFocused ? 0 : 0
+        }
+    }),
+    indicatorSeparator: () => ({
+        display:'none'
+    }),
+    dropdownIndicator:  (provided, state)  => ({
+        ...provided,
+        display:'none'
+    }),
+    placeholder: (provided, state) => ({
+        ...provided,
+        color:'black',
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        zIndex:1301
+    }),
+    container: (provided, state) => ({
+        ...provided,
+        width:'100%',
+    }),
+}
+
 export const clearFilterStyle = {
     fontWeight:'bolder',fontSize:18,width:20,height:20,cursor:'pointer',
     borderRadius:100,backgroundColor:'red',position:'absolute',right:-10,top:-12.5,zIndex:1,color:'white',
