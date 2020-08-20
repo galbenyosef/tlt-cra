@@ -11,7 +11,6 @@ export default () => {
   const setMediaModal = val => setGlobalState('media',val)
   const [agents] = useGlobalState('agents')
 
-  console.log(property)
   if (!property)
     return null
 

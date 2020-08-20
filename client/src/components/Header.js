@@ -34,6 +34,15 @@ export default () => {
   const selectRef = useRef(0)
   const [inputValue,setInputValue] = useState('')
   const {address} = filters
+  const [propertiesNumbers] = useGlobalState('propertiesNumbers')
+  const [properties] = useGlobalState('properties')
+
+  let filteredCount = 0
+
+  for (let property of properties){
+    property.isFiltered && ++filteredCount
+  }
+
   return (
     <>
     <Grid container direction={'row'} style={{backgroundColor:colors.darkblue,width:'100%'}}>
@@ -132,22 +141,25 @@ export default () => {
               openMenuOnFocus={false}
               openMenuOnClick={true}
               getOptionValue={e => e}
-              getOptionLabel={e => e}
+              getOptionLabel={e => Number.isInteger(parseInt(inputValue)) ? `נכס מספר #${e}`:e}
               inputValue={inputValue}
-              components={{ SingleValue: () => <div>{`נבחרו ${filters.address.length} פריטים`}</div>}}
+              components={{ SingleValue: () => <div>{`מוצגים ${filteredCount} פריטים`}</div>}}
               onInputChange={e => setInputValue(e)}
-              options={addressesData}
-              placeholder="חיפוש חדש"
-              value={filters.address}
+              options={Number.isInteger(parseInt(inputValue)) ? propertiesNumbers : addressesData}
+              placeholder="הקש כתובת/ מספר נכס"
+              value={filters.propertyNumber.length ? [`נכס מספר #${filters.propertyNumber[0]}`] : [filters.address[0]]}
               onChange={e => {
                 console.log(e)
                 if (!e)
                   changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
-                else{
+                else if(!Number.isInteger(parseInt(e))){
                   if (address.includes(e))
                     changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
                   else
                     changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
+                }
+                else{
+                  changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
                 }
               }}
             />
