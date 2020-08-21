@@ -76,9 +76,17 @@ export const createPropertyDescription = property => {
     totalfloors,
   } = property
 
+  let test = []
+  if (airdirections)
+    test.push(`${airdirections} כיווני אוויר`)
+  if (bathroomamount)
+    test.push(`${bathroomamount} חדרי רחצה`)
+  if (toiletamount)
+    test.push(`${toiletamount} חדרי שירותים`)
+
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
-${airdirections} כיווני אוויר, ${bathroomamount} חדרי רחצה, ${toiletamount} חדרי שירותים
+${test.join(', ')}
 ${furniture}${structure != 'ישן' ? ` בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
   `
   return string

@@ -3,6 +3,11 @@ import {Modal} from "@material-ui/core";
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
 import {createPropertyDescription, getAgentById} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappShareButton,
+} from "react-share"
 
 export default () => {
 
@@ -143,15 +148,17 @@ export default () => {
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>על הנכס</span>
             <span style={{whiteSpace:'break-spaces'}}>{createPropertyDescription(property)}</span>
           </div>
-          <span>{`תאריך כניסה: ${entrance}`}</span>
+          <span>{`תאריך כניסה: ${(entrance && entrance.slice(0,-5)) || 'לא צוין'}`}</span>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
-            כאן יופיעו קישורי שיתוף והעתקת קישור כמו ביד2
+            <EmailShareButton/>
+            <FacebookShareButton/>
+            <WhatsappShareButton/>
           </div>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>מה יש בנכס?</span>
             <PropertyDetailGrid {...property}/>
             <span>{furniture}</span>
-            <span>{furniture_items && furniture_items.length? `${furniture_items.join(', ')}` : ``}</span>
+            <span>{furniture_items && furniture_items.length? `פירוט ריהוט: ${furniture_items.join(', ')}` : ``}</span>
           </div>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20,marginBottom:20}}>
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>פרטים נוספים</span>
