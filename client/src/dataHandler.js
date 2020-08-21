@@ -3,19 +3,21 @@ import {getGlobalState, setGlobalState, useGlobalState} from "./globalState";
 import {devices, furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
 import moment from "moment";
 
-const setProperties = (val) => setGlobalState('properties',val)
-const setAddresses = (val) => setGlobalState('addresses',val)
-const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
-const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
-const setIsLoading = (val) => setGlobalState('loading',val)
-const setProperty = val => setGlobalState('property',val)
-const setCity = val => setGlobalState('city',val)
-const setFilters = val => setGlobalState('filters',val)
-const setAgents = val => setGlobalState('agents',val)
-const setActionFeedback = (val) => setGlobalState('feedback',val)
-const setLead = (val) => setGlobalState('lead',val)
-const setCurrentFilter = (val) => setGlobalState('currentFilter',val)
-
+export const setProperties = (val) => setGlobalState('properties',val)
+export const setAddresses = (val) => setGlobalState('addresses',val)
+export const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
+export const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
+export const setIsLoading = (val) => setGlobalState('loading',val)
+export const setProperty = val => setGlobalState('property',val)
+export const setCity = val => setGlobalState('city',val)
+export const setFilters = val => setGlobalState('filters',val)
+export const setAgents = val => setGlobalState('agents',val)
+export const setActionFeedback = (val) => setGlobalState('feedback',val)
+export const setLead = (val) => setGlobalState('lead',val)
+export const setCurrentFilter = (val) => setGlobalState('currentFilter',val)
+export const setLeadModal = val => setGlobalState('lead',val)
+export const setMediaModal = val => setGlobalState('media',val)
+export const setMapModal = val => setGlobalState('map',val)
 
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})

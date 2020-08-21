@@ -2,7 +2,13 @@ import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
 import {devices} from '../Utilities';
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
-import {createPropertyDescription, fetchCoordinates, getAgentById, onPropertyClicked} from "../../dataHandler";
+import {
+  createPropertyDescription,
+  fetchCoordinates,
+  getAgentById,
+  onPropertyClicked, setLeadModal, setMapModal,
+  setMediaModal
+} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {colors} from "../../colors";
 
@@ -37,9 +43,6 @@ export default React.memo(({property,property:{
 
 },index,toggleFavourite}) => {
 
-  const setLeadModal = val => setGlobalState('lead',val)
-  const setMediaModal = val => setGlobalState('media',val)
-  const setMapModal = val => setGlobalState('map',val)
   const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const [agentPhone,setAgentPhone] = useState('')
@@ -143,7 +146,7 @@ export default React.memo(({property,property:{
               borderRadius:10,
               display:'flex',
               height:66,
-              width:110,
+              minWidth:110,
               backgroundImage:`url(${media.images[0]?.original})`,
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',

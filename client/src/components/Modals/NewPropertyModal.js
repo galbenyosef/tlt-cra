@@ -1,13 +1,14 @@
 import React from 'react'
 import {Modal} from "@material-ui/core";
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
-import {createPropertyDescription, getAgentById} from "../../dataHandler";
+import {createPropertyDescription, fetchCoordinates, getAgentById, setLeadModal, setMapModal} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {
   EmailShareButton,
   FacebookShareButton,
   WhatsappShareButton,
 } from "react-share"
+import {colors} from "../../colors";
 
 export default () => {
 
@@ -20,6 +21,7 @@ export default () => {
     return null
 
   const {
+    id,
     thumb_file,
     agent_id,
     pic_living_room__url,
@@ -48,7 +50,10 @@ export default () => {
     committee
   } = property
 
+  
   const agent = getAgentById(agents,agent_id)
+  const agentName = agent && [agent.first_name,agent.last_name].join(' ')
+  const propertyName = [city_id,neighborhood_name,street_name].join(', ')
   const agentPhone = agent && agent.phone
 
   let pictures =[]
@@ -141,8 +146,22 @@ export default () => {
             </div>
           </div>
           <div style={{display:'flex',width:'100%',alignItems:'center',textAlign:'center',justifyContent:'space-around',marginTop:20}}>
-            <button>מפה</button>
-            <button>נווט</button>
+            <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
+                  onClick={() => {
+                    setLeadModal(modal => {
+                      let user_id = agent_id
+                      let kala_property_id = id
+                      return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id,propertyName,agentName,agentPhone:agent.phone}})
+                    })
+                  }}>לפגישה</span>
+            <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
+                  onClick={async () => {
+                    let coords = await fetchCoordinates([street_name,neighborhood_name,city_id].join(', '))
+                    if (coords ){
+                      const {lon,lat} = coords
+                      setMapModal({lon,lat,opened:true})
+                    }
+                  }}>מפה</span>
           </div>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>על הנכס</span>
