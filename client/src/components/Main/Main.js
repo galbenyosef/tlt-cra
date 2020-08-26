@@ -14,6 +14,7 @@ import Footer from "../Footer";
 import Modals from "../Modals";
 import FiltersBar from "../FiltersBar";
 import moment from "moment-timezone";
+import {Dev} from "../Dev";
 
 
 const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
@@ -26,7 +27,7 @@ const CitySelection = () => {
   if (city)
     return null
   return(
-    <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly',flexWrap:'wrap'}}>
+    <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly',flexWrap:'wrap',marginRight:'auto',marginLeft:'auto',marginTop:10,marginBottom:30}}>
       <p style={{padding:'0px 10px',width:'100%'}}>
         בחר עיר מבוקשת:
       </p>
@@ -88,12 +89,17 @@ const AboutUs = () => {
   )
 }
 
-const Main = ({id}) => {
+const Main = ({id,dev}) => {
 
   const [isLoading] = useGlobalState('loading')
   const setHeaderHeight = val => setGlobalState('headerHeight',val)
+  const [city] = useGlobalState('city')
 
   const handleScroll = (e) => setHeaderHeight(118 - (e.currentTarget.scrollY > 36 ? 36 : e.currentTarget.scrollY))
+
+  if (dev && !city){
+    onCityClick('חיפה')
+  }
 
   useEffect(() => {
     window.addEventListener("resize",resize);
@@ -126,6 +132,9 @@ const Main = ({id}) => {
                 <FiltersBar/>
               </Hidden>
               <Suspense fallback={<div>Loading...</div>}>
+                {
+                  dev ? <Dev/>: null
+                }
                 <PropertyList />
               </Suspense>
             </div>

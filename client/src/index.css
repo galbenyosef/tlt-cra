@@ -27,10 +27,10 @@ code {
 
 /* *{
   -ms-overflow-style: none;
-}*/
+}
 ::-webkit-scrollbar {
   display: none;
-}
+}*/
 video::-webkit-media-controls-volume-slider {
   display: none;
 }

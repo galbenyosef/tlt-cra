@@ -5,6 +5,7 @@ import Main from './components/Main/Main';
 import * as serviceWorker from './serviceWorker';
 import {useRoutes} from 'hookrouter';
 import {validateId} from "./dataHandler";
+import {Dev} from "./components/Dev";
 
 const NotFound = () => (
   <div>
@@ -17,6 +18,7 @@ const NotFound = () => (
 
 const routes = {
   '/': () => <Main />,
+  '/dev': () => <Main dev/>,
   '/:id': ({id}) => (validateId((id)) ? <Main id={id}/> : <NotFound/>)
 };
 

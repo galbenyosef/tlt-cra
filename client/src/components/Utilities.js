@@ -27,7 +27,7 @@ const constants = {
   MinFurniture:1,
   MaxFurniture:3,
   MinMetres:1,
-  MaxMetres:250,
+  MaxMetres:300,
   MinFloor:0,
   MaxFloor:50,
 }

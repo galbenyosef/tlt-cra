@@ -1,7 +1,14 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {Modal} from "@material-ui/core";
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
-import {createPropertyDescription, fetchCoordinates, getAgentById, setLeadModal, setMapModal} from "../../dataHandler";
+import {
+  createPropertyDescription,
+  fetchCoordinates,
+  getAgentById,
+  onExploreClicked,
+  setLeadModal,
+  setMapModal, setMediaModal,
+} from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {
   EmailShareButton,
@@ -9,6 +16,14 @@ import {
   WhatsappShareButton,
 } from "react-share"
 import {colors} from "../../colors";
+import moment from "moment";
+import FacebookIcon from "react-share/es/FacebookIcon";
+import TwitterShareButton from "react-share/es/TwitterShareButton";
+import TwitterIcon from "react-share/es/TwitterIcon";
+import WhatsappIcon from "react-share/es/WhatsappIcon";
+import EmailIcon from "react-share/es/EmailIcon";
+import FacebookMessengerShareButton from "react-share/es/FacebookMessengerShareButton";
+import FacebookMessengerIcon from "react-share/es/FacebookMessengerIcon";
 
 export default () => {
 
@@ -16,11 +31,13 @@ export default () => {
   const [property,setProperty] = useGlobalState('property')
   const setMediaModal = val => setGlobalState('media',val)
   const [agents] = useGlobalState('agents')
+  const videoRef = useRef(0)
+
 
   if (!property)
     return null
 
-  const {
+  let {
     id,
     thumb_file,
     agent_id,
@@ -47,16 +64,19 @@ export default () => {
     furniture,
     furniture_items,
     tax,
-    committee
+    committee,
+    custom_id
   } = property
 
-  
+
   const agent = getAgentById(agents,agent_id)
   const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
   const agentPhone = agent && agent.phone
 
   let pictures =[]
+
+  let getPropertyUrl = () => `https://tlt-israel.herkouapp.com/${id}`
 
   if (thumb_file)
     pictures.push(`/common/assets/748/724/${thumb_file.lg}`)
@@ -86,16 +106,32 @@ export default () => {
     media.videos.push({
       original:'',
       renderItem:() => (<div>
-        <video controls muted className={"image-gallery-image"}>
+        <video ref={videoRef} controls muted className={"image-gallery-image"}>
           <source src={`https://tlt.kala-crm.co.il/${video__url}`} type="video/mp4"/>
         </video>
       </div>),
     })
   }
 
+  const onExploreClicked = async () => {
+    let myPromise = () => new Promise((resolve,reject) => {
+      setMediaModal({
+        type:MediaModalTypes.Videos,
+        opened:true,
+        ...media
+      })
+      resolve()
+    })
+
+    await myPromise()
+    videoRef.current && videoRef.current.play()
+
+  }
+
   let top = headerHeight
 
   let innerH = window.innerHeight
+  entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
 
   return (
     <Modal
@@ -141,7 +177,7 @@ export default () => {
             <span>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
             <div style={{display:'flex',width:'100%',alignItems:'center',whiteSpace:'pre-wrap',textAlign:'center',justifyContent:'space-around',paddingTop:20}}>
               <span>{`${rooms}\n חדרים`}</span>
-              <span>{`${floor}\n קומה`}</span>
+              <span>{`${floor || `קרקע`}\n קומה`}</span>
               <span>{`${metres}\n מ"ר`}</span>
             </div>
           </div>
@@ -154,6 +190,10 @@ export default () => {
                       return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id,propertyName,agentName,agentPhone:agent.phone}})
                     })
                   }}>לפגישה</span>
+            {
+              media.videos.length ? <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
+                                          onClick={() => onExploreClicked()}>סיור בנכס</span> : null
+            }
             <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
                   onClick={async () => {
                     let coords = await fetchCoordinates([street_name,neighborhood_name,city_id].join(', '))
@@ -167,7 +207,7 @@ export default () => {
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>על הנכס</span>
             <span style={{whiteSpace:'break-spaces'}}>{createPropertyDescription(property)}</span>
           </div>
-          <span>{`תאריך כניסה: ${(entrance && entrance.slice(0,-5)) || 'לא צוין'}`}</span>
+          <span>{`תאריך כניסה: ${entrance}`}</span>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
             <EmailShareButton/>
             <FacebookShareButton/>
@@ -190,9 +230,36 @@ export default () => {
               <span>{tax > 0 ? `${tax.toLocaleString()} ₪` : `לא צוין`}</span>
             </div>
           </div>
+          <div style={{display:'flex',width:'100%',justifyContent:'space-around',alignItems:'center'}}>
+            <FacebookShareButton url={getPropertyUrl()} quote={`נכס מספר ${custom_id}`}>
+              <FacebookIcon
+                size={40} // You can use rem value instead of numbers
+                round
+              />
+            </FacebookShareButton>
+
+            <FacebookMessengerShareButton title={'messnger'} url={getPropertyUrl()}>
+              <FacebookMessengerIcon round
+                size={40}
+              />
+            </FacebookMessengerShareButton>
+
+            <TwitterShareButton title={'twitter title'} url={getPropertyUrl()}>
+              <TwitterIcon size={40} round />
+            </TwitterShareButton>
+
+            <WhatsappShareButton url={getPropertyUrl()} title={'whatsapp test'} separator=":: ">
+              <WhatsappIcon size={40} round />
+            </WhatsappShareButton>
+
+            <EmailShareButton url={getPropertyUrl()} subject={'mail test'} body="body">
+              <EmailIcon size={40} round />
+            </EmailShareButton>
+
+          </div>
         </div>
-        <div style={{width:'100%',backgroundColor:'lime',textAlign:'center',position:'fixed',bottom:0,right:0,left:0,height:30}}>
-          <span onClick={() => window.open(`tel:${agentPhone}`,`_blank`)}>{`התקשר ${agentPhone}`}</span>
+        <div style={{width:'100%',backgroundColor:'yellowgreen',textAlign:'center',position:'fixed',bottom:0,right:0,left:0,height:30,display:'flex'}}>
+          <span style={{margin:'auto'}} onClick={() => window.open(`tel:${agentPhone}`,`_blank`)}>{`התקשר ${agentPhone}`}</span>
         </div>
       </div>
     </Modal>

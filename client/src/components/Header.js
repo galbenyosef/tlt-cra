@@ -59,7 +59,7 @@ export default () => {
           <div style={{display:'flex',justifyContent:'center'}}>
             <div style={{display:'flex',padding:10}}>
               <AiFillPhone/>
-              <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-552-5456</p>
+              <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-333-8879</p>
             </div>
             <div style={{display:'flex',padding:10}}>
               <BsEnvelope/>
@@ -67,7 +67,7 @@ export default () => {
             </div>
             <div style={{display:'flex',padding:10}}>
               <FaWhatsapp/>
-              <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-552-5456</p>
+              <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-333-8879</p>
             </div>
           </div>
         </Grid>
@@ -183,28 +183,6 @@ export default () => {
               }
             </div>
           </div>
-         {/* <div style={{width: '100%',display:'flex',alignItems:'center',padding:'0px 10px',border:'2px solid black',borderTop:0,height:30,justifyContent:'space-between'}}>
-                <span onClick={() => setFiltersModal(filtersModalOpened?false:true)} style={{cursor:'pointer',width:'100%'}}>
-                  {
-                    filtersModalOpened ? 'סגור' : 'לחץ כאן לחיפוש מתקדם'
-                  }
-                </span>
-            {
-              filtersModalOpened ?
-                <div style={{width:20}}/>:
-                <div style={{display:'flex',alignItems:'center'}}>
-                  {
-                    <FaSearch size={30} color={'black'} style={{paddingLeft:getValueByDevice(5,5,5)}} />
-                  }
-                  {
-                    isFavouritesView ?
-                      <FaHeart size={30} color={'red'}  />
-                      :
-                      <FaHeart size={30}  />
-                  }
-                </div>
-            }
-          </div>*/}
         </Hidden>
       }
     </Grid>

@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
-import {devices} from '../Utilities';
+import {devices, getValueByDevice} from '../Utilities';
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
 import {
   createPropertyDescription,
@@ -11,6 +11,7 @@ import {
 } from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {colors} from "../../colors";
+import moment from "moment";
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
@@ -108,6 +109,10 @@ export default React.memo(({property,property:{
     })
   }
 
+
+  entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
+
+
   const onExploreClicked = async () => {
     let myPromise = () => new Promise((resolve,reject) => {
       setMediaModal({
@@ -154,7 +159,12 @@ export default React.memo(({property,property:{
               backgroundColor:'white'
             }}>
           </div>
-          <div style={{display:'flex',flexDirection:'column',paddingRight:20}}>
+          <div style={{display:'flex',flexDirection:'column',paddingRight:getValueByDevice(20,10,5),width:'100%'}}>
+            <Hidden smUp>
+              <span style={{fontSize:16,textAlign:'left',marginRight: 'auto', backgroundColor: 'blanchedalmond'}}>
+                {`${price.toLocaleString()} ₪`}
+              </span>
+            </Hidden>
             <span style={{fontSize:16}}>{street_name}</span>
             <span style={{fontSize:14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
           </div>
@@ -198,7 +208,7 @@ export default React.memo(({property,property:{
 
               </div>
               <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{(entrance && entrance.slice(0,-5)) || 'לא צוין'}</span></span>
+                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{entrance}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ארנונה <span style={{fontSize:12}}>{parseInt(tax) ? `${tax.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
                 <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>

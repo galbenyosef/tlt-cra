@@ -94,6 +94,10 @@ const initialState = {
     areas: [],
     neighborhoods: [],
     city:null,
+    page:1,
+    perPage:25,
+    totalCityCount:0,
+    totalFiltered:0,
 
     //elementary
     sideFiltersVisible: false,

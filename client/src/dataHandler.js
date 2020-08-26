@@ -18,6 +18,8 @@ export const setCurrentFilter = (val) => setGlobalState('currentFilter',val)
 export const setLeadModal = val => setGlobalState('lead',val)
 export const setMediaModal = val => setGlobalState('media',val)
 export const setMapModal = val => setGlobalState('map',val)
+export const setTotalCityCount = val => setGlobalState('totalCityCount',val)
+export const setTotalFiltered = val => setGlobalState('totalFiltered',val)
 
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})
@@ -86,8 +88,13 @@ export const createPropertyDescription = property => {
   if (toiletamount)
     test.push(`${toiletamount} חדרי שירותים`)
 
+  let first = []
+  first.push(`${rooms} חדרים,`)
+  first.push(`${metres} מ"ר,`)
+  first.push(`${floor ? `קומה ${floor}`:`קומת קרקע`}`)
+  first.push(`מתוך ${totalfloors} קומות`)
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
-${rooms} חדרים, ${metres} מ"ר, קומה ${floor} מתוך ${totalfloors} קומות
+${first.join(' ')}
 ${test.join(', ')}
 ${furniture}${structure != 'ישן' ? ` בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
   `
@@ -115,7 +122,6 @@ export const filterProperties = (properties,filters) => {
     floorTo,
   } = filters
 
-  console.log(filters)
   let furnitureRange = range(furnitureFrom,furnitureTo)
   let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
   let primeFilters = [...properties]
@@ -126,7 +132,6 @@ export const filterProperties = (properties,filters) => {
   else if (address.length) {
     primeFilters = primeFilters.filter(({neighborhood_name, street_name}) => {
       for (let addr of address) {
-        console.log(addr)
         let [neighborhood, street] = addr.split(', ')
         if (neighborhood_name === neighborhood && street_name === street)
           return true
@@ -138,11 +143,9 @@ export const filterProperties = (properties,filters) => {
     })
   }
   else if (propertyNumber.length) {
-    console.log(propertyNumber)
     primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.some(num => custom_id == num))
   }
 
-  console.log(primeFilters)
   let filtered = primeFilters
     .filter(({
                price,
@@ -178,6 +181,7 @@ export const filterProperties = (properties,filters) => {
     else
       property.isFiltered = false
   }
+  setTotalFiltered(filtered.length)
   return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
 
@@ -191,8 +195,6 @@ export const onPropertyClicked = async (id) => {
     street_name,neighborhood_name,city_id
   } = property
 
-  if (!street_name || !neighborhood_name || !city_id)
-    alert('לא נמצא נכס')
   let addressString = [street_name,neighborhood_name,city_id].join(', ')
   let coordinates = await fetchCoordinates(addressString)
   let alternatives = getAlternatives(property)
@@ -299,9 +301,11 @@ export const fetchProperties = async (city) => {
     if (property.custom_id)
       propertiesNumbers.push(property.custom_id + '')
 
+    setTotalCityCount(properties.length)
+    setTotalFiltered(properties.length)
+
   }
 
-  console.log(addressesMap)
   let addresses = []
   let areas = Object.keys(addressesMap).sort()
   for (let _area of areas){
@@ -318,6 +322,7 @@ export const fetchProperties = async (city) => {
   setAddresses(addresses)
   setProperties(properties)
   setPropertiesNumbers(propertiesNumbers)
+
 
 }
 
