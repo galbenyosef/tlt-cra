@@ -20,6 +20,7 @@ export const setMediaModal = val => setGlobalState('media',val)
 export const setMapModal = val => setGlobalState('map',val)
 export const setTotalCityCount = val => setGlobalState('totalCityCount',val)
 export const setTotalFiltered = val => setGlobalState('totalFiltered',val)
+export const setPage = val => setGlobalState('page',val)
 
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})
@@ -181,6 +182,7 @@ export const filterProperties = (properties,filters) => {
     else
       property.isFiltered = false
   }
+  setPage(1)
   setTotalFiltered(filtered.length)
   return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
