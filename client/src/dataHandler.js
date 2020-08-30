@@ -203,9 +203,11 @@ export const onPropertyClicked = async (id) => {
   } = property
 
   let addressString = [street_name,neighborhood_name,city_id].join(', ')
+/*
   let coordinates = await fetchCoordinates(addressString)
+*/
   let alternatives = getAlternatives(property)
-  setProperty({...property,alternatives,coordinates})
+  setProperty({...property,alternatives,/*coordinates*/})
 
   return property
 }
