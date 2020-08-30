@@ -146,18 +146,15 @@ export default React.memo(({property,property:{
     <Grid container
           onMouseEnter={() => handleHover(id)}
           onMouseLeave={() => handleHover(null)}
-          onClick={() => {
-      console.log(property);
-      (device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)
-    }
-    } style={{
+          style={{
       width: '100%',
       display: 'flex',
       alignItems: 'center',
       borderBottom: '2px solid lightgrey',
       justifyContent: 'space-between'
     }}>
-      <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
+      <Grid           onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
+                      item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
         <div
           onClick={(e) => {
             e.stopPropagation();
