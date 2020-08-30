@@ -3,6 +3,9 @@ import React from "react";
 import {Modal} from "@material-ui/core";
 import {MediaModalTypes, useGlobalState} from "../../globalState";
 import {devices} from "../Utilities";
+import "../image-gallery.css";
+
+
 
 export default () => {
 

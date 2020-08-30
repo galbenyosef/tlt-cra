@@ -22,6 +22,10 @@ export const setTotalCityCount = val => setGlobalState('totalCityCount',val)
 export const setTotalFiltered = val => setGlobalState('totalFiltered',val)
 export const setPage = val => setGlobalState('page',val)
 
+export const setImageHover = (properties,id) => {
+  setProperties(properties => properties.map(property => property.id === id ? ({...property,isHovered:true}) : ({...property,isHovered:false})))
+}
+
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})
 }
@@ -183,6 +187,7 @@ export const filterProperties = (properties,filters) => {
       property.isFiltered = false
   }
   setPage(1)
+
   setTotalFiltered(filtered.length)
   return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
@@ -263,9 +268,7 @@ export const showSingleProperty = async (propertyId) => {
   setProperties(
     properties => {
       let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})
-      if (selectedProperty.length){
-        return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
-      }
+      return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
     }
   )
   setIsLoading(false)
@@ -303,10 +306,9 @@ export const fetchProperties = async (city) => {
     if (property.custom_id)
       propertiesNumbers.push(property.custom_id + '')
 
-    setTotalCityCount(properties.length)
-    setTotalFiltered(properties.length)
-
   }
+  setTotalCityCount(properties.length)
+  setTotalFiltered(properties.length)
 
   let addresses = []
   let areas = Object.keys(addressesMap).sort()

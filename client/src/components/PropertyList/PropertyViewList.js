@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
 import {devices, getValueByDevice} from '../Utilities';
 import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
@@ -6,12 +6,22 @@ import {
   createPropertyDescription,
   fetchCoordinates,
   getAgentById,
-  onPropertyClicked, setLeadModal, setMapModal,
+  onPropertyClicked, setImageHover, setLeadModal, setMapModal,
   setMediaModal
 } from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {colors} from "../../colors";
 import moment from "moment";
+import {EmailShareButton, FacebookShareButton, WhatsappShareButton} from "react-share";
+import FacebookIcon from "react-share/es/FacebookIcon";
+import FacebookMessengerShareButton from "react-share/es/FacebookMessengerShareButton";
+import FacebookMessengerIcon from "react-share/es/FacebookMessengerIcon";
+import TwitterShareButton from "react-share/es/TwitterShareButton";
+import TwitterIcon from "react-share/es/TwitterIcon";
+import WhatsappIcon from "react-share/es/WhatsappIcon";
+import EmailIcon from "react-share/es/EmailIcon";
+import {FaHeart} from "react-icons/fa";
+import {FiHeart} from "react-icons/fi";
 
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 
@@ -40,9 +50,10 @@ export default React.memo(({property,property:{
   totalfloors,
   isCollapsedOut,
   requirements,
-  agent_id
+  agent_id,
+  isHovered
 
-},index,toggleFavourite}) => {
+},index,toggleFavourite,handleHover}) => {
 
   const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
@@ -111,6 +122,7 @@ export default React.memo(({property,property:{
 
 
   entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
+  let getPropertyUrl = () => `https://tlt-israel.herkouapp.com/${id}`
 
 
   const onExploreClicked = async () => {
@@ -130,140 +142,285 @@ export default React.memo(({property,property:{
 
   console.log('card render')
 
-  const PropertyViewComponent = () =>
-    <>
-      <Grid container onClick={() => {
-        console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}
-      } style={{width:'100%',height:74,display:'flex',alignItems:'center',borderBottom:'2px solid lightgrey',justifyContent:'space-between'}}>
-        <Grid item xs={8} sm={5} style={{display:'flex',alignItems:'center'}}>
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setMediaModal({
-                opened:true,
-                type:MediaModalTypes.Images,
-                ...media
-                })
-              }
-            }
-            style={{
-              borderRadius:10,
-              display:'flex',
-              height:66,
-              minWidth:110,
-              backgroundImage:`url(${media.images[0]?.original})`,
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize:'cover',
-              backgroundColor:'white'
-            }}>
-          </div>
-          <div style={{display:'flex',flexDirection:'column',paddingRight:getValueByDevice(20,10,5),width:'100%'}}>
-            <Hidden smUp>
-              <span style={{fontSize:16,textAlign:'left',marginRight: 'auto', backgroundColor: 'blanchedalmond'}}>
-                {`${price.toLocaleString()} ₪`}
-              </span>
-            </Hidden>
-            <span style={{fontSize:16}}>{street_name}</span>
-            <span style={{fontSize:14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
-          </div>
-        </Grid>
-        <Grid item xs={4} sm={4} style={{textAlign:'center',justifyContent:"space-around",alignItems:'center',display:'flex',height:'100%',borderLeft:'1px solid rgba(0,0,0,.1)',borderRight:'1px solid rgba(0,0,0,.1)'}}>
-          <div style={{display:'flex',flexDirection:'column'}}>
-            <span style={{fontSize:16}}>{rooms}</span>
-            <span style={{fontSize:14}}>חדרים</span>
-          </div>
-          <div style={{display:'flex',flexDirection:'column'}}>
-            <span style={{fontSize:16}}>{floor ? floor:'קרקע'}</span>
-            <span style={{fontSize:14}}>קומה</span>
-          </div>
-          <div style={{display:'flex',flexDirection:'column'}}>
-            <span style={{fontSize:16}}>{metres}</span>
-            <span style={{fontSize:14}}>מ"ר</span>
-          </div>
-        </Grid>
-        <Hidden only={'xs'}>
-          <Grid item sm={3} style={{display:'flex',flexDirection:'column',paddingLeft:20}}>
-            <span style={{textAlign:'left'}}>
+  return (
+    <Grid container
+          onMouseEnter={() => handleHover(id)}
+          onMouseLeave={() => handleHover(null)}
+          onClick={() => {
+      console.log(property);
+      (device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)
+    }
+    } style={{
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: '2px solid lightgrey',
+      justifyContent: 'space-between'
+    }}>
+      <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setMediaModal({
+              opened: true,
+              type: MediaModalTypes.Images,
+              ...media
+            })
+          }
+          }
+          style={{
+            borderRadius: 10,
+            display: 'flex',
+            height: 66,
+            minWidth: 110,
+            backgroundImage: `url(${media.images[0]?.original})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundColor: 'white',
+            position:'relative',
+            cursor:'pointer',
+          }}>
+          {
+            isFavourite ?
+              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={26} color={'red'} style={{zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+              :
+              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={26} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+          }
+          {
+            isHovered ?
+              <div style={{
+                width: 45,
+                backgroundColor: 'white',
+                borderRadius: 20,
+                margin:'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 35
+              }}>
+                {`+${propertyImages.length}`}
+              </div>
+              :
+              null
+          }
+        </div>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          paddingRight: getValueByDevice(20, 10, 5),
+          width: '100%'
+        }}>
+          <Hidden smUp>
+            <span style={{fontSize: 16, textAlign: 'left', marginRight: 'auto', backgroundColor: 'blanchedalmond'}}>
               {`${price.toLocaleString()} ₪`}
             </span>
-            <span style={{fontSize:10,textAlign:'left'}}>
-              {isNew? 'חדש' : ''}
-            </span>
-          </Grid>
-        </Hidden>
+          </Hidden>
+          <span style={{fontSize: 16}}>{street_name}</span>
+          <span style={{fontSize: 14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
+        </div>
+      </Grid>
+      <Grid item xs={4} sm={4} style={{
+        textAlign: 'center',
+        justifyContent: "space-around",
+        alignItems: 'center',
+        display: 'flex',
+        height: '100%',
+        borderLeft: '1px solid rgba(0,0,0,.1)',
+        borderRight: '1px solid rgba(0,0,0,.1)'
+      }}>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <span style={{fontSize: 16}}>{rooms}</span>
+          <span style={{fontSize: 14}}>חדרים</span>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <span style={{fontSize: 16}}>{floor ? floor : 'קרקע'}</span>
+          <span style={{fontSize: 14}}>קומה</span>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <span style={{fontSize: 16}}>{metres}</span>
+          <span style={{fontSize: 14}}>מ"ר</span>
+        </div>
       </Grid>
       <Hidden only={'xs'}>
-      {
-        isCollapsed?
-          <Grid container style={{display:'flex',backgroundColor:'white'}}>
-            <Grid item xs={8} sm={5} style={{display:'flex',flexDirection:'column',justifyContent:'space-between',padding:20,paddingBottom:55}}>
-              <div style={{display:'flex',flexDirection:'column'}}>
-                <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>תיאור הנכס</span>
-                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{createPropertyDescription((property))}</span>
-                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{description}</span>
-                <span style={{fontSize:12,whiteSpace:'break-spaces'}}>{furniture_items && furniture_items.length ?
-                  `פירוט ריהוט: ${furniture_items.join(', ')}`:``}</span>
-
-              </div>
-              <div style={{display:'flex',flexWrap:'wrap',paddingTop:10}}>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>תאריך כניסה <span style={{fontSize:12}}>{entrance}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ארנונה <span style={{fontSize:12}}>{parseInt(tax) ? `${tax.toLocaleString()} ₪` : 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>ועד בית <span style={{fontSize:12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
-                <span style={{width:'50%',paddingTop:10,fontWeight:'bold'}}>קומות בבניין <span style={{fontSize:12}}>{totalfloors || 'לא צוין'}</span></span>
-                <span style={{width:'55%',margin:'auto',paddingTop:10,fontWeight:'bold'}}>דרישות בחוזה <span style={{fontSize:12}}>{requirements || 'לא צוין'}</span></span>
-
-              </div>
-            </Grid>
-            <Grid item xs={4} sm={4} style={{display:'flex',flexDirection:'column',textAlign:'center',padding:20}}>
-              <span style={{fontSize:16,fontWeight:'bold',paddingBottom:20}}>מה יש בנכס?</span>
-              <PropertyDetailGrid {...property}/>
-            </Grid>
-            <Grid item sm={3} style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',alignItems:'center',color:'white',textAlign:'center'}}>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
-                onClick={() => {
-                  setLeadModal(modal => {
-                    let user_id = agent_id
-                    let kala_property_id = id
-                    return ({...modal,opened:true,user_id,attributes:{...modal.attributes,kala_property_id,propertyName,agentName,agentPhone:agent.phone}})
-                  })
-                }}>לפגישה</span>
-              {
-                media.videos.length ? <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
-                      onClick={() => onExploreClicked()}>סיור בנכס</span>
-                  :
-                  <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer'}}
-                        >לא קיים וידאו</span>
-              }
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:'grey',cursor:'pointer',fontSize:agentPhone ?12:''}}
-                onClick={
-                  () => setAgentPhone(agent.phone)
-                }
-              >{agentPhone || 'צור קשר'}</span>
-              <span style={{display:'flex',justifyContent:'center',alignItems:'center',height:30,width:'45%',backgroundColor:colors.darkblue,cursor:'pointer'}}
-                onClick={async () => {
-                  let coords = await fetchCoordinates([street_name,neighborhood_name,city_id].join(', '))
-                  if (coords ){
-                    const {lon,lat} = coords
-                    setMapModal({lon,lat,opened:true})
-                  }
-                }}>מפה</span>
-            </Grid>
-            <div style={{margin:'auto'}}><span>{`נכס מספר ${custom_id}`}</span></div>
-          </Grid>
-          : null
-      }
+        <Grid item sm={3} style={{display: 'flex', flexDirection: 'column', paddingLeft: 20}}>
+          <span style={{textAlign: 'left'}}>
+            {`${price.toLocaleString()} ₪`}
+          </span>
+          <span style={{fontSize: 10, textAlign: 'left'}}>
+            {isNew ? 'חדש' : ''}
+          </span>
+        </Grid>
       </Hidden>
-    </>
-  return  (
-      <PropertyViewComponent/>
-  )
+      <Hidden only={'xs'}>
+        {
+          isCollapsed ?
+            <Grid container style={{display: 'flex', backgroundColor: 'white'}}>
+              <Grid item xs={8} sm={5} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: 20,
+                paddingBottom: 55
+              }}>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                  <span style={{fontSize: 16, fontWeight: 'bold', paddingBottom: 20}}>תיאור הנכס</span>
+                  <span style={{fontSize: 12, whiteSpace: 'break-spaces'}}>{createPropertyDescription((property))}</span>
+                  <span style={{fontSize: 12, whiteSpace: 'break-spaces'}}>{description}</span>
+                  <span style={{fontSize: 12, whiteSpace: 'break-spaces'}}>{furniture_items && furniture_items.length ?
+                    `פירוט ריהוט: ${furniture_items.join(', ')}` : ``}</span>
+
+                </div>
+                <div style={{display: 'flex', flexWrap: 'wrap', paddingTop: 10}}>
+              <span style={{width: '50%', paddingTop: 10, fontWeight: 'bold'}}>תאריך כניסה <span
+                style={{fontSize: 12}}>{entrance}</span></span>
+                  <span style={{width: '50%', paddingTop: 10, fontWeight: 'bold'}}>ארנונה <span
+                    style={{fontSize: 12}}>{parseInt(tax) ? `${tax.toLocaleString()} ₪` : 'לא צוין'}</span></span>
+                  <span style={{width: '50%', paddingTop: 10, fontWeight: 'bold'}}>ועד בית <span
+                    style={{fontSize: 12}}>{parseInt(committee) ? `${committee.toLocaleString()} ₪` : 'לא צוין'}</span></span>
+                  <span style={{width: '50%', paddingTop: 10, fontWeight: 'bold'}}>קומות בבניין <span
+                    style={{fontSize: 12}}>{totalfloors || 'לא צוין'}</span></span>
+                  <span style={{width: '55%', margin: 'auto', paddingTop: 10, fontWeight: 'bold'}}>דרישות בחוזה <span
+                    style={{fontSize: 12}}>{requirements || 'לא צוין'}</span></span>
+
+                </div>
+              </Grid>
+              <Grid item xs={4} sm={4}
+                    style={{display: 'flex', flexDirection: 'column', textAlign: 'center', padding: 20}}>
+                <span style={{fontSize: 16, fontWeight: 'bold', paddingBottom: 20}}>מה יש בנכס?</span>
+                <PropertyDetailGrid {...property}/>
+              </Grid>
+              <Grid item sm={3} style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                color: 'white',
+                textAlign: 'center'
+              }}>
+            <span style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 30,
+              width: '45%',
+              backgroundColor: colors.darkblue,
+              cursor: 'pointer'
+            }}
+                  onClick={() => {
+                    setLeadModal(modal => {
+                      let user_id = agent_id
+                      let kala_property_id = id
+                      return ({
+                        ...modal,
+                        opened: true,
+                        user_id,
+                        attributes: {
+                          ...modal.attributes,
+                          kala_property_id,
+                          propertyName,
+                          agentName,
+                          agentPhone: agent.phone
+                        }
+                      })
+                    })
+                  }}>לפגישה</span>
+                {
+                  media.videos.length ? <span style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 30,
+                      width: '45%',
+                      backgroundColor: 'grey',
+                      cursor: 'pointer'
+                    }}
+                                              onClick={() => onExploreClicked()}>סיור בנכס</span>
+                    :
+                    <span style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 30,
+                      width: '45%',
+                      backgroundColor: 'grey',
+                      cursor: 'pointer'
+                    }}
+                    >לא קיים וידאו</span>
+                }
+                <span style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 30,
+                  width: '45%',
+                  backgroundColor: 'grey',
+                  cursor: 'pointer',
+                  fontSize: agentPhone ? 12 : ''
+                }}
+                      onClick={
+                        () => setAgentPhone(agent.phone)
+                      }
+                >{agentPhone || 'צור קשר'}</span>
+                <span style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 30,
+                  width: '45%',
+                  backgroundColor: colors.darkblue,
+                  cursor: 'pointer'
+                }}
+                      onClick={async () => {
+                        let coords = await fetchCoordinates([street_name, neighborhood_name, city_id].join(', '))
+                        if (coords) {
+                          const {lon, lat} = coords
+                          setMapModal({lon, lat, opened: true})
+                        }
+                      }}>מפה</span>
+              </Grid>
+              <div style={{display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center'}}>
+                <FacebookShareButton url={getPropertyUrl()} quote={`נכס מספר ${custom_id}`}>
+                  <FacebookIcon
+                    size={40} // You can use rem value instead of numbers
+                    round
+                  />
+                </FacebookShareButton>
+
+                <FacebookMessengerShareButton title={'messnger'} url={getPropertyUrl()}>
+                  <FacebookMessengerIcon round
+                                         size={40}
+                  />
+                </FacebookMessengerShareButton>
+
+                <TwitterShareButton title={'twitter title'} url={getPropertyUrl()}>
+                  <TwitterIcon size={40} round/>
+                </TwitterShareButton>
+
+                <WhatsappShareButton url={getPropertyUrl()} title={'whatsapp test'} separator=":: ">
+                  <WhatsappIcon size={40} round/>
+                </WhatsappShareButton>
+
+                <EmailShareButton url={getPropertyUrl()} subject={'mail test'} body="body">
+                  <EmailIcon size={40} round/>
+                </EmailShareButton>
+
+              </div>
+              <div style={{margin: 'auto'}}><span>{`נכס מספר ${custom_id}`}</span></div>
+            </Grid>
+            : null
+        }
+      </Hidden>
+    </Grid>
+)
+
 
 },(prevProps,nextProps) => {
   return(
-    (prevProps.property.isFavourite === nextProps.property.isFavourite) ||
-    (prevProps.property.isCollapsed === nextProps.property.isCollapsed)
+    (prevProps.property.isFavourite === nextProps.property.isFavourite) &&
+    (prevProps.property.isCollapsed === nextProps.property.isCollapsed) &&
+    (prevProps.property.isHovered === nextProps.property.isHovered)
   )
 })
 

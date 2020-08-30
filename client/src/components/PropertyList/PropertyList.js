@@ -8,6 +8,7 @@ import PropertyViewList from "./PropertyViewList";
 import PropertyViewGrid from "./PropertyViewGrid";
 import Pagination from '@material-ui/lab/Pagination';
 import {devices} from "../Utilities";
+import {setImageHover} from "../../dataHandler";
 
 const PropertyList = () => {
 
@@ -33,6 +34,7 @@ const PropertyList = () => {
     return null
 
 
+
   const toggleFavourite = idx => {
 
     setPropertiesData(properties => {
@@ -46,8 +48,9 @@ const PropertyList = () => {
   let propertiesFiltered = propertiesData.length ? propertiesData.filter(p => p.isFiltered) : []
   let properties = propertiesFiltered.filter(p => p.isFiltered).slice((page-1) * perPage,perPage*page)
 
+  const handleHover = id => setImageHover(propertiesData,id)
   console.log('property List rendered')
-  console.log(page,perPage)
+
   return (
     <div style={{display:'flex',justifyContent:'center',overflow:'hidden',width:'100%',fontFamily:'Rubik'}}>
       <div style={{flexDirection:'column',display:'flex',width:'100%',maxWidth:window.innerWidth > 1000 ? '1300px': 'auto' ,alignItems:'center'}}>
@@ -79,7 +82,7 @@ const PropertyList = () => {
             <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewList handleHover={handleHover} toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
                 )
               }
             </div>:
