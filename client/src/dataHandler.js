@@ -21,10 +21,8 @@ export const setMapModal = val => setGlobalState('map',val)
 export const setTotalCityCount = val => setGlobalState('totalCityCount',val)
 export const setTotalFiltered = val => setGlobalState('totalFiltered',val)
 export const setPage = val => setGlobalState('page',val)
-
-export const setImageHover = (properties,id) => {
-  setProperties(properties => properties.map(property => property.id === id ? ({...property,isHovered:true}) : ({...property,isHovered:false})))
-}
+export const setAddressTree = (val) => setGlobalState('addressTree',val)
+export const setAddressMap = (val) => setGlobalState('addressMap',val)
 
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})
@@ -43,12 +41,14 @@ export const getAlternatives = ({id,price,rooms},options = []) => {
 export const handleCloseFilter = () => setCurrentFilter({currentFilterName:'',currentFilterElement:null})
 
 
-export const changeFilters = filters => {
+export const changeFilters = newFilters => {
 
-  setFilters(filters)
+  let _filters = []
+  setFilters(filters => {return _filters = ({...filters,...newFilters})})
 
+  console.log(_filters)
   setProperties(
-    properties => filterProperties(properties,filters)
+    properties => filterProperties(properties,_filters)
   )
 }
 
@@ -198,16 +198,9 @@ export const validateId = id => id && Number.isInteger(parseInt(id)) && id.lengt
 export const onPropertyClicked = async (id) => {
 
   let property = await fetchProperty(id)
-  const {
-    street_name,neighborhood_name,city_id
-  } = property
 
-  let addressString = [street_name,neighborhood_name,city_id].join(', ')
-/*
-  let coordinates = await fetchCoordinates(addressString)
-*/
   let alternatives = getAlternatives(property)
-  setProperty({...property,alternatives,/*coordinates*/})
+  setProperty({...property,alternatives})
 
   return property
 }
@@ -288,27 +281,67 @@ export const fetchProperties = async (city) => {
   let favouritesString = localStorage.getItem('favourites')
   let favourites = favouritesString && JSON.parse(favouritesString) || []
 
+  let newAddressMap = []
+  let dropdownData = []
+
+
   for (let property of properties){
     let {
       neighborhood_name,
       street_name,
-      area
+      area,
+      custom_id
     } = property
 
     property.isFiltered = true
     if (favourites && favourites.includes(property.id))
       property.isFavourite = true
-    if (!addressesMap[area])
+    if (!addressesMap[area]) {
       addressesMap[area] = {}
-    if (!addressesMap[area][neighborhood_name])
+      newAddressMap[area] = {}
+      dropdownData.push({
+        id:area,
+        label:area,
+        value:area,
+      })
+    }
+    if (!addressesMap[area][neighborhood_name]) {
       addressesMap[area][neighborhood_name] = []
-    if (!addressesMap[area][neighborhood_name].includes(street_name))
+      newAddressMap[area][neighborhood_name] = []
+      dropdownData.push({
+        area,
+        id:neighborhood_name,
+        label:neighborhood_name,
+        parent_id:area,
+      })
+    }
+    if (!addressesMap[area][neighborhood_name].includes(street_name)) {
       addressesMap[area][neighborhood_name].push(street_name)
+      newAddressMap[area][neighborhood_name][street_name] = []
+      dropdownData.push({
+        area,
+        neighborhood_name,
+        id:street_name,
+        label:street_name,
+        parent_id:neighborhood_name,
+      })
+    }
 
-    if (property.custom_id)
+
+    if (custom_id) {
       propertiesNumbers.push(property.custom_id + '')
+      newAddressMap[area][neighborhood_name][street_name].push(custom_id)
+      dropdownData.push({
+        id:custom_id,
+        label:`נכס מספר ${custom_id}`,
+        parent_id:street_name
+      })
+    }
 
   }
+
+  setAddressMap(newAddressMap)
+  setAddressTree(unflatten(dropdownData))
   setTotalCityCount(properties.length)
   setTotalFiltered(properties.length)
 
@@ -332,6 +365,35 @@ export const fetchProperties = async (city) => {
 
 }
 
+function unflatten(arr) {
+  var tree = [],
+    mappedArr = {},
+    arrElem,
+    mappedElem;
+
+  // First map the nodes of the array to an object -> create a hash table.
+  for(var i = 0, len = arr.length; i < len; i++) {
+    arrElem = arr[i];
+    mappedArr[arrElem.id] = arrElem;
+    mappedArr[arrElem.id]['children'] = [];
+  }
+
+
+  for (var id in mappedArr) {
+    if (mappedArr.hasOwnProperty(id)) {
+      mappedElem = mappedArr[id];
+      // If the element is not at the root level, add it to its parent array of children.
+      if (mappedElem.parent_id) {
+        mappedArr[mappedElem['parent_id']]['children'].push(mappedElem);
+      }
+      // If the element is at the root level, add it to first level elements array.
+      else {
+        tree.push(mappedElem);
+      }
+    }
+  }
+  return tree;
+}
 
 export const createLeadKala = async (data) => {
 

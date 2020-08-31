@@ -98,6 +98,8 @@ const initialState = {
     perPage:25,
     totalCityCount:0,
     totalFiltered:0,
+    addressTree:[],
+    addressMap:{},
 
     //elementary
     sideFiltersVisible: false,

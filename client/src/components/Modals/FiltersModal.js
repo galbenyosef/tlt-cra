@@ -88,7 +88,7 @@ export default () => {
             </>
             {
               roomsActive > 0 &&
-              <div onClick={(e) => {changeFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
+              <div onClick={(e) => {changeFilters({roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
           </div>
@@ -102,7 +102,7 @@ export default () => {
             {
               budgetActive > 0 &&
               <div onClick={(e) => {
-                changeFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                changeFilters({budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                 e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
@@ -116,7 +116,7 @@ export default () => {
             </>
             {
               furnitureActive > 0 &&
-              <div onClick={(e) => {changeFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
+              <div onClick={(e) => {changeFilters({furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
           </div>
@@ -130,7 +130,7 @@ export default () => {
             {
               floorActive > 0 &&
               <div onClick={(e) => {
-                changeFilters({...filters,floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
+                changeFilters({floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
                 e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
@@ -144,7 +144,7 @@ export default () => {
             </>
             {
               renovationActive > 0 &&
-              <div onClick={(e) => {changeFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
+              <div onClick={(e) => {changeFilters({renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
           </div>
@@ -158,7 +158,7 @@ export default () => {
             {
               metresActive > 0 &&
               <div onClick={(e) => {
-                changeFilters({...filters,metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
+                changeFilters({metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
                 e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }

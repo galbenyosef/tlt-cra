@@ -88,7 +88,7 @@ export const FilterContent = () => {
           </div>
           <div style={filterBoxStyle}>
             <div onClick={() => {
-              changeFilters({...filters, budgetActive: filters.budgetActive + 1});
+              changeFilters({ budgetActive: filters.budgetActive + 1});
               handleCloseFilter()}
             }
                  style={{
@@ -178,7 +178,7 @@ export const FilterContent = () => {
             </div>
             <div style={filterBoxStyle}>
               <div onClick={() => {
-                changeFilters({...filters, roomsActive: filters.roomsActive + 1});
+                changeFilters({ roomsActive: filters.roomsActive + 1});
                 handleCloseFilter()
               }}
                    style={{
@@ -239,7 +239,7 @@ export const FilterContent = () => {
 
               <div style={filterBoxStyle}>
                 <div onClick={() => {
-                  changeFilters({...filters, renovationActive: filters.renovationActive + 1});
+                  changeFilters({ renovationActive: filters.renovationActive + 1});
                   handleCloseFilter()
                 }}
                      style={{
@@ -304,7 +304,7 @@ export const FilterContent = () => {
 
                 <div style={filterBoxStyle}>
                   <div onClick={() => {
-                    changeFilters({...filters, furnitureActive: filters.furnitureActive + 1});
+                    changeFilters({ furnitureActive: filters.furnitureActive + 1});
                     handleCloseFilter()
                   }}
                        style={{
@@ -394,7 +394,7 @@ export const FilterContent = () => {
                   </div>
                   <div style={filterBoxStyle}>
                     <div onClick={() => {
-                      changeFilters({...filters, metresActive: filters.metresActive + 1});
+                      changeFilters({ metresActive: filters.metresActive + 1});
                       handleCloseFilter()
                     }
                     }
@@ -485,7 +485,7 @@ export const FilterContent = () => {
                     </div>
                     <div style={filterBoxStyle}>
                       <div onClick={() => {
-                        changeFilters({...filters, floorActive: filters.floorActive + 1});
+                        changeFilters({ floorActive: filters.floorActive + 1});
                         handleCloseFilter()
                       }
                       }
@@ -535,7 +535,7 @@ export const FilterContent = () => {
                             <label style={{height:'100%',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'center',fontSize:14,textAlign:'center'}}>
                               <p>{switchFilters[filter]}</p>
                               <Switch onChange={checked => {
-                                changeFilters({...filters,[filter]:checked})}
+                                changeFilters({[filter]:checked})}
                               }
                                       checked={filters[filter]}/>
                             </label>

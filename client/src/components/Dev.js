@@ -1,81 +1,93 @@
 
-import React, {useRef, useState} from "react";
-import {changeFilters} from "../dataHandler";
-import WindowedSelect from "react-windowed-select";
-import {newSearchStyle} from "../styles";
+import React from "react";
 import {useGlobalState} from "../globalState";
+import DropdownTreeSelect from 'react-dropdown-tree-select'
+import './dropdownTree.css'
+import {changeFilters} from "../dataHandler";
 
-const customFilterOption = (option, rawInput) => {
+function searchPredicate(node, searchTerm) {
 
-  console.log(option,rawInput)
-  const words = rawInput.split(' ');
-
-  if (!Number.isInteger(parseInt(rawInput))) {
-    return words.reduce(
-      (acc, cur) => acc && option.data.address.toLowerCase().includes(cur.toLowerCase()),
-      true,
-    );
+  if (Number.isInteger(parseInt(searchTerm))){
+    console.log(searchTerm)
+    let node_id = node.id.toString()
+    return node_id.indexOf(searchTerm) >= 0
   }
-  else{
-    return option.data.number.toString().includes(rawInput)
-  }
-};
+  if (Number.isInteger(parseInt(node.id)))
+    return false
+  return node.id.indexOf(searchTerm) >= 0
+}
 
-const createOptionLabel = option => `${option.address.toLowerCase()} ${option.number.toString()}`
+export const Dev = React.memo(() => {
 
-export const Dev = () => {
-
-  const [addressesData] = useGlobalState('addresses');
-  const [inputValue,setInputValue] = useState('')
-  const [propertiesNumbers] = useGlobalState('propertiesNumbers')
-  const [properties] = useGlobalState('properties')
-  const [filters,setFilters] = useGlobalState('filters')
-  const {address} = filters
+  const [addressTree] = useGlobalState('addressTree')
+  const [addressMap] = useGlobalState('addressMap')
 
 
-  let filteredCount = 0
+  function getLeafNodes(nodes){
 
-  for (let property of properties){
-    property.isFiltered && ++filteredCount
+      let node_children = []
+
+      for (let node of nodes) {
+        //is Area
+        if (!node.parent_id) {
+          let area = node.id
+          let itsNeighborhoods = Object.keys(addressMap[area])
+          for (let neighborhood of itsNeighborhoods) {
+            let streets = Object.keys(addressMap[area][neighborhood])
+            for (let street of streets) {
+              node_children = node_children.concat(addressMap[area][neighborhood][street])
+            }
+          }
+        }
+        //is Custom_id
+        else if (Number.isInteger(node.id)) {
+          node_children.push(node.id)
+        }
+        //is street
+        else if(node.neighborhood_name){
+          let street = node.id
+          let neighborhood = node.neighborhood_name
+          let area = node.area
+          node_children = node_children.concat(addressMap[area][neighborhood][street])
+          continue
+        }
+        //is neighborhood
+        else {
+          let neighborhood = node.id
+          let area = node.area
+          let streets = Object.keys(addressMap[area][neighborhood])
+          for (let street of streets) {
+            node_children = node_children.concat(addressMap[area][neighborhood][street])
+          }
+        }
+      }
+
+
+    console.log(node_children)
+
+    return node_children;
   }
 
   return (
-    <div style={{width:'100%',display:'flex'}}>
-      <WindowedSelect
-        filterOption={customFilterOption}
-        styles={newSearchStyle}
-        isClearable={true}
-        isRtl={true}
-        closeMenuOnSelect={false}
-        isMulti={false}
-        menuIsOpen={!!inputValue}
-        getOptionLabel={prop => createOptionLabel(prop)}
-        openMenuOnFocus={false}
-        openMenuOnClick={true}
-        inputValue={inputValue}
-        components={{ SingleValue: () => <div>{`מוצגים ${filteredCount} פריטים`}</div>}}
-        onInputChange={e => setInputValue(e)}
-        options={properties.map(prop => ({number:prop.custom_id,address:[prop.area, prop.neighborhood_name, prop.street_name].join(', ')}))}
-        placeholder="הקש כתובת/ מספר נכס"
-/*        value={filters.propertyNumber.length ? [`נכס מספר #${filters.propertyNumber[0]}`] : [filters.address[0]]}
-        onChange={e => {
-          console.log(e)
-          if (!e)
-            changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
-          else if(!Number.isInteger(parseInt(e))){
-            if (address.includes(e))
-              changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
-            else
-              changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
-          }
-          else{
-            changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
-          }
-        }}*/
-      />
+    <div style={{height:23}}>
+    <DropdownTreeSelect
+      keepTreeOnSearch
+      showPartiallySelected
+      clearSearchOnChange
+      keepOpenOnSelect
+      data={addressTree}
+      searchPredicate={searchPredicate}
+      onChange={(a,b) => {
+        changeFilters({propertyNumber:getLeafNodes(b),addresses:[],addressesActive:0,address:''})
+      }}
+      texts={{
+        placeholder:'הקש אזור/שכונה/רחוב/מספר נכס',
+        noMatches:'לא נמצאו תוצאות'
+      }}
+      className="mdl-demo" />
     </div>
   )
 
 
 
-}
+},() => true)

@@ -5,7 +5,6 @@ import Main from './components/Main/Main';
 import * as serviceWorker from './serviceWorker';
 import {useRoutes} from 'hookrouter';
 import {validateId} from "./dataHandler";
-import {Dev} from "./components/Dev";
 
 const NotFound = () => (
   <div>

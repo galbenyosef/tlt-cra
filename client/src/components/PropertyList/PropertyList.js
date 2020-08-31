@@ -7,8 +7,6 @@ import {colors} from "../../colors";
 import PropertyViewList from "./PropertyViewList";
 import PropertyViewGrid from "./PropertyViewGrid";
 import Pagination from '@material-ui/lab/Pagination';
-import {devices} from "../Utilities";
-import {setImageHover} from "../../dataHandler";
 
 const PropertyList = () => {
 
@@ -19,7 +17,6 @@ const PropertyList = () => {
   const [city] = useGlobalState('city')
   const [perPage,setPerPage] = useGlobalState('perPage')
   const [page,setPage] = useGlobalState('page')
-  const [device] = useGlobalState('device')
 
 
   const listRef = React.useRef(null)
@@ -48,7 +45,6 @@ const PropertyList = () => {
   let propertiesFiltered = propertiesData.length ? propertiesData.filter(p => p.isFiltered) : []
   let properties = propertiesFiltered.filter(p => p.isFiltered).slice((page-1) * perPage,perPage*page)
 
-  const handleHover = id => setImageHover(propertiesData,id)
   console.log('property List rendered')
 
   return (
@@ -82,7 +78,7 @@ const PropertyList = () => {
             <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewList handleHover={handleHover} toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
                 )
               }
             </div>:

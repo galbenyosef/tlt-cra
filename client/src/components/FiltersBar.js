@@ -122,9 +122,9 @@ const FiltersBar = () => {
               onChange={e => {
                 console.log(e)
                 !Number.isInteger(parseInt(e)) ?
-                  changeFilters({...filters,address:e ? [e] : [],addresses:[],addressesActive:0,propertyNumber:[]})
+                  changeFilters({address:e ? [e] : [],addresses:[],addressesActive:0,propertyNumber:[]})
                   :
-                  changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
+                  changeFilters({propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
               }}
             />
           </div>
@@ -156,12 +156,12 @@ const FiltersBar = () => {
                   onChange={e => {
                     console.log(e)
                     if (!e)
-                      changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
+                      changeFilters({address:[],addresses:[],addressesActive:0,propertyNumber:[]})
                     else{
                       if (address.includes(e))
-                        changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
+                        changeFilters({address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
                       else
-                        changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
+                        changeFilters({address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
                     }
                   }}
                 />
@@ -176,7 +176,7 @@ const FiltersBar = () => {
                 </>
                 {
                   roomsActive > 0 &&
-                  <div onClick={(e) => {changeFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
+                  <div onClick={(e) => {changeFilters({roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
                        style={clearFilterStyle}>X</div>
                 }
               </div>
@@ -191,7 +191,7 @@ const FiltersBar = () => {
                 {
                   budgetActive > 0 &&
                   <div onClick={(e) => {
-                    changeFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                    changeFilters({budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                     e.stopPropagation()} }
                        style={clearFilterStyle}>X</div>
                 }
@@ -206,7 +206,7 @@ const FiltersBar = () => {
                 </>
                 {
                   renovationActive > 0 &&
-                  <div onClick={(e) => {changeFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
+                  <div onClick={(e) => {changeFilters({renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
                        style={clearFilterStyle}>X</div>
                 }
               </div>
@@ -222,7 +222,7 @@ const FiltersBar = () => {
                 </>
                 {
                   furnitureActive > 0 &&
-                  <div onClick={(e) => {changeFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
+                  <div onClick={(e) => {changeFilters({furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
                        style={clearFilterStyle}>X</div>
                 }
               </div>
@@ -331,7 +331,7 @@ const FiltersBar = () => {
                   </div>
                   <div style={filterBoxStyle}>
                     <div onClick={() => {
-                      changeFilters({...filters,budgetActive:filters.budgetActive+1});
+                      changeFilters({budgetActive:filters.budgetActive+1});
                       handleCloseFilter()}
                     }
                          style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -384,7 +384,7 @@ const FiltersBar = () => {
                       />
                     </div>
                     <div style={filterBoxStyle}>
-                      <div onClick={() => {changeFilters({...filters,roomsActive:filters.roomsActive+1});handleCloseFilter()}}
+                      <div onClick={() => {changeFilters({roomsActive:filters.roomsActive+1});handleCloseFilter()}}
                            style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                              color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                       <div onClick={() => handleCloseFilter() }
@@ -412,7 +412,7 @@ const FiltersBar = () => {
                       </div>
 
                       <div style={filterBoxStyle}>
-                        <div onClick={() => {changeFilters({...filters,renovationActive:filters.renovationActive+1});handleCloseFilter()}}
+                        <div onClick={() => {changeFilters({renovationActive:filters.renovationActive+1});handleCloseFilter()}}
                              style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                         <div onClick={() => handleCloseFilter() }
@@ -441,7 +441,7 @@ const FiltersBar = () => {
                         <div style={filterBoxStyle}>
                           <div onClick={() => {
                             let newVal = new Set(filters.addresses.concat(neighborhoodSelected))
-                            changeFilters({...filters,addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
+                            changeFilters({addresses: [...newVal],addressesActive:filters.addressesActive+1,address:''});
                             handleCloseFilter()
                           }}
                                style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -476,7 +476,7 @@ const FiltersBar = () => {
                           </div>
 
                           <div style={filterBoxStyle}>
-                            <div onClick={() => {changeFilters({...filters,furnitureActive:filters.furnitureActive+1});handleCloseFilter()}}
+                            <div onClick={() => {changeFilters({furnitureActive:filters.furnitureActive+1});handleCloseFilter()}}
                                  style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
                                    color:'white',display:'flex',justifyContent:'center',alignItems:'center'}}>אישור</div>
                             <div onClick={() => handleCloseFilter() }
@@ -528,7 +528,7 @@ const FiltersBar = () => {
                             </div>
                             <div style={filterBoxStyle}>
                               <div onClick={() => {
-                                changeFilters({...filters,metresActive:filters.metresActive+1});
+                                changeFilters({metresActive:filters.metresActive+1});
                                 handleCloseFilter()}
                               }
                                    style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",
@@ -582,7 +582,7 @@ const FiltersBar = () => {
                               </div>
                               <div style={filterBoxStyle}>
                                 <div onClick={() => {
-                                  changeFilters({...filters,floorActive:filters.floorActive+1});
+                                  changeFilters({floorActive:filters.floorActive+1});
                                   handleCloseFilter()}
                                 }
                                      style={{width:'30%',backgroundColor:'lightgreen',cursor:'pointer',fontSize:'14px',boxShadow: "3px 3px 0px 1px rgba(0,0,0,0.18)",

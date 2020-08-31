@@ -159,15 +159,15 @@ export default () => {
               onChange={e => {
                 console.log(e)
                 if (!e)
-                  changeFilters({...filters,address:[],addresses:[],addressesActive:0,propertyNumber:[]})
+                  changeFilters({address:[],addresses:[],addressesActive:0,propertyNumber:[]})
                 else if(!Number.isInteger(parseInt(e))){
                   if (address.includes(e))
-                    changeFilters({...filters,address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
+                    changeFilters({address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
                   else
-                    changeFilters({...filters,address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
+                    changeFilters({address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
                 }
                 else{
-                  changeFilters({...filters,propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
+                  changeFilters({propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
                 }
               }}
             />

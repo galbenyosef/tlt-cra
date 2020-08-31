@@ -97,7 +97,7 @@ export const SideFilters = () => {
                             {
                                 budgetActive > 0 &&
                                 <div onClick={(e) => {
-                                    changeFilters({...filters,budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+                                    changeFilters({budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
                                     e.stopPropagation()} } 
                                     style={xStyle}>X</div>
                             }
@@ -112,7 +112,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 roomsActive > 0 &&
-                                <div onClick={(e) => {changeFilters({...filters,roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
+                                <div onClick={(e) => {changeFilters({roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -126,7 +126,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 renovationActive > 0 &&
-                                <div onClick={(e) => {changeFilters({...filters,renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
+                                <div onClick={(e) => {changeFilters({renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -140,7 +140,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 filters.addresses.length > 0 &&
-                                <div onClick={(e) => {changeFilters({...filters,addresses:[],addressesActive:0});e.stopPropagation()} }
+                                <div onClick={(e) => {changeFilters({addresses:[],addressesActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -154,7 +154,7 @@ export const SideFilters = () => {
                             </>
                             {
                                 furnitureActive > 0 &&
-                                <div onClick={(e) => {changeFilters({...filters,furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
+                                <div onClick={(e) => {changeFilters({furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
                                 style={xStyle}>X</div>
                             }
                         </div>
@@ -172,7 +172,7 @@ export const SideFilters = () => {
                         {
                             floorActive > 0 &&
                             <div onClick={(e) => {
-                                changeFilters({...filters,floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
+                                changeFilters({floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
                                 e.stopPropagation()} } 
                                 style={xStyle}>X</div>
                         }
@@ -187,7 +187,7 @@ export const SideFilters = () => {
                         {
                             metresActive > 0 &&
                             <div onClick={(e) => {
-                                changeFilters({...filters,metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
+                                changeFilters({metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
                                 e.stopPropagation()} } 
                                 style={xStyle}>X</div>
                         }
@@ -198,7 +198,7 @@ export const SideFilters = () => {
                                     <label style={{height:'100%',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'center',fontSize:14,textAlign:'center'}}>
                                         <p>{switchFilters[filter]}</p>
                                         <Switch onChange={checked => {
-                                                changeFilters({...filters,[filter]:checked})}
+                                                changeFilters({[filter]:checked})}
                                             }
                                         checked={filters[filter]}/>
                                     </label>

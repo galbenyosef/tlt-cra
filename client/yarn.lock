@@ -2327,6 +2327,11 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
+array.partial@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/array.partial/-/array.partial-1.0.5.tgz#f514595aacbf6a99ea20bbcffbcacc10316f0d56"
+  integrity sha512-nkHH1dU6JXrwppCqdUD5M1R85vihgBqhk9miq+3WFwwRayNY1ggpOT6l99PppqYQ1Hcjv2amFfUzhe25eAcYfA==
+
 array.prototype.flat@^1.2.1:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/array.prototype.flat/-/array.prototype.flat-1.2.3.tgz#0de82b426b0318dbfdb940089e38b043d37f6c7b"
@@ -9404,6 +9409,14 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-dropdown-tree-select@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/react-dropdown-tree-select/-/react-dropdown-tree-select-2.4.1.tgz#57b32526a6d323f17435e6708d6622d07ed6075a"
+  integrity sha512-LTC4D3hzUP3h7aj4Gs8WPXzVFCJIkfA544Mr+YHRO1IVtes5FX4Dkm6gK5tHlACt2Nq4cw9bseY7a9VLI/Ru3A==
+  dependencies:
+    array.partial "^1.0.5"
+    react-infinite-scroll-component "^4.0.2"
+
 react-error-overlay@^6.0.7:
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.7.tgz#1dcfb459ab671d53f660a991513cb2f0a0553108"
@@ -9441,6 +9454,11 @@ react-image-gallery@^1.0.7:
     prop-types "^15.5.8"
     react-swipeable "^5.2.0"
     resize-observer-polyfill "^1.5.0"
+
+react-infinite-scroll-component@^4.0.2:
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-4.5.3.tgz#008c2ec358628b490117ffc4aa6ce6982b26f8be"
+  integrity sha512-8O0PIeYZx0xFVS1ChLlLl/1obn64vylzXeheLsm+t0qUibmet7U6kDaKFg6jVRQJwDikWBTcyqEFFsxrbFCO5w==
 
 react-input-autosize@^2.2.2:
   version "2.2.2"

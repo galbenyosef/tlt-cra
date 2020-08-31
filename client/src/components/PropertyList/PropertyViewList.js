@@ -6,7 +6,7 @@ import {
   createPropertyDescription,
   fetchCoordinates,
   getAgentById,
-  onPropertyClicked, setImageHover, setLeadModal, setMapModal,
+  onPropertyClicked, setImageHover, setImageHoverId, setLeadModal, setMapModal,
   setMediaModal
 } from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
@@ -51,14 +51,14 @@ export default React.memo(({property,property:{
   isCollapsedOut,
   requirements,
   agent_id,
-  isHovered
 
-},index,toggleFavourite,handleHover}) => {
+},index,toggleFavourite}) => {
 
   const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const [agentPhone,setAgentPhone] = useState('')
   const [agents] = useGlobalState('agents')
+  const [isHovered,setIsHovered] = useState(false)
 
   const videoRef = useRef(0)
 
@@ -144,8 +144,8 @@ export default React.memo(({property,property:{
 
   return (
     <Grid container
-          onMouseEnter={() => handleHover(id)}
-          onMouseLeave={() => handleHover(null)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           style={{
       width: '100%',
       display: 'flex',
@@ -417,7 +417,7 @@ export default React.memo(({property,property:{
   return(
     (prevProps.property.isFavourite === nextProps.property.isFavourite) &&
     (prevProps.property.isCollapsed === nextProps.property.isCollapsed) &&
-    (prevProps.property.isHovered === nextProps.property.isHovered)
+    (prevProps.isHovered === nextProps.isHovered)
   )
 })
 
