@@ -9,7 +9,7 @@ import {FaShekelSign} from "react-icons/fa";
 import {IoIosConstruct, IoIosResize} from "react-icons/io";
 import {constants} from "../Utilities";
 import {filterProperties} from "../../dataHandler";
-import {FilterContent} from "../FiltersContent";
+import {FiltersModalContent} from "./FiltersModalContent";
 
 const {
   MinPrice,
@@ -172,7 +172,7 @@ export default () => {
 
         </div>
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',paddingTop:20,paddingBottom:20,borderTop:'2px dotted lightgrey'}}>
-          <FilterContent/>
+          <FiltersModalContent/>
         </div>
       </div>
     </Modal>

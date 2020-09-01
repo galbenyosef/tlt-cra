@@ -3,6 +3,7 @@ import {devices} from "./Utilities";
 import {ListDisplays, useGlobalState} from "../globalState";
 import {PropertyModal} from "./Modals/PropertyModal";
 import {LeadModal} from "./Modals/LeadModal";
+import {FiltersBarContent} from "./FiltersBarContent";
 
 const ActionFeedbackModal = React.lazy(() => import('./Modals/ActionFeedbackModal'));
 const MediaModal = React.lazy(() => import('./Modals/MediaModal'));
@@ -18,6 +19,7 @@ export default () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ActionFeedbackModal/>
+      <FiltersBarContent/>
       <MediaModal/>
       <MapModal/>
       <LeadModal/>

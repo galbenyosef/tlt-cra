@@ -161,10 +161,12 @@ export const filterProperties = (properties,filters) => {
                furniture,
              }) => {
 
+
+
       return (
-        (budgetFrom <= price) && (price <= budgetTo) &&
+        (budgetFrom <= price) && (budgetTo == 10000 ? price <= 9999999 : price <= budgetTo) &&
         (metresFrom <= metres) && (metres <= metresTo) &&
-        (roomsFrom <= rooms) && (rooms <= roomsTo) &&
+        (roomsFrom <= rooms) && (roomsTo == 6 ? rooms <= 99 : rooms <= roomsTo+.5) &&
         (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
         (renovationFrom <= renovation) && (renovation <= renovationTo) &&
         (furnitureRangeText.some(text => furniture === text))

@@ -19,9 +19,9 @@ const devices = {
 
 const constants = {
   MinPrice: 1000,
-  MaxPrice: 40000,
+  MaxPrice: 10000,
   MinRooms: 1,
-  MaxRooms: 10,
+  MaxRooms: 6,
   MinRenovation:1,
   MaxRenovation:4,
   MinFurniture:1,

@@ -1,12 +1,12 @@
 import {Range} from "rc-slider/es";
 import {Grid, Input, InputAdornment} from "@material-ui/core";
-import {filterBoxStyle} from "../styles";
-import {constants, renovationTypes, switchFilters} from "./Utilities";
-import {NeighborhoodsFilterView} from "./Main/NeighborhoodFilterView";
+import {filterBoxStyle} from "../../styles";
+import {constants, renovationTypes, switchFilters} from "../Utilities";
+import {NeighborhoodsFilterView} from "../Main/NeighborhoodFilterView";
 import React from "react";
-import {useGlobalState} from "../globalState";
-import {changeFilters, handleCloseFilter} from "../dataHandler";
-import {PropertyDetailGrid} from "./PropertyDetailGrid";
+import {useGlobalState} from "../../globalState";
+import {changeFilters, handleCloseFilter} from "../../dataHandler";
+import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import Switch from "react-switch";
 const {
   MinPrice,
@@ -23,7 +23,7 @@ const {
   MaxFloor
 } = constants
 
-export const FilterContent = () => {
+export const FiltersModalContent = () => {
 
   const [currentFilter] = useGlobalState('currentFilter')
   const {currentFilterName} = currentFilter
