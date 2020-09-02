@@ -19,7 +19,7 @@ import {GiHamburgerMenu} from "react-icons/gi";
 import {getValueByDevice} from "./Utilities";
 import React, {useRef, useState} from "react";
 import {useGlobalState} from "../globalState";
-import {changeFilters} from "../dataHandler";
+import {changeFilters, setProperties} from "../dataHandler";
 import WindowedSelect, { components } from "react-windowed-select";
 import {newSearchStyle} from "../styles";
 
@@ -35,7 +35,7 @@ export default () => {
 
   const [city] = useGlobalState('city')
   const [filters,setFilters] = useGlobalState('filters')
-  const [isFavouritesView] = useGlobalState('isFavouritesView')
+  const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
   const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
   const {modalOpened:filtersModalOpened} = filters
   const [addressesData] = useGlobalState('addresses');
@@ -171,16 +171,43 @@ export default () => {
                 }
               }}
             />
-            <div style={{display:'flex',alignItems:'center',paddingLeft:20}}>
+            <div style={{display:'flex',alignItems:'center',width:150,justifyContent:'space-evenly'}}>
               {
-                <FaFilter onClick={() => setFiltersModal(filtersModalOpened?false:true)} size={30} color={'black'} style={{paddingLeft:getValueByDevice(5,5,5)}} />
+                <FaFilter onClick={() => setFiltersModal(filtersModalOpened?false:true)} size={30} color={'black'} />
               }
+              <div onClick={() =>  {
+                if (isFavouritesView){
+                  setProperties(properties => {
+                    let newProperties = [...properties]
+                    for (let property of newProperties){
+                      property.isFiltered = true
+                    }
+                    setIsFavouriteView(false)
+                    return newProperties
+                  })
+                }
+                else{
+                  setProperties(properties => {
+                    let newProperties = [...properties]
+                    for (let property of newProperties){
+                      if (property.isFavourite)
+                        property.isFiltered = true
+                      else
+                        property.isFiltered = false
+                    }
+                    setIsFavouriteView(true)
+                    return newProperties})
+                }
+              }}>
+
+
               {
                 isFavouritesView ?
                   <FaHeart size={30} color={'red'}  />
                   :
                   <FaHeart size={30}  />
               }
+              </div>
             </div>
           </div>
         </Hidden>
