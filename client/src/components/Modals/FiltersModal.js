@@ -100,7 +100,7 @@ export default () => {
               <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
             {
               furnitureActive > 0 &&
-              <div onClick={(e) => {changeFilters({furnitureFrom:MinFurniture,furnitureTo:MaxFurniture,furnitureActive:0});e.stopPropagation()} }
+              <div onClick={(e) => {changeFilters({furnitureTypes: [],furnitureActive:0});e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
           </div>
@@ -124,7 +124,7 @@ export default () => {
               <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
             {
               renovationActive > 0 &&
-              <div onClick={(e) => {changeFilters({renovationFrom:MinRenovation,renovationTo:MaxRenovation,renovationActive:0});e.stopPropagation()} }
+              <div onClick={(e) => {changeFilters({renovations:[],renovationActive:0});e.stopPropagation()} }
                    style={clearFilterStyle}>X</div>
             }
           </div>
