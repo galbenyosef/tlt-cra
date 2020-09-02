@@ -18,8 +18,6 @@ const {
     MaxPrice,
     MinRooms,
     MaxRooms,
-    MinRenovation,
-    MaxRenovation,
     MinFurniture,
     MaxFurniture,
     MinMetres,
@@ -40,8 +38,7 @@ const initialState = {
         roomsTo:MaxRooms,
         roomsActive:0,
         //renovation default values
-        renovationFrom:MinRenovation,
-        renovationTo:MaxRenovation,
+        renovations:[],
         renovationActive:0,
         //free search default values
         addresses:[],
@@ -49,13 +46,11 @@ const initialState = {
         address:[],
         propertyNumber:[],
         //furniture default values
-        furnitureFrom:MinFurniture,
-        furnitureTo:MaxFurniture,
+        furnitureTypes:[],
         furnitureActive:0,
 
-        propertyTypes:[],
         //metres default values
-        metresFrom:MinMetres,
+        metresFrom:0,
         metresTo:MaxMetres,
         metresActive:0,
         //floor default values
@@ -63,21 +58,24 @@ const initialState = {
         floorTo:MaxFloor,
         floorActive:0,
         //extended grid default values
-        terrace:false,
-        bathtub:false,
-        landscape:false,
-        airconditioner:false,
-        parking:false,
-        boiler:false,
-        elevator:false,
-        warehouse:false,
-        garden:false,
-        accessibility:false,
-        saferoom:false,
-        bars:false,
-        nets:false,
-        electricshutters:false,
-        parentsunit:false,
+        attributesActive:0,
+        attributes:{
+            terrace:false,
+            bathtub:false,
+            landscape:false,
+            airconditioner:false,
+            parking:false,
+            boiler:false,
+            elevator:false,
+            warehouse:false,
+            garden:false,
+            accessibility:false,
+            saferoom:false,
+            bars:false,
+            nets:false,
+            electricshutters:false,
+            parentsunit:false
+        },
     },
     //filter element default values
     currentFilter:{

@@ -24,20 +24,20 @@ const constants = {
   MaxRooms: 6,
   MinRenovation:1,
   MaxRenovation:4,
-  MinFurniture:1,
-  MaxFurniture:3,
   MinMetres:1,
-  MaxMetres:300,
+  MaxMetres:100,
   MinFloor:0,
-  MaxFloor:50,
+  MaxFloor:10,
 }
 
 const switchFilters = {
+  airconditioner:'מיזוג',
   terrace:'מרפסת',
+  shower:'מקלחת',
   bathtub:'אמבטיה',
   landscape:'נוף',
   parking:'חניה',
-  boiler:'דוד',
+  boiler:'דוד שמש/חשמלי',
   elevator:'מעלית',
   warehouse:'מחסן',
   garden:'גינה',
@@ -47,7 +47,6 @@ const switchFilters = {
   nets:'חלונות מרושתים',
   parentsunit:'יחידת הורים',
   electricshutters:'תריס חשמלי',
-
 }
 
 const renovationTypes = {
@@ -57,7 +56,14 @@ const renovationTypes = {
   4:'משופצת ברמה גבוהה'
 }
 
-const furnitureTypes = {
+const renovationDescription = {
+  1:'לא שופצה אך מצבה טוב',
+  2:'שופצה ב-5 שנים האחרונות',
+  3:'לא גרו בה מעולם',
+  4:'נבנתה ב-5 שנים האחרונות'
+}
+
+const FurnitureTypes = {
   1: 'ללא ריהוט',
   2: 'ריהוט חלקי',
   3: 'ריהוט מלא',
@@ -85,4 +91,4 @@ const LeadTypes = {
   WannaHearMore:2,
 }
 
-export {constants,renovationTypes,range,furnitureTypes,devices,LeadTypes,switchFilters}
+export {constants,renovationTypes,range,FurnitureTypes,devices,LeadTypes,switchFilters,renovationDescription}

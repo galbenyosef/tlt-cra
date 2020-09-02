@@ -147,12 +147,12 @@ export default React.memo(({property,property:{
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      borderBottom: '2px solid lightgrey',
-      justifyContent: 'space-between'
-    }}>
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            borderBottom: '2px solid lightgrey',
+            justifyContent: 'space-between'
+          }}>
       <Grid           onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
                       item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
         <div
@@ -324,7 +324,8 @@ export default React.memo(({property,property:{
                     })
                   }}>לפגישה</span>
                 {
-                  media.videos.length ? <span style={{
+                  media.videos.length ?
+                    <span style={{
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -332,8 +333,7 @@ export default React.memo(({property,property:{
                       width: '45%',
                       backgroundColor: 'grey',
                       cursor: 'pointer'
-                    }}
-                                              onClick={() => onExploreClicked()}>סיור בנכס</span>
+                    }} onClick={() => onExploreClicked()}>סיור בנכס</span>
                     :
                     <span style={{
                       display: 'flex',
@@ -355,10 +355,7 @@ export default React.memo(({property,property:{
                   backgroundColor: 'grey',
                   cursor: 'pointer',
                   fontSize: agentPhone ? 12 : ''
-                }}
-                      onClick={
-                        () => setAgentPhone(agent.phone)
-                      }
+                }} onClick={() => setAgentPhone(agent.phone)}
                 >{agentPhone || 'צור קשר'}</span>
                 <span style={{
                   display: 'flex',
@@ -379,16 +376,11 @@ export default React.memo(({property,property:{
               </Grid>
               <div style={{display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center'}}>
                 <FacebookShareButton url={getPropertyUrl()} quote={`נכס מספר ${custom_id}`}>
-                  <FacebookIcon
-                    size={40} // You can use rem value instead of numbers
-                    round
-                  />
+                  <FacebookIcon size={40} round/>
                 </FacebookShareButton>
 
                 <FacebookMessengerShareButton title={'messnger'} url={getPropertyUrl()}>
-                  <FacebookMessengerIcon round
-                                         size={40}
-                  />
+                  <FacebookMessengerIcon round size={40}/>
                 </FacebookMessengerShareButton>
 
                 <TwitterShareButton title={'twitter title'} url={getPropertyUrl()}>
@@ -410,7 +402,7 @@ export default React.memo(({property,property:{
         }
       </Hidden>
     </Grid>
-)
+  )
 
 
 },(prevProps,nextProps) => {

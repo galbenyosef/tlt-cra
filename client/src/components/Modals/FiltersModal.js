@@ -164,8 +164,8 @@ export default () => {
             }
           </div>
 
-          <div id='booleans' onClick={handleClick}
-            style={{...filterLabelStyle,...isSelectedBackground('booleans'),borderLeft:'2px solid black'}}>
+          <div id='attributes' onClick={handleClick}
+            style={{...filterLabelStyle,...isSelectedBackground('attributes'),borderLeft:'2px solid black'}}>
             <TuneOutlined/>
             <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>מאפיינים</span>
           </div>

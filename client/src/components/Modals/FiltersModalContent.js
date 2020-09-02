@@ -520,7 +520,7 @@ export const FiltersModalContent = () => {
                     </div>
                   </div>
                 </div> :
-                currentFilterName === 'booleans' ?
+                currentFilterName === 'attributes' ?
                   <div style={{
                     direction: 'rtl',
                     display: 'flex',

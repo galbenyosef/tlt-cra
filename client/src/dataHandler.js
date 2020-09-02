@@ -1,6 +1,6 @@
 import {createLead, getAgents, getCoordinates, getProperties, getProperty, getUser} from "./apiHandler";
 import {getGlobalState, setGlobalState, useGlobalState} from "./globalState";
-import {devices, furnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
+import {constants, devices, FurnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
 import moment from "moment";
 
 export const setProperties = (val) => setGlobalState('properties',val)
@@ -113,22 +113,18 @@ export const filterProperties = (properties,filters) => {
     budgetTo,
     roomsFrom,
     roomsTo,
-    renovationFrom,
-    renovationTo,
+    renovations,
     addresses,
     addressesActive,
     address,
     propertyNumber,
-    furnitureFrom,
-    furnitureTo,
+    furnitureTypes,
     metresFrom,
     metresTo,
     floorFrom,
     floorTo,
   } = filters
 
-  let furnitureRange = range(furnitureFrom,furnitureTo)
-  let furnitureRangeText = furnitureRange.map(num => furnitureTypes[num])
   let primeFilters = [...properties]
 
   if (addressesActive){
@@ -161,20 +157,19 @@ export const filterProperties = (properties,filters) => {
                furniture,
              }) => {
 
-
-
+      console.log()
       return (
-        (budgetFrom <= price) && (budgetTo == 10000 ? price <= 9999999 : price <= budgetTo) &&
-        (metresFrom <= metres) && (metres <= metresTo) &&
-        (roomsFrom <= rooms) && (roomsTo == 6 ? rooms <= 99 : rooms <= roomsTo+.5) &&
-        (!floor || (floorFrom <= floor) && (floor <= floorTo)) &&
-        (renovationFrom <= renovation) && (renovation <= renovationTo) &&
-        (furnitureRangeText.some(text => furniture === text))
+        (budgetFrom <= price) && (budgetTo == constants.MaxPrice ? price <= 9999999 : price <= budgetTo) &&
+        (metresFrom <= metres) && (metresTo == constants.MaxMetres ? metres <= 9999999 : metres <= metresTo) &&
+        (roomsFrom <= rooms) && (roomsTo == constants.MaxRooms ? rooms <= 99 : rooms <= roomsTo+.5) &&
+        (floorFrom <= floor) && (floorTo == constants.MaxFloor ? floor <= 9999999 : floor <= metresTo) &&
+        (renovations.length ? renovations.some(ren => ren === renovation.toString()) : true) &&
+        (furnitureTypes.length ? furnitureTypes.some(type => FurnitureTypes[type] === furniture) : true)
       );
     })
 
   Object.keys(switchFilters).forEach(filter => {
-    if (filters[filter])
+    if (filters.attributes[filter])
       filtered = filtered.filter(prop => prop[filter])
   })
 
