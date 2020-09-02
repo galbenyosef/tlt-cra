@@ -152,9 +152,10 @@ export default React.memo(({property,property:{
             alignItems: 'center',
             borderBottom: '2px solid lightgrey',
             justifyContent: 'space-between'
-          }}>
-      <Grid           onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
-                      item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
+          }}
+          onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
+    >
+      <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
         <div
           onClick={(e) => {
             e.stopPropagation();
