@@ -1,7 +1,6 @@
 import React, {Suspense, useEffect} from 'react'
 import Layout from '../Layout'
 import {useGlobalState, setGlobalState} from '../../globalState'
-import { SideFilters } from '../SideFilters';
 import {Hidden} from '@material-ui/core';
 import {MainSpinner} from "./MainSpinner";
 import bigLogo from '../../assets/YellowLogoTrans_TLT.png'
@@ -142,7 +141,6 @@ const Main = ({id,dev}) => {
       </div>
       <Footer/>
       <Modals/>
-      <SideFilters/>
     </Layout>
 
   )

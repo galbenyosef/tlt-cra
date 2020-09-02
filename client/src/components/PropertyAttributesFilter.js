@@ -11,14 +11,15 @@ import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import {setFilters} from "../dataHandler";
 import {useGlobalState} from "../globalState";
-import {switchFilters} from "./Utilities";
+import {devices, switchFilters} from "./Utilities";
 
 const MifratItemStyle = {
   flexWrap:'wrap',
   display:'flex',
   alignItems:'center',
-  fontSize:16,
-  paddingBottom:35
+  fontSize:14,
+  paddingBottom:35,
+  whiteSpace:'nowrap'
 }
 
 const MifratTextStyle = {
@@ -49,13 +50,14 @@ const switchFiltersImages = {
 export const PropertyAttributesFilter = () => {
 
   const [filters] = useGlobalState('filters')
+  const [device] = useGlobalState('device')
 
   const changeAttributes = (attribute,value) => setFilters({...filters,attributes:{...filters.attributes,[attribute]:value}})
 
   return (
-    <Grid container style={{paddingTop:20}}>
+    <Grid container style={{paddingTop:20,maxWidth:600}}>
       {
-        Object.keys(switchFilters).map(filterName => <Grid style={MifratItemStyle} item xs={4}>
+        Object.keys(switchFilters).map(filterName => <Grid key={filterName} style={MifratItemStyle} item xs={device == devices.Desktop ? 4:6}>
           <div style={{display:'flex',alignItems:'center'}}>
             <Checkbox style={{paddingBottom:0,paddingTop:0}} checked={filters.attributes[filterName]} onChange={e => changeAttributes(filterName,e.currentTarget.checked)} />
             {switchFiltersImages[filterName]}

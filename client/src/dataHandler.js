@@ -125,6 +125,7 @@ export const filterProperties = (properties,filters) => {
     floorTo,
   } = filters
 
+  console.log(filters)
   let primeFilters = [...properties]
 
   if (addressesActive){
