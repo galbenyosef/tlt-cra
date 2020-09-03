@@ -188,9 +188,10 @@ export default () => {
                 }
                 else{
                   setProperties(properties => {
+                    let favourites = JSON.parse(localStorage.getItem('favourites')) || []
                     let newProperties = [...properties]
                     for (let property of newProperties){
-                      if (property.isFavourite)
+                      if (favourites.includes(property.id))
                         property.isFiltered = true
                       else
                         property.isFiltered = false

@@ -172,7 +172,6 @@ export const filterProperties = (properties,filters) => {
                furniture,
              }) => {
 
-      console.log()
       return (
         (budgetFrom <= price) && (budgetTo == constants.MaxPrice ? price <= 9999999 : price <= budgetTo) &&
         (metresFrom <= metres) && (metresTo == constants.MaxMetres ? metres <= 9999999 : metres <= metresTo) &&
@@ -307,7 +306,7 @@ export const fetchProperties = async (city) => {
 
     property.isFiltered = true
     if (favourites && favourites.includes(property.id))
-      property.isFavourite = true
+      property.isFavouriteOut = true
     if (!addressesMap[area]) {
       addressesMap[area] = {}
       newAddressMap[area] = {}
