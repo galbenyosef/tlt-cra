@@ -254,7 +254,7 @@ export default React.memo(({property,property:{
       <Hidden only={'xs'}>
         {
           isCollapsed ?
-            <Grid container style={{display: 'flex', backgroundColor: 'white'}}>
+            <Grid container onClick={e => e.stopPropagation()} style={{display: 'flex', backgroundColor: 'white'}}>
               <Grid item xs={8} sm={5} style={{
                 display: 'flex',
                 flexDirection: 'column',
