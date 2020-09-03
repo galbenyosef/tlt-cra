@@ -68,7 +68,7 @@ export default () => {
       disableEnforceFocus={true}
       BackdropProps={{style:{top:headerHeight + 38}}}
       open={modalOpened} style={{direction:'rtl',backgroundColor:'rgba(0,0,0,0.4)',top:headerHeight + 38,zIndex:1}} onBackdropClick={() => setModalOpened(false)}>
-      <div style={{display:'flex',maxHeight:`calc(100vh - ${headerHeight}px - 60px)`,backgroundColor:'white',overflow:'auto',outline:'none',flexWrap:'wrap',padding:20,justifyContent:'center',paddingBottom:0}}>
+      <div style={{display:'flex',flexDirection:'column',maxHeight:`calc(100vh - ${headerHeight}px - 60px)`,backgroundColor:'white',overflow:'auto',outline:'none',padding:20,alignItems:'center',justifyContent:'center',paddingBottom:0}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-around',whiteSpace:'nowrap',flexWrap:'wrap',maxWidth:360,paddingBottom:20}}>
           <div id='rooms' onClick={handleClick}
                style={{...filterLabelStyle,...isSelectedBackground('rooms')}}>

@@ -24,6 +24,20 @@ export const setPage = val => setGlobalState('page',val)
 export const setAddressTree = (val) => setGlobalState('addressTree',val)
 export const setAddressMap = (val) => setGlobalState('addressMap',val)
 
+
+export const toggleFavourite = id => {
+
+  let favourites = JSON.parse(localStorage.getItem('favourites')) || []
+  if (favourites.includes(id)){
+    favourites.splice(favourites.indexOf(id),1)
+  }
+  else{
+    favourites = favourites.concat(id)
+  }
+  localStorage.setItem('favourites',JSON.stringify(favourites))
+}
+
+
 const feedback = (result,message,timer) => {
   setActionFeedback( {result,message,timer})
 }

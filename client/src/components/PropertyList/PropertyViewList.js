@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
 import {devices, getValueByDevice} from '../Utilities';
-import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
+import {MediaModalTypes, useGlobalState} from "../../globalState";
 import {
   createPropertyDescription,
   fetchCoordinates,
   getAgentById,
-  onPropertyClicked, setImageHover, setImageHoverId, setLeadModal, setMapModal,
-  setMediaModal
+  onPropertyClicked, setLeadModal, setMapModal,
+  setMediaModal, toggleFavourite
 } from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {colors} from "../../colors";
@@ -40,7 +40,7 @@ export default React.memo(({property,property:{
   custom_id,
   city_id,
   propertytype,
-  isFavourite,
+  isFavouriteOut,
   description,
   entrance,
   tax,
@@ -52,10 +52,11 @@ export default React.memo(({property,property:{
   requirements,
   agent_id,
 
-},index,toggleFavourite}) => {
+},index}) => {
 
   const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
+  const [isFavourite,setIsFavourite] = useState(isFavouriteOut || false)
   const [agentPhone,setAgentPhone] = useState('')
   const [agents] = useGlobalState('agents')
   const [isHovered,setIsHovered] = useState(false)
@@ -140,6 +141,8 @@ export default React.memo(({property,property:{
 
   }
 
+  const onHeartClicked = () => {setIsFavourite(fav => !fav);toggleFavourite(id)}
+
   console.log('card render')
 
   return (
@@ -182,9 +185,9 @@ export default React.memo(({property,property:{
           }}>
           {
             isFavourite ?
-              <FaHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={26} color={'red'} style={{zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+              <FaHeart onClick={(event) => {onHeartClicked();event.stopPropagation()}} size={26} color={'red'} style={{zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
               :
-              <FiHeart onClick={(event) => {toggleFavourite(index);event.stopPropagation()}} size={26} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+              <FiHeart onClick={(event) => {onHeartClicked();event.stopPropagation()}} size={26} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
           }
           {
             isHovered ?

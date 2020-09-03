@@ -30,18 +30,6 @@ const PropertyList = () => {
   if (!propertiesData.length)
     return null
 
-
-
-  const toggleFavourite = idx => {
-
-    setPropertiesData(properties => {
-      let updatedProperties = properties.map((p,_idx) => (idx == _idx ? {...p,isFavourite:!p.isFavourite} : p ))
-      localStorage.setItem('favourites',JSON.stringify(updatedProperties.filter(p => p.isFavourite).map(p => p.id)))
-      return updatedProperties
-    })
-
-  }
-
   let propertiesFiltered = propertiesData.length ? propertiesData.filter(p => p.isFiltered) : []
   let properties = propertiesFiltered.filter(p => p.isFiltered).slice((page-1) * perPage,perPage*page)
 
@@ -78,14 +66,14 @@ const PropertyList = () => {
             <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewList toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewList index={idx} key={prop.id} property={prop}/>
                 )
               }
             </div>:
             <Grid spacing={4} ref={listRef}  style={{width:'100%',overflow:'auto',justifyContent:'center'}} container>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewGrid toggleFavourite={toggleFavourite} index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewGrid index={idx} key={prop.id} property={prop}/>
                 )
               }
             </Grid>
