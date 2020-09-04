@@ -156,7 +156,7 @@ export default () => {
           </div>
 
         </div>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center',borderTop:'2px dotted lightgrey'}}>
+        <div style={{borderTop:'2px dotted lightgrey',overflow:'scroll'}}>
           <FiltersBarContent mobile={device != devices.Desktop}/>
         </div>
       </div>
