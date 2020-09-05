@@ -50,6 +50,7 @@ export default () => {
     pic_bedroom__url,
     pic_bathroom__url,
     pic_bathroom2__url,
+    description,
     pic_view__url,
     video__url,
     propertytype,
@@ -69,6 +70,7 @@ export default () => {
   } = property
 
 
+  console.log(description)
   const agent = getAgentById(agents,agent_id)
   const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
@@ -206,6 +208,7 @@ export default () => {
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
             <span style={{fontSize:20,fontWeight:'bold',paddingBottom:10}}>על הנכס</span>
             <span style={{whiteSpace:'break-spaces'}}>{createPropertyDescription(property)}</span>
+            <span style={{whiteSpace: 'break-spaces'}}>{description}</span>
           </div>
           <span>{`תאריך כניסה: ${entrance}`}</span>
           <div style={{display:'flex',width:'100%',flexDirection:'column',marginTop:20}}>
