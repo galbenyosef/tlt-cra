@@ -9,7 +9,7 @@ import {constants, getValueByDevice} from './Utilities'
 import WindowedSelect from "react-windowed-select";
 import {clearFilterStyle, searchStyle} from '../styles';
 import {colors} from "../colors";
-import {changeFilters} from "../dataHandler";
+import {changeFilters, setProperties} from "../dataHandler";
 
 const {
   MinPrice,
@@ -219,11 +219,12 @@ const FiltersBar = () => {
               return newProperties
             })
           }
-          else{
+        else{
             setProperties(properties => {
+              let favourites = JSON.parse(localStorage.getItem('favourites')) || []
               let newProperties = [...properties]
               for (let property of newProperties){
-                if (property.isFavourite)
+                if (favourites.includes(property.id))
                   property.isFiltered = true
                 else
                   property.isFiltered = false
