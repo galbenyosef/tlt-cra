@@ -96,6 +96,7 @@ export const createPropertyDescription = property => {
     floor,
     price,
     structure,
+    garden,
     totalfloors,
   } = property
 
@@ -109,7 +110,11 @@ export const createPropertyDescription = property => {
 
   let first = []
   first.push(`${rooms} חדרים,`)
-  first.push(`${metres} מ"ר,`)
+
+  if (garden)
+    first.push(`${metres} מ"ר + גינה,`)
+  else
+    first.push(`${metres} מ"ר,`)
   first.push(`${floor ? `קומה ${floor}`:`קומת קרקע`}`)
   first.push(`מתוך ${totalfloors} קומות`)
   let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
