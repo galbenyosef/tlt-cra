@@ -70,7 +70,6 @@ export default () => {
   } = property
 
 
-  console.log(description)
   const agent = getAgentById(agents,agent_id)
   const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
@@ -134,7 +133,7 @@ export default () => {
 
   let innerH = window.innerHeight
   entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
-
+  console.log(property)
   return (
     <Modal
       hideBackdrop

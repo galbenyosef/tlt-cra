@@ -100,6 +100,7 @@ export const createPropertyDescription = property => {
     totalfloors,
   } = property
 
+  console.log(garden)
   let test = []
   if (airdirections)
     test.push(`${airdirections} כיווני אוויר`)

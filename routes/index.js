@@ -230,7 +230,8 @@ router.get('/properties/:id', async (req,res) => {
         pic_bedroom__url,
         pic_bathroom__url,
         pic_bathroom2__url,
-        pic_view__url
+        pic_view__url,
+        garden
       },
 
       active,
@@ -264,6 +265,7 @@ router.get('/properties/:id', async (req,res) => {
       shower,
       bathtub,
       floor,
+      garden,
       furniture_items,
       totalfloors,
       structure,
