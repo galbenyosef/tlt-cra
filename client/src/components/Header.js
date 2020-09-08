@@ -173,7 +173,10 @@ export default () => {
             />
             <div style={{display:'flex',alignItems:'center',width:150,justifyContent:'space-evenly'}}>
               {
-                <FaFilter onClick={() => setFiltersModal(filtersModalOpened?false:true)} size={30} color={'black'} />
+                filters.modalOpened ?
+                  <FaFilter color={'forestgreen'} onClick={() => setFiltersModal(false)} size={30} />
+                  :
+                  <FaFilter onClick={() => setFiltersModal(true)} size={30} color={'black'} />
               }
               <div onClick={() =>  {
                 if (isFavouritesView){
