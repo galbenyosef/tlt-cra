@@ -119,7 +119,7 @@ router.get('/agents/',async (req,res) => {
       }
     })
     const {data:{payload}} = response
-
+    res.set('Cache-control', 'public, max-age=300')
     return res.send(payload)
   }
   catch(e){
@@ -445,7 +445,6 @@ router.get('/properties/', async (req,res) => {
       pic_bathroom2__url,
       pic_view__url
     }))
-
     return res.send(properties)
   }
   catch(e){

@@ -12,11 +12,8 @@ import Header from "../Header";
 import Footer from "../Footer";
 import Modals from "../Modals";
 import FiltersBar from "../FiltersBar";
-import moment from "moment-timezone";
 import {Dev} from "../Dev";
-
-
-const PropertyList = React.lazy(() => import('../PropertyList/PropertyList'));
+import PropertyList from '../PropertyList/PropertyList';
 
 
 const CitySelection = () => {
@@ -121,23 +118,21 @@ const Main = ({id,dev}) => {
     <Layout>
       <Header/>
       <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly',position:'relative'}}>
-          {
+        {
           isLoading ?
-              <MainSpinner/> :
+            <MainSpinner/> :
             <div style={{display:'flex',flexDirection:'column'}}>
               <CitySelection/>
               <AboutUs/>
               <Hidden mdDown>
                 <FiltersBar/>
               </Hidden>
-              <Suspense fallback={<div>Loading...</div>}>
-                {
-                  dev ? <Dev/>: null
-                }
-                <PropertyList />
-              </Suspense>
+              {
+                dev ? <Dev/>: null
+              }
+              <PropertyList />
             </div>
-          }
+        }
       </div>
       <Footer/>
       <Modals/>

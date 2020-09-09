@@ -5,11 +5,11 @@ import {PropertyModal} from "./Modals/PropertyModal";
 import {LeadModal} from "./Modals/LeadModal";
 import {FiltersBarContent} from "./FiltersBarContent";
 
-const ActionFeedbackModal = React.lazy(() => import('./Modals/ActionFeedbackModal'));
-const MediaModal = React.lazy(() => import('./Modals/MediaModal'));
-const MapModal = React.lazy(() => import('./Modals/MapModal'));
-const FiltersModal = React.lazy(() => import('./Modals/FiltersModal'));
-const NewPropertyModal = React.lazy(() => import('./Modals/NewPropertyModal'));
+import ActionFeedbackModal from './Modals/ActionFeedbackModal';
+import MediaModal from './Modals/MediaModal';
+import MapModal from './Modals/MapModal';
+import FiltersModal from './Modals/FiltersModal';
+import NewPropertyModal from './Modals/NewPropertyModal';
 
 export default () => {
 
@@ -17,7 +17,7 @@ export default () => {
   const [listDisplay] = useGlobalState('listDisplay')
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <>
       <ActionFeedbackModal/>
       <FiltersBarContent/>
       <MediaModal/>
@@ -35,6 +35,6 @@ export default () => {
             :
             <NewPropertyModal/>
       }
-    </Suspense>
+    </>
   )
 }
