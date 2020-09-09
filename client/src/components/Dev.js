@@ -5,23 +5,26 @@ import DropdownTreeSelect from 'react-dropdown-tree-select'
 import './dropdownTree.css'
 import {changeFilters} from "../dataHandler";
 
-function searchPredicate(node, searchTerm) {
 
-  if (Number.isInteger(parseInt(searchTerm))){
-    console.log(searchTerm)
-    let node_id = node.id.toString()
-    return node_id.indexOf(searchTerm) >= 0
-  }
-  if (Number.isInteger(parseInt(node.id)))
-    return false
-  return node.id.indexOf(searchTerm) >= 0
-}
-
-export const Dev = React.memo(() => {
+export const Dev = () => {
 
   const [addressTree] = useGlobalState('addressTree')
   const [addressMap] = useGlobalState('addressMap')
 
+  const searchPredicate = (node, searchTerm) => {
+
+    //number search
+    if (parseInt(searchTerm)){
+      let node_id = node.id.toString()
+      return node_id.indexOf(searchTerm) >= 0
+    }
+
+    //character search
+/*    if (parseInt(node.id))
+      return false*/
+
+    return node.id.toString().indexOf(searchTerm) >= 0
+  }
 
   function getLeafNodes(nodes){
 
@@ -68,6 +71,7 @@ export const Dev = React.memo(() => {
     return node_children;
   }
 
+  console.log(addressTree.length)
   return (
     <div style={{height:23}}>
     <DropdownTreeSelect
@@ -90,4 +94,4 @@ export const Dev = React.memo(() => {
 
 
 
-},() => true)
+}
