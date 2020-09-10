@@ -4,7 +4,6 @@ import {setGlobalState, useGlobalState} from "../globalState";
 import DropdownTreeSelect from 'react-dropdown-tree-select'
 import './dropdownTree.css'
 import {changeFilters} from "../dataHandler";
-import { disablePageScroll, enablePageScroll } from 'scroll-lock';
 
 const setDropdownHeight = val => setGlobalState('DropdownHeight',val)
 
@@ -14,7 +13,6 @@ let TheTree = React.memo(() => {
 
   const onFocus = () => {
 
-    disablePageScroll(document.body)
         setTimeout(() => {
           let dropdownContent = document.getElementsByClassName('dropdown-content').item(0)
           if (dropdownContent) {
@@ -26,7 +24,6 @@ let TheTree = React.memo(() => {
   const onBlur = () => {
 
     setDropdownHeight(0)
-    enablePageScroll(document.body)
   }
   const searchPredicate = (node, searchTerm) => {
 
