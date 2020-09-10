@@ -4,7 +4,7 @@ import {setGlobalState, useGlobalState} from "../globalState";
 import DropdownTreeSelect from 'react-dropdown-tree-select'
 import './dropdownTree.css'
 import {changeFilters} from "../dataHandler";
-import disableScroll from 'disable-scroll';
+import ScrollLock, { TouchScrollable } from 'react-scrolllock';
 
 const setDropdownHeight = val => setGlobalState('DropdownHeight',val)
 
@@ -14,15 +14,16 @@ let TheTree = React.memo(() => {
 
   const onFocus = () => {
 
-    disableScroll.on()
+
         setTimeout(() => {
-          if (document.getElementsByClassName('dropdown-content').item(0))
-            setDropdownHeight(document.getElementsByClassName('dropdown-content').item(0).offsetHeight)
+          let dropdownContent = document.getElementsByClassName('dropdown-content').item(0)
+          if (dropdownContent) {
+            setDropdownHeight(dropdownContent.offsetHeight)
+          }
         },0)
   }
 
   const onBlur = () => {
-    disableScroll.off()
 
     setDropdownHeight(0)
   }
