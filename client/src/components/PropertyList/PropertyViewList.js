@@ -87,7 +87,7 @@ export default React.memo(({property,property:{
   let pictures =[]
 
   if (thumb_file)
-    pictures.push(`/common/assets/748/724/${thumb_file.lg}`)
+    pictures.push(`/common/assets/748/724/${thumb_file.sm}`)
 
   pictures = pictures.concat([pic_living_room__url,
     pic_living_room2__url,

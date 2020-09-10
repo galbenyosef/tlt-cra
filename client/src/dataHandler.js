@@ -145,7 +145,6 @@ export const filterProperties = (properties,filters) => {
     floorTo,
   } = filters
 
-  console.log(filters)
   let primeFilters = [...properties]
 
   if (addressesActive){
@@ -184,7 +183,7 @@ export const filterProperties = (properties,filters) => {
         (roomsFrom <= rooms) && (roomsTo == constants.MaxRooms ? rooms <= 99 : rooms <= roomsTo+.5) &&
         (floorFrom <= floor) && (floorTo == constants.MaxFloor ? floor <= 9999999 : floor <= metresTo) &&
         (renovations.length ? renovations.some(ren => ren === renovation.toString()) : true) &&
-        (furnitureTypes.length ? furnitureTypes.some(type => FurnitureTypes[type] === furniture) : true)
+        (furnitureTypes.length ? furnitureTypes.some(f_type => f_type === furniture) : true)
       );
     })
 

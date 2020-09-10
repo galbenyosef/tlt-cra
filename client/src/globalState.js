@@ -106,6 +106,7 @@ const initialState = {
     addressSearch: '',
     device:null,
     rootRef:createRef(),
+    DropdownHeight:0,
     headerHeight:118,
     listDisplay:ListDisplays.List,
 

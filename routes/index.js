@@ -173,7 +173,6 @@ router.get('/properties/:id', async (req,res) => {
     })
 
     const {data:{payload}} = response
-    console.log(payload)
     let  {
       title,
       thumb_file,

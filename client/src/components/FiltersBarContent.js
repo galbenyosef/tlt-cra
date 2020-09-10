@@ -115,7 +115,7 @@ export const FiltersBarContent = ({mobile}) => {
                     [1,2,3,4,5,6].map(num =>
                       <div key={num} onClick={() => setFilters({...filters,roomsFrom:num})}
                            style={{backgroundColor:filters.roomsFrom == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                        {num != 6 ? num: '6+'}
+                        {num != constants.MaxRooms ? num: `${constants.MaxRooms}+`}
                       </div>
                     )
                   }
@@ -128,7 +128,7 @@ export const FiltersBarContent = ({mobile}) => {
                     [1,2,3,4,5,6].map(num =>
                       <div key={num} onClick={() => setFilters({...filters,roomsTo:num})}
                            style={{backgroundColor:filters.roomsTo == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                        {num != 6 ? num: '6+'}
+                        {num != constants.MaxRooms ? num: `${constants.MaxRooms}+`}
                       </div>
                     )
                   }
@@ -184,18 +184,30 @@ export const FiltersBarContent = ({mobile}) => {
                   <div style={{width:'300px',display:'flex',flexDirection:'column'}}>
                     <div style={{padding:20,display:'flex',flexDirection:'column-reverse',justifyContent:'space-around',height:170}}>
                       {
-                        Object.keys(FurnitureTypes).map(
+                        Object.values(FurnitureTypes).map(
                           type =>
-                            <div key={FurnitureTypes[type]}>
+                            <div key={type}>
                               <div style={{display:'flex',alignItems:'center'}}>
                                 <Checkbox style={{paddingBottom:0,paddingTop:0}} onChange={() => {
-                                  if (furnitureTypes.includes(type))
-                                    furnitureTypes.splice(furnitureTypes.indexOf(type),1)
-                                  else
+                                  if (furnitureTypes.includes(type)) {
+                                    furnitureTypes.splice(furnitureTypes.indexOf(type), 1)
+                                  }
+                                  else {
                                     furnitureTypes = furnitureTypes.concat(type)
+                                    if (type == FurnitureTypes.FULL){
+                                      furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
+                                    }
+                                    if (type == FurnitureTypes.PARTIAL){
+                                      furnitureTypes = furnitureTypes.concat(FurnitureTypes.FULL)
+                                    }
+                                    if (type == FurnitureTypes.NONE){
+                                      furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
+                                    }
+                                  }
+
                                   setFilters({...filters,furnitureTypes})
                                 }} checked={furnitureTypes.includes(type)}/>
-                                <span >{FurnitureTypes[type]}</span>
+                                <span >{type}</span>
                               </div>
                             </div>
                         )
@@ -473,18 +485,30 @@ export const FiltersBarContent = ({mobile}) => {
           <div style={{width:'300px',display:'flex',flexDirection:'column'}}>
             <div style={{padding:20,display:'flex',flexDirection:'column-reverse',justifyContent:'space-around',height:170}}>
               {
-                Object.keys(FurnitureTypes).map(
+                Object.values(FurnitureTypes).map(
                   type =>
-                    <div key={FurnitureTypes[type]}>
+                    <div key={type}>
                       <div style={{display:'flex',alignItems:'center'}}>
                         <Checkbox style={{paddingBottom:0,paddingTop:0}} onChange={() => {
-                          if (furnitureTypes.includes(type))
-                            furnitureTypes.splice(furnitureTypes.indexOf(type),1)
-                          else
+                          if (furnitureTypes.includes(type)) {
+                            furnitureTypes.splice(furnitureTypes.indexOf(type), 1)
+                          }
+                          else {
                             furnitureTypes = furnitureTypes.concat(type)
+                            if (type == FurnitureTypes.FULL){
+                              furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
+                            }
+                            if (type == FurnitureTypes.PARTIAL){
+                              furnitureTypes = furnitureTypes.concat(FurnitureTypes.FULL)
+                            }
+                            if (type == FurnitureTypes.NONE){
+                              furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
+                            }
+                          }
+
                           setFilters({...filters,furnitureTypes})
                         }} checked={furnitureTypes.includes(type)}/>
-                        <span >{FurnitureTypes[type]}</span>
+                        <span >{type}</span>
                       </div>
                     </div>
                 )

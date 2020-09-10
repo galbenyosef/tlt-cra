@@ -11,19 +11,22 @@
   cursor:not-allowed
 }
 .tag-remove:focus{color:#3c3c3c}
-.node>label{cursor:pointer;margin-left:2px}
+.node>label{cursor:pointer;display: flex;align-items:center}
 .tag-list{display:inline;padding:0;margin:0}
-.tag-item{display:none;margin:4px}
+.tag-item{display:none;}
 .tag-item input {font-size: 16px;font-weight: bold;color: black}
-.tag-item .search{border:none;outline:none;min-width:175px}
+.tag-item .search{border:none;outline:none;width:100%;max-width:150px}
 .tag-item:last-child{display:inline-block;margin-right:4px}
 .node{list-style:none;white-space:nowrap;padding:4px;display:flex}
+.node[aria-level] {
+  align-items: center;
+}
 .node[aria-level='1'] {
-  font-size:24px !important;
+  font-size:20px !important;
 }
 .node[aria-level='2'] {
   padding-right: 30px !important;
-  font-size:20px !important;
+  font-size:18px !important;
 }
 .node[aria-level='3'] {
   padding-right: 60px !important;
@@ -39,23 +42,40 @@
 .node.disabled>*{color:gray;cursor:not-allowed}
 .node.match-in-children.hide .node-label{opacity:.5}
 .node.focused{background-color:#f4f4f4}
-.toggle{white-space:pre;margin-right:4px;cursor:pointer}
-.toggle:after{content:" "}
+.toggle{white-space:pre;margin-right:4px;cursor:pointer;}
+.toggle:after{content:" ";font-size: 32px;}
+
+
+
 .toggle.collapsed:after{content:"+"}
 .toggle.expanded:after{content:"-"}
 .searchModeOn .toggle{display:none}
 .checkbox-item,.radio-item{vertical-align:middle;margin:0 0 0 4px}
+/*problem zone*/
+
 .checkbox-item.simple-select,.radio-item.simple-select{display:none}
 .hide:not(.match-in-children){display:none}
-.react-dropdown-tree-select .dropdown{position:relative;display:table}
-.react-dropdown-tree-select .dropdown .dropdown-trigger{padding:4px;line-height:20px;max-height:200px;display:inline-block;overflow:auto;border:1px solid #b9b9b9}
-.react-dropdown-tree-select .dropdown .dropdown-trigger.arrow{cursor:pointer}
+.react-dropdown-tree-select {
+  display: flex;
+  align-items: center;
+}
+.react-dropdown-tree-select .dropdown{position:relative;display:table;}
+.react-dropdown-tree-select .dropdown .dropdown-trigger{max-height:200px;}
+/*problem zone end*/
+
+.react-dropdown-tree-select .dropdown .dropdown-trigger.arrow{cursor:pointer;outline:none;white-space: pre}
+
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.bottom:after{
-  content:"\25BC";vertical-align:middle;color:#3c3c3c;margin-right:2px
+  content:"\25BC";vertical-align:middle;color:#3c3c3c;
+  font-size: 17px;
+
 }
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.top:after{
-  content:"\25B2";vertical-align:middle;color:#3c3c3c;margin-right:2px
+  content:"\25B2";vertical-align:middle;color:#3c3c3c;
+  font-size: 17px;
 }
+
+
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.disabled{
   cursor:not-allowed
 }
@@ -63,14 +83,16 @@
   color:#b9b9b9
 }
 .react-dropdown-tree-select .dropdown .dropdown-content{
-  maxHeight:400;
-  z-index:2;position:absolute;padding:4px;background:#fff;border-top:1px solid rgba(0,0,0,.05);-webkit-box-shadow:0 5px 8px rgba(0,0,0,.15);box-shadow:0 5px 8px rgba(0,0,0,.15)
+  z-index:2;position:absolute;width:100vw;max-width:400px;background:#fff;border-top:1px solid rgba(0,0,0,.05);-webkit-box-shadow:0 5px 8px rgba(0,0,0,.15);box-shadow:0 5px 8px rgba(0,0,0,.15)
 }
 .react-dropdown-tree-select .dropdown .dropdown-content ul{
   margin:0;padding:0
 }
 
-
+.infinite-scroll-component{
+  max-height: 400px;
+  overflow-y:auto;
+}
 /*# sourceMappingURL=styles.css.map*/
 
 /* fallback, until https://github.com/CompuIves/codesandbox-client/issues/174 is resolved */
@@ -102,10 +124,10 @@
  * The idea is that it is easy to extend/override builtin styles with very little effort.
  */
 
-.mdl-demo .dropdown-trigger > span:after {
+/*.mdl-demo .dropdown-trigger > span:after {
   font-size: 12px;
   color: #555;
-}
+}*/
 
 .mdl-demo .toggle {
   font: normal normal normal 18px/1 "Material Icons";
@@ -133,6 +155,7 @@
   height: 1rem;
   margin-right: 0.75rem;
   cursor: pointer;
+  margin-left: 0.75rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

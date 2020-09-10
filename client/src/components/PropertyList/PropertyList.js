@@ -7,6 +7,7 @@ import {colors} from "../../colors";
 import PropertyViewList from "./PropertyViewList";
 import PropertyViewGrid from "./PropertyViewGrid";
 import Pagination from '@material-ui/lab/Pagination';
+import {devices} from "../Utilities";
 
 const PropertyList = () => {
 
@@ -17,7 +18,7 @@ const PropertyList = () => {
   const [city] = useGlobalState('city')
   const [perPage,setPerPage] = useGlobalState('perPage')
   const [page,setPage] = useGlobalState('page')
-
+  const [device] = useGlobalState('device')
 
   const listRef = React.useRef(null)
 
@@ -43,7 +44,7 @@ const PropertyList = () => {
             <span>{`מציג ${properties.length} מתוך ${totalFiltered} נכסים מסוננים,`}</span>
             <span>{` ${totalCityCount} נכסים ב${city} סה"כ`}</span>
           </div>
-          <div style={{paddingTop:10}}>
+      {/*    <div style={{paddingTop:10}}>
             {
               listDisplay == ListDisplays.List ?
                 <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',borderRadius:20,border:'1px solid black',paddingLeft:10,paddingRight:10}}>
@@ -56,9 +57,18 @@ const PropertyList = () => {
                   <FiList size={32} style={{cursor:'pointer'}} onClick={() => setListDisplay(ListDisplays.List)}/>
                 </div>
             }
-          </div>
+          </div>*/}
           <div style={{direction:'ltr',display:'flex',justifyContent:'center',width:'100%',paddingTop:10}}>
-            <Pagination siblingCount={0} showFirstButton showLastButton count={parseInt(propertiesFiltered.length/perPage)+1} page={page} onChange={(e, page) => setPage(page)} variant="outlined" shape="rounded" />
+            <Pagination siblingCount={0}
+                        showFirstButton
+                        showLastButton
+                        count={parseInt(propertiesFiltered.length/perPage)+1}
+                        page={page}
+                        onChange={(e, page) => setPage(page)}
+                        variant="outlined"
+                        shape="rounded"
+                        size={window.innerWidth < 340 ? 'small':'medium'}
+            />
           </div>
         </div>
         {

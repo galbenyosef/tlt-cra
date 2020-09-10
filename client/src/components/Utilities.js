@@ -19,15 +19,15 @@ const devices = {
 
 const constants = {
   MinPrice: 1000,
-  MaxPrice: 10000,
+  MaxPrice: 25000,
   MinRooms: 1,
   MaxRooms: 6,
   MinRenovation:1,
   MaxRenovation:4,
   MinMetres:1,
-  MaxMetres:100,
+  MaxMetres:300,
   MinFloor:0,
-  MaxFloor:10,
+  MaxFloor:50,
 }
 
 const switchFilters = {
@@ -58,15 +58,15 @@ const renovationTypes = {
 
 const renovationDescription = {
   1:'לא שופצה אך מצבה טוב',
-  2:'שופצה ב-5 שנים האחרונות',
-  3:'לא גרו בה מעולם',
-  4:'נבנתה ב-5 שנים האחרונות'
+  2:'דירה משופצת במצב מצוין',
+  3:'בניין חדש',
+  4:'מושקעת ומשודרגת מהרגיל'
 }
 
 const FurnitureTypes = {
-  1: 'ללא ריהוט',
-  2: 'ריהוט חלקי',
-  3: 'ריהוט מלא',
+  NONE: 'ללא ריהוט',
+  PARTIAL: 'ריהוט חלקי',
+  FULL: 'ריהוט מלא',
 }
 
 /*const propertyTypes = {

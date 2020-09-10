@@ -22,6 +22,7 @@ import {useGlobalState} from "../globalState";
 import {changeFilters, setProperties} from "../dataHandler";
 import WindowedSelect, { components } from "react-windowed-select";
 import {newSearchStyle} from "../styles";
+import DropDownTree from "./DropDownTree";
 
 const customFilterOption = (option, rawInput) => {
   const words = rawInput.split(' ');
@@ -135,9 +136,9 @@ export default () => {
       </div>
       {
         city &&
-        <Hidden lgUp>
-          <div style={{width:'100%',display:'flex'}}>
-            <WindowedSelect
+        <Hidden smUp>
+          <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+            {/*<WindowedSelect
               filterOption={customFilterOption}
               styles={newSearchStyle}
               ref={selectRef}
@@ -170,7 +171,8 @@ export default () => {
                   changeFilters({propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
                 }
               }}
-            />
+            />*/}
+            <DropDownTree/>
             <div style={{display:'flex',alignItems:'center',width:150,justifyContent:'space-evenly'}}>
               {
                 filters.modalOpened ?

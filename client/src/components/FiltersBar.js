@@ -10,6 +10,7 @@ import WindowedSelect from "react-windowed-select";
 import {clearFilterStyle, searchStyle} from '../styles';
 import {colors} from "../colors";
 import {changeFilters, setProperties} from "../dataHandler";
+import DropDownTree from "./DropDownTree";
 
 const {
   MinPrice,
@@ -23,15 +24,15 @@ const {
 } = constants
 
 const singleFilterStyle = {
-  display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:`2px solid ${colors.darkblue}`,position:'relative'
+  display:'flex',justifyContent:'space-around',alignItems:'center',cursor:'pointer',borderBottom:`2px solid ${colors.darkblue}`,position:'relative',whiteSpace:'pre'
 }
+
+const filterLabelStyle = {fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}
 
 const FiltersBar = () => {
 
   const [addressesData] = useGlobalState('addresses');
   const [filters] = useGlobalState('filters');
-  const [propertiesNumbers] = useGlobalState('propertiesNumbers')
-  const [inputValue,setInputValue] = useState('')
 
   const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
 
@@ -81,20 +82,14 @@ const FiltersBar = () => {
         style={{
           backgroundColor:'white',
           display:'flex',
-          justifyContent:'space-between',
+          justifyContent:'center',
           alignItems:'center',
+          gap:15,
+          flexWrap:'wrap'
         }}>
 
-
-        <IconButton onClick={() => {window.open('http://109.207.78.24/app',"_self")}}>
-          <AccountCircleOutlined/>
-        </IconButton>
-
-
-        <div style={{display:'flex',justifyContent:'space-around',width:1000,height:38}}>
-
-          <div style={{width:'200px'}}>
-            <WindowedSelect
+        <div style={{width:'200px',borderBottom: '2px solid rgb(253, 209, 5)'}}>
+          {/* <WindowedSelect
               styles={searchStyle}
               isClearable={true}
               isRtl={true}
@@ -113,99 +108,98 @@ const FiltersBar = () => {
                   :
                   changeFilters({propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
               }}
-            />
-          </div>
+            />*/}
+          <DropDownTree/>
+        </div>
 
-          <div id='rooms' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
-            <Hotel style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>חדרים</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              roomsActive > 0 &&
-              <div onClick={(e) => {changeFilters({roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+        <div id='rooms' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+          <Hotel style={{paddingLeft:5}}/>
+          <span style={filterLabelStyle}>חדרים</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            roomsActive > 0 &&
+            <div onClick={(e) => {changeFilters({roomsFrom:MinRooms,roomsTo:MaxRooms,roomsActive:0});e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
-          <div id='budget' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
-            <FaShekelSign style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>תקציב</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              budgetActive > 0 &&
-              <div onClick={(e) => {
-                changeFilters({budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
-                e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+        <div id='budget' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+          <FaShekelSign style={{paddingLeft:5}}/>
+          <span style={filterLabelStyle}>תקציב</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            budgetActive > 0 &&
+            <div onClick={(e) => {
+              changeFilters({budgetFrom:MinPrice,budgetTo:MaxPrice,budgetActive:0})
+              e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
-          <div id='renovation' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+        <div id='renovation' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
 
           <IoIosConstruct style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>רמת שיפוץ</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              renovationActive > 0 &&
-              <div onClick={(e) => {changeFilters({renovations:[],renovationActive:0});e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+          <span style={filterLabelStyle}>רמת שיפוץ</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            renovationActive > 0 &&
+            <div onClick={(e) => {changeFilters({renovations:[],renovationActive:0});e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
-          <div id='furniture' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+        <div id='furniture' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
 
           <Weekend style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>ריהוט</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              furnitureActive > 0 &&
-              <div onClick={(e) => {changeFilters({furnitureTypes: [],furnitureActive:0});e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+          <span style={filterLabelStyle}>ריהוט</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            furnitureActive > 0 &&
+            <div onClick={(e) => {changeFilters({furnitureTypes: [],furnitureActive:0});e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
-          <div id='floor' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
-
-          <IoIosResize style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>קומה</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              floorActive > 0 &&
-              <div onClick={(e) => {
-                changeFilters({floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
-                e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
-
-          <div id='metres' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+        <div id='floor' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
 
           <IoIosResize style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>גודל במ"ר</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              metresActive > 0 &&
-              <div onClick={(e) => {
-                changeFilters({metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
-                e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+          <span style={filterLabelStyle}>קומה</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            floorActive > 0 &&
+            <div onClick={(e) => {
+              changeFilters({floorFrom:MinFloor,floorTo:MaxFloor,floorActive:0})
+              e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
-          <div id='attributes' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+        <div id='metres' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
 
           <IoIosResize style={{paddingLeft:5}}/>
-            <span style={{fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bold',paddingLeft:5}}>מאפיינים</span>
-            <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
-            {
-              attributesActive > 0 &&
-              <div onClick={(e) => {
-                changeFilters({attributesActive:0,attributes:{}})
-                e.stopPropagation()} }
-                   style={clearFilterStyle}>X</div>
-            }
-          </div>
+          <span style={filterLabelStyle}>גודל במ"ר</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            metresActive > 0 &&
+            <div onClick={(e) => {
+              changeFilters({metresFrom:MinMetres,metresTo:MaxMetres,metresActive:0})
+              e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
+        </div>
 
+        <div id='attributes' onClick={e => handleClickFilter(e)} style={singleFilterStyle}>
+
+          <IoIosResize style={{paddingLeft:5}}/>
+          <span style={filterLabelStyle}>מאפיינים</span>
+          <MdKeyboardArrowDown size={24} color={colors.darkblue}/>
+          {
+            attributesActive > 0 &&
+            <div onClick={(e) => {
+              changeFilters({attributesActive:0,attributes:{}})
+              e.stopPropagation()} }
+                 style={clearFilterStyle}>X</div>
+          }
         </div>
 
         <div onClick={() =>  {
@@ -219,7 +213,7 @@ const FiltersBar = () => {
               return newProperties
             })
           }
-        else{
+          else{
             setProperties(properties => {
               let favourites = JSON.parse(localStorage.getItem('favourites')) || []
               let newProperties = [...properties]

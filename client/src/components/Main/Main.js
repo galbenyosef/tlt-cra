@@ -124,7 +124,7 @@ const Main = ({id,dev}) => {
             <div style={{display:'flex',flexDirection:'column'}}>
               <CitySelection/>
               <AboutUs/>
-              <Hidden mdDown>
+              <Hidden xsDown>
                 <FiltersBar/>
               </Hidden>
               {

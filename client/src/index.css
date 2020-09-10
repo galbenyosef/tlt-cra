@@ -7,10 +7,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 p {
   margin: 0;
 }
-
+input.search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: black;
+  height:22px;
+  font-family: Assistant;
+  opacity: 1; /* Firefox */
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
