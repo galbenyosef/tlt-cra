@@ -91,7 +91,7 @@ export default () => {
       boxShadow: '0px 10px 10px 0px grey',
       position:'sticky',
       top:0,
-      zIndex:2,
+      zIndex:3,
     }}>
       <div style={{width:'100%',
         display:'flex',
