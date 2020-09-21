@@ -123,7 +123,7 @@ export default React.memo(({property,property:{
             borderBottom: '2px solid lightgrey',
             justifyContent: 'space-between'
           }}
-          onClick={() => {(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
+          onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
     >
       <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
         <div

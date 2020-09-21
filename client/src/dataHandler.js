@@ -206,7 +206,7 @@ export const filterProperties = (properties,filters) => {
   return retVal.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
 
-export const validateId = id => id && Number.isInteger(parseInt(id)) && id.length === 5
+export const validateId = id => {console.log(id);return (id && Number.isInteger(parseInt(id)) && id.length === 5)}
 
 
 export const onPropertyClicked = async (id) => {

@@ -51,14 +51,11 @@ const Root = () => {
           <Route path="/נשר">
             <CityView/>
           </Route>
-          <Route path="/:id" component={
-            ({id}) => (validateId((id)) ? <Main id={id}/> :  <NotFound/>)
-          }/>
+          <Route path="/:id">
+            <CityView/>
+          </Route>
           <Route path="/">
             <Main/>
-          </Route>
-          <Route path="*">
-            <NotFound/>
           </Route>
         </Switch>
         <Footer/>

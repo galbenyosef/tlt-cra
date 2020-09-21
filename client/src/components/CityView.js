@@ -4,18 +4,32 @@ import FiltersBar from "./FiltersBar";
 import PropertyList from "./PropertyList/PropertyList";
 import {MainSpinner} from "./Main/MainSpinner";
 import {useGlobalState} from "../globalState";
-import {onCityClick} from "../dataHandler";
-import {useLocation} from "react-router-dom";
+import {onCityClick, showSingleProperty, validateId} from "../dataHandler";
+import {useLocation,useParams} from "react-router-dom";
 
 export default () => {
   const [isLoading] = useGlobalState('loading')
   let location = useLocation()
   let city = location.pathname.replace('/','')
+  let {id} = useParams()
+
   useEffect(() => {
 
+    if (parseInt(city))
+      return
     if (city)
       onCityClick(city)
   },[city])
+
+  useEffect(() => {
+    console.log(id)
+    if (!parseInt(city))
+      return
+    if (id){
+      if (validateId(id))
+        showSingleProperty(id)
+    }
+  },[id])
 
   console.log('city rendered ')
 
