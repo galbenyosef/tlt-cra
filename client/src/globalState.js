@@ -1,25 +1,13 @@
 import { createGlobalState } from 'react-hooks-global-state';
-import {constants} from './components/Utilities'
+import {constants, ListDisplays} from './components/Utilities'
 import { createRef } from 'react';
 import moment from "moment";
-
-export const MediaModalTypes = {
-    Images: 1,
-    Videos: 2,
-}
-
-export const ListDisplays = {
-    List:1,
-    Grid:2,
-}
 
 const {
     MinPrice,
     MaxPrice,
     MinRooms,
     MaxRooms,
-    MinFurniture,
-    MaxFurniture,
     MinMetres,
     MaxMetres,
     MinFloor,
@@ -50,7 +38,7 @@ const initialState = {
         furnitureActive:0,
 
         //metres default values
-        metresFrom:0,
+        metresFrom:MinMetres,
         metresTo:MaxMetres,
         metresActive:0,
         //floor default values
@@ -89,8 +77,6 @@ const initialState = {
     properties:[],
     propertiesNumbers:[],
     addresses: [],
-    areas: [],
-    neighborhoods: [],
     city:null,
     page:1,
     perPage:25,
@@ -100,15 +86,14 @@ const initialState = {
     addressMap:{},
 
     //elementary
-    sideFiltersVisible: false,
     listRef: null,
     loading: false,
-    addressSearch: '',
     device:null,
     rootRef:createRef(),
-    DropdownHeight:0,
     headerHeight:118,
     listDisplay:ListDisplays.List,
+    chatbotOpened: false,
+    sideMenuOpened:false,
 
     //modals
     media:{
@@ -144,4 +129,4 @@ const initialState = {
     }
 };
 
-export const { useGlobalState,setGlobalState,getGlobalState } = createGlobalState(initialState)
+export const { useGlobalState,setGlobalState } = createGlobalState(initialState)

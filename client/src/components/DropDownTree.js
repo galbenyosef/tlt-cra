@@ -1,16 +1,16 @@
 
 import React from "react";
-import {setGlobalState, useGlobalState} from "../globalState";
+import {useGlobalState} from "../globalState";
 import DropdownTreeSelect from 'react-dropdown-tree-select'
 import './dropdownTree.css'
 import {changeFilters} from "../dataHandler";
 
-const setDropdownHeight = val => setGlobalState('DropdownHeight',val)
 
 let TheTree = React.memo(() => {
   const [addressTree] = useGlobalState('addressTree')
   const [addressMap] = useGlobalState('addressMap')
 
+/*
   const onFocus = () => {
 
         setTimeout(() => {
@@ -20,11 +20,12 @@ let TheTree = React.memo(() => {
           }
         },0)
   }
+*/
 
-  const onBlur = () => {
+/*  const onBlur = () => {
 
     setDropdownHeight(0)
-  }
+  }*/
   const searchPredicate = (node, searchTerm) => {
 
     //number search
@@ -84,8 +85,6 @@ let TheTree = React.memo(() => {
       showPartiallySelected
       keepOpenOnSelect
       data={addressTree}
-      onFocus={onFocus}
-      onBlur={onBlur}
       searchPredicate={searchPredicate}
       onChange={(a,b) => {
         changeFilters({propertyNumber:getLeafNodes(b),addresses:[],addressesActive:0,address:''})
@@ -100,19 +99,8 @@ let TheTree = React.memo(() => {
 
 export default () => {
 
-  const [DropdownHeight] = useGlobalState('DropdownHeight')
-
   return (
-    <div  style={{position:'relative',display:'flex'}}>
-      <TheTree/>
-   {/*   {
-        DropdownHeight ?
-          <div style={{position:'absolute',top:DropdownHeight+29,zIndex:2,backgroundColor:'lime'}}>
-            here will come check/uncheck all
-          </div> : null
-      }*/}
-
-    </div>
+    <TheTree/>
   )
 
 }

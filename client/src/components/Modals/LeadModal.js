@@ -1,7 +1,6 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useRef} from 'react'
 import { Modal, Button } from '@material-ui/core'
-import { useGlobalState, setGlobalState } from '../../globalState'
-import DatePicker from "react-datetime-picker"
+import { useGlobalState } from '../../globalState'
 import {createLeadKala, validateEmail} from "../../dataHandler";
 import moment from "moment-timezone";
 
@@ -12,15 +11,12 @@ export const LeadModal = () => {
 
   let {
     opened,
-    user_id,
-    subject,
     full_name,
     phone,
     email,
     comments,
     attributes:{
       actual_when,
-      kala_property_id,
       agentName,
       agentPhone,
       propertyName,
@@ -58,17 +54,17 @@ export const LeadModal = () => {
               <label htmlFor='phoneInput'>
                 טלפון (חובה)
               </label>
-              <input type="tel" style={{border:'0.5px solid black',marginBottom:20}} id='phoneInput' type='text' value={phone} onChange={e => setModalProp('phone',e.currentTarget.value)}/>
+              <input type="tel" style={{border:'0.5px solid black',marginBottom:20}} id='phoneInput' value={phone} onChange={e => setModalProp('phone',e.currentTarget.value)}/>
               <label htmlFor='mailInput'>
                 מייל
               </label>
-              <input type="email" style={{border:'0.5px solid black',marginBottom:20}} id='mailInput' type='text' value={email} onChange={e => setModalProp('email',e.currentTarget.value)}/>
+              <input type="email" style={{border:'0.5px solid black',marginBottom:20}} id='mailInput'  value={email} onChange={e => setModalProp('email',e.currentTarget.value)}/>
               <p>בחר תאריך ושעה</p>
               <input style={{marginBottom:20,border: '1px solid black'}} min={actual_when} max={'2021-01-01T00:00'} defaultValue={actual_when} type='datetime-local' ref={dateRef}/>
               <label htmlFor='commentInput'>
                 הערות
               </label>
-              <textarea style={{border:'0.5px solid black',marginBottom:20}} id='commentInput' type='text' value={comments} onChange={e => setModalProp('comments',e.currentTarget.value)}/>
+              <textarea style={{border:'0.5px solid black',marginBottom:20}} id='commentInput'  value={comments} onChange={e => setModalProp('comments',e.currentTarget.value)}/>
            {/*   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
                 <label htmlFor='commentInput'>
                   אני לא רובוט

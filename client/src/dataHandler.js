@@ -1,11 +1,9 @@
-import {createLead, getAgents, getCoordinates, getProperties, getProperty, getUser} from "./apiHandler";
-import {getGlobalState, setGlobalState, useGlobalState} from "./globalState";
-import {constants, devices, FurnitureTypes, range, renovationTypes, switchFilters} from "./components/Utilities";
-import moment from "moment";
+import {createLead, getAgents, getCoordinates, getProperties, getProperty} from "./apiHandler";
+import {setGlobalState} from "./globalState";
+import {constants, devices, renovationTypes, switchFilters} from "./components/Utilities";
 
 export const setProperties = (val) => setGlobalState('properties',val)
 export const setAddresses = (val) => setGlobalState('addresses',val)
-export const setNeighborhoods = (val) => setGlobalState('neighborhoods',val)
 export const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
 export const setIsLoading = (val) => setGlobalState('loading',val)
 export const setProperty = val => setGlobalState('property',val)
@@ -23,6 +21,9 @@ export const setTotalFiltered = val => setGlobalState('totalFiltered',val)
 export const setPage = val => setGlobalState('page',val)
 export const setAddressTree = (val) => setGlobalState('addressTree',val)
 export const setAddressMap = (val) => setGlobalState('addressMap',val)
+export const setHeaderHeight = val => setGlobalState('headerHeight',val)
+export const setDevice = (val) => {setGlobalState('device',val)}
+export const setFeedback = (val) => {setGlobalState('feedback',val)}
 
 
 export const toggleFavourite = id => {
@@ -76,7 +77,7 @@ export const fetchCoordinates = async address => {
   catch(e){
     console.log(e)
   }
-  return
+
 }
 
 export const createPropertyDescription = property => {
@@ -100,7 +101,6 @@ export const createPropertyDescription = property => {
     totalfloors,
   } = property
 
-  console.log(garden)
   let test = []
   if (airdirections)
     test.push(`${airdirections} כיווני אוויר`)
@@ -118,12 +118,12 @@ export const createPropertyDescription = property => {
     first.push(`${metres} מ"ר,`)
   first.push(`${floor ? `קומה ${floor}`:`קומת קרקע`}`)
   first.push(`מתוך ${totalfloors} קומות`)
-  let string = `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
+
+  return `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${first.join(' ')}
 ${test.join(', ')}
-${furniture}${structure != 'ישן' ? ` בבניין ${structure}`:``} במחיר של ${price.toLocaleString()} ₪
+${furniture}${structure !== 'ישן' ? ` בבניין ${structure}` : ``} במחיר של ${price.toLocaleString()} ₪
   `
-  return string
 }
 
 export const filterProperties = (properties,filters) => {
@@ -151,7 +151,7 @@ export const filterProperties = (properties,filters) => {
     primeFilters = primeFilters.filter(({neighborhood_name}) => addresses.some(addr => neighborhood_name.includes(addr)))
   }
   else if (address.length) {
-    primeFilters = primeFilters.filter(({neighborhood_name, street_name}) => {
+    primeFilters = primeFilters.filter( ({neighborhood_name, street_name}) => {
       for (let addr of address) {
         let [neighborhood, street] = addr.split(', ')
         if (neighborhood_name === neighborhood && street_name === street)
@@ -160,11 +160,13 @@ export const filterProperties = (properties,filters) => {
           if (neighborhood_name === neighborhood)
             return true
         }
+        return false
       }
+      return false
     })
   }
   else if (propertyNumber.length) {
-    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.some(num => custom_id == num))
+    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.some(num => custom_id === num))
   }
 
   let filtered = primeFilters
@@ -178,10 +180,10 @@ export const filterProperties = (properties,filters) => {
              }) => {
 
       return (
-        (budgetFrom <= price) && (budgetTo == constants.MaxPrice ? price <= 9999999 : price <= budgetTo) &&
-        (metresFrom <= metres) && (metresTo == constants.MaxMetres ? metres <= 9999999 : metres <= metresTo) &&
-        (roomsFrom <= rooms) && (roomsTo == constants.MaxRooms ? rooms <= 99 : rooms <= roomsTo+.5) &&
-        (floorFrom <= floor) && (floorTo == constants.MaxFloor ? floor <= 9999999 : floor <= metresTo) &&
+        (budgetFrom <= price) && (budgetTo === constants.MaxPrice ? price <= 9999999 : price <= budgetTo) &&
+        (metresFrom <= metres) && (metresTo === constants.MaxMetres ? metres <= 9999999 : metres <= metresTo) &&
+        (roomsFrom <= rooms) && (roomsTo === constants.MaxRooms ? rooms <= 99 : rooms <= roomsTo+.5) &&
+        (floorFrom <= floor) && (floorTo === constants.MaxFloor ? floor <= 9999999 : floor <= metresTo) &&
         (renovations.length ? renovations.some(ren => ren === renovation.toString()) : true) &&
         (furnitureTypes.length ? furnitureTypes.some(f_type => f_type === furniture) : true)
       );
@@ -194,21 +196,17 @@ export const filterProperties = (properties,filters) => {
 
 
   filtered = filtered.map(({id}) => id)
-  let retval = [...properties]
-  for (let property of retval){
-    if (filtered.includes(property.id)){
-      property.isFiltered = true
-    }
-    else
-      property.isFiltered = false
+  let retVal = [...properties]
+  for (let property of retVal){
+    property.isFiltered = filtered.includes(property.id);
   }
   setPage(1)
 
   setTotalFiltered(filtered.length)
-  return retval.sort(({created:createdA},{created:createdB}) => createdB - createdA)
+  return retVal.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
 
-export const validateId = id => id && Number.isInteger(parseInt(id)) && id.length == 5
+export const validateId = id => id && Number.isInteger(parseInt(id)) && id.length === 5
 
 
 export const onPropertyClicked = async (id) => {
@@ -222,7 +220,6 @@ export const onPropertyClicked = async (id) => {
 }
 
 export const resize = () => {
-  const setDevice = (val) => setGlobalState('device',val)
 
   if (window.innerWidth < 600)
     setDevice(devices.Mobile)
@@ -230,6 +227,7 @@ export const resize = () => {
     setDevice(devices.Tablet)
   else
     setDevice(devices.Desktop)
+
 }
 
 export const fetchAgents = async () => {
@@ -243,7 +241,7 @@ export const fetchAgents = async () => {
   return data
 }
 
-export const getAgentById = (agents,id) => agents.find(agent => agent.id == id)
+export const getAgentById = (agents,id) => agents.find(agent => agent.id === id)
 
 export const fetchProperty = async (id) => {
 
@@ -279,7 +277,7 @@ export const showSingleProperty = async (propertyId) => {
   setProperties(
     properties => {
       let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})
-      return selectedProperty.map(prop => prop.custom_id == custom_id ? ({...prop,isCollapsedOut:true}) : prop)
+      return selectedProperty.map(prop => prop.custom_id === custom_id ? ({...prop,isCollapsedOut:true}) : prop)
     }
   )
   setIsLoading(false)
@@ -295,7 +293,7 @@ export const fetchProperties = async (city) => {
   let propertiesNumbers = []
 
   let favouritesString = localStorage.getItem('favourites')
-  let favourites = favouritesString && JSON.parse(favouritesString) || []
+  let favourites = (favouritesString && JSON.parse(favouritesString)) || []
 
   let newAddressMap = []
   let dropdownData = []
@@ -382,20 +380,20 @@ export const fetchProperties = async (city) => {
 }
 
 function unflatten(arr) {
-  var tree = [],
+  let tree = [],
     mappedArr = {},
     arrElem,
     mappedElem;
 
   // First map the nodes of the array to an object -> create a hash table.
-  for(var i = 0, len = arr.length; i < len; i++) {
+  for(let i = 0, len = arr.length; i < len; i++) {
     arrElem = arr[i];
     mappedArr[arrElem.id] = arrElem;
     mappedArr[arrElem.id]['children'] = [];
   }
 
 
-  for (var id in mappedArr) {
+  for (let id in mappedArr) {
     if (mappedArr.hasOwnProperty(id)) {
       mappedElem = mappedArr[id];
       // If the element is not at the root level, add it to its parent array of children.
@@ -427,6 +425,6 @@ export const createLeadKala = async (data) => {
 }
 
 export const validateEmail = (email) => {
-  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
+  let re = /\S+@\S+\.\S+/;
+  return re.test(email);
 }

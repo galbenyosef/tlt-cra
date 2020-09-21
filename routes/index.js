@@ -20,6 +20,7 @@ let getPropertiesUrl = city => {
     'select[3]':'attributes',
     'select[4]':'active',
     'select[5]':'thumb_file',
+    'select[6]':'modified',
     'active':'true',
     'page_attributes[city_id]':`${city}`,
     'page_attributes[status]':'במאגר',
@@ -47,6 +48,7 @@ const getPropertyUrl = id => `https://tlt.kala-crm.co.il/api/v1/page?${serialize
   'select[3]':'attributes',
   'select[4]':'active',
   'select[5]':'thumb_file',
+  'select[6]':'modified'
 })}&id=${id}`
 
 const getCoordinatesUrl = (q) => `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&addressdetails=1`
@@ -232,7 +234,6 @@ router.get('/properties/:id', async (req,res) => {
         pic_view__url,
         garden
       },
-
       active,
       created,
       modified,
@@ -292,18 +293,24 @@ router.get('/properties/:id', async (req,res) => {
       modified,
       deleted,
       asset_id,
-      pic_living_room__url,
-      pic_living_room2__url,
-      pic_balcony__url,
-      pic_kitchen__url,
-      pic_kitchen2__url,
-      pic_main_bedroom__url,
-      pic_bedroom__url,
-      pic_bathroom__url,
-      pic_bathroom2__url,
-      pic_view__url
+      pictures:[
+        thumb_file ? `/common/assets/748/724/${thumb_file.sm}` : null,
+        pic_living_room__url,
+        pic_living_room2__url,
+        pic_balcony__url,
+        pic_kitchen__url,
+        pic_kitchen2__url,
+        pic_main_bedroom__url,
+        pic_bedroom__url,
+        pic_bathroom__url,
+        pic_bathroom2__url,
+        pic_view__url
+      ].filter(img => !!img).map(image => ({
+        original:`https://tlt.kala-crm.co.il/${image}`,
+        thumbnail:`https://tlt.kala-crm.co.il/${image}`,
+      }))
     }
-    
+    console.log(modified)
     return res.send(property)
   }
   catch(e){
@@ -389,7 +396,6 @@ router.get('/properties/', async (req,res) => {
     }) => ({
       id,
       created,
-      thumb_file,
       agent_id,
       video__url,
       neighborhood_name,
@@ -433,17 +439,24 @@ router.get('/properties/', async (req,res) => {
       entrance,
       committee,
       totalfloors,
-      pic_living_room__url,
-      pic_living_room2__url,
-      pic_balcony__url,
-      pic_kitchen__url,
-      pic_kitchen2__url,
-      pic_main_bedroom__url,
-      pic_bedroom__url,
-      pic_bathroom__url,
-      pic_bathroom2__url,
-      pic_view__url
+      pictures:[
+        thumb_file ? `/common/assets/748/724/${thumb_file.sm}` : null,
+        pic_living_room__url,
+        pic_living_room2__url,
+        pic_balcony__url,
+        pic_kitchen__url,
+        pic_kitchen2__url,
+        pic_main_bedroom__url,
+        pic_bedroom__url,
+        pic_bathroom__url,
+        pic_bathroom2__url,
+        pic_view__url
+      ].filter(img => !!img).map(image => ({
+        original:`https://tlt.kala-crm.co.il/${image}`,
+        thumbnail:`https://tlt.kala-crm.co.il/${image}`,
+      }))
     }))
+
     return res.send(properties)
   }
   catch(e){

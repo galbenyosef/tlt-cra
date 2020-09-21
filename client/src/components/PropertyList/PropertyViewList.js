@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 import {Grid, Hidden} from '@material-ui/core';
-import {devices, getValueByDevice} from '../Utilities';
-import {MediaModalTypes, useGlobalState} from "../../globalState";
+import {devices, getValueByDevice, MediaModalTypes} from '../Utilities';
+import {useGlobalState} from "../../globalState";
 import {
   createPropertyDescription,
   fetchCoordinates,
@@ -23,13 +23,14 @@ import EmailIcon from "react-share/es/EmailIcon";
 import {FaHeart} from "react-icons/fa";
 import {FiHeart} from "react-icons/fi";
 
+/*
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
+*/
 
 export default React.memo(({property,property:{
 
   id,
   created,
-  thumb_file,
   video__url,
   neighborhood_name,
   street_name,
@@ -44,15 +45,15 @@ export default React.memo(({property,property:{
   description,
   entrance,
   tax,
-  furniture,
   furniture_items,
   committee,
   totalfloors,
   isCollapsedOut,
   requirements,
   agent_id,
+  pictures
 
-},index}) => {
+}}) => {
 
   const [device] = useGlobalState('device')
   const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
@@ -71,42 +72,8 @@ export default React.memo(({property,property:{
   const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
 
-  const {
-    pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
-    pic_view__url
-  } = property
-
-  let pictures =[]
-
-  if (thumb_file)
-    pictures.push(`/common/assets/748/724/${thumb_file.sm}`)
-
-  pictures = pictures.concat([pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
-    pic_view__url]).filter(img => !!img)
-
-  let propertyImages = pictures.map(image => ({
-    original:`https://tlt.kala-crm.co.il/${image}`,
-    thumbnail:`https://tlt.kala-crm.co.il/${image}`,
-  }))
-
   let media = {
-    images:propertyImages,
+    images:pictures,
     videos:[]
   }
 
@@ -127,7 +94,7 @@ export default React.memo(({property,property:{
 
 
   const onExploreClicked = async () => {
-    let myPromise = () => new Promise((resolve,reject) => {
+    let myPromise = () => new Promise((resolve) => {
       setMediaModal({
         type:MediaModalTypes.Videos,
         opened:true,
@@ -147,7 +114,7 @@ export default React.memo(({property,property:{
 
   return (
     <Grid container
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={() => device === devices.Desktop && setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
             width: '100%',
@@ -156,7 +123,7 @@ export default React.memo(({property,property:{
             borderBottom: '2px solid lightgrey',
             justifyContent: 'space-between'
           }}
-          onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
+          onClick={() => {(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
     >
       <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
         <div
@@ -201,7 +168,7 @@ export default React.memo(({property,property:{
                 alignItems: 'center',
                 height: 35
               }}>
-                {`+${propertyImages.length}`}
+                {`+${pictures.length}`}
               </div>
               :
               null

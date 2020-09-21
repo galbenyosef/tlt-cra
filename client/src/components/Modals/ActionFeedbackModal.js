@@ -1,22 +1,23 @@
 import React, {useEffect} from 'react'
 import {useGlobalState} from "../../globalState";
+import {setFeedback} from "../../dataHandler";
+
+const decreaseFeedbackTimer = () => setFeedback(feedback => ({...feedback,timer:feedback.timer - 1}))
 
 export default () => {
 
-    const [feedback,setFeedback] = useGlobalState('feedback')
+    const [feedback] = useGlobalState('feedback')
     const {result,message,timer} = feedback
 
     useEffect(() => {
         let kak
-        const decreaseFeedbackTimer = () => setFeedback({...feedback,timer:feedback.timer - 1})
 
         if (timer){
             kak = setTimeout(decreaseFeedbackTimer,1000)
         }
 
-        return () => {
-            clearTimeout(kak)
-        }
+        return () => clearTimeout(kak)
+
     },[timer])
 
     if (!timer)

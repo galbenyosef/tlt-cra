@@ -23,13 +23,16 @@
     "react-icons": "^3.10.0",
     "react-image-gallery": "^1.0.7",
     "react-leaflet": "^2.7.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-share": "^4.2.1",
+    "react-simple-chatbot": "^0.6.1",
     "react-switch": "^5.0.1",
     "react-windowed-select": "^2.0.3",
     "scroll-lock": "^2.1.4",
     "serve": "^11.3.2",
-    "source-map-explorer": "^2.4.2"
+    "source-map-explorer": "^2.4.2",
+    "styled-components": "^5.2.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

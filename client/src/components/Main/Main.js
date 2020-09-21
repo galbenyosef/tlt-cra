@@ -1,62 +1,44 @@
-import React, {Suspense, useEffect} from 'react'
-import Layout from '../Layout'
-import {useGlobalState, setGlobalState} from '../../globalState'
+import React from 'react'
 import {Hidden} from '@material-ui/core';
-import {MainSpinner} from "./MainSpinner";
 import bigLogo from '../../assets/YellowLogoTrans_TLT.png'
 import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
-import {onCityClick, resize, showSingleProperty} from "../../dataHandler";
 import {colors} from "../../colors";
-import Header from "../Header";
-import Footer from "../Footer";
-import Modals from "../Modals";
-import FiltersBar from "../FiltersBar";
-import {Dev} from "../Dev";
-import PropertyList from '../PropertyList/PropertyList';
+import {Link} from "react-router-dom";
 
+export const CitySelection = () => {
 
-const CitySelection = () => {
-
-  const [city] = useGlobalState('city')
-
-  if (city)
-    return null
   return(
     <div style={{margin:'0px auto',minHeight:70,display:'flex',alignItems:'center',justifyContent:'space-evenly',flexWrap:'wrap',marginRight:'auto',marginLeft:'auto',marginTop:10,marginBottom:30}}>
       <p style={{padding:'0px 10px',width:'100%'}}>
         בחר עיר מבוקשת:
       </p>
-      <p onClick={() => onCityClick('חיפה') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+      <Link to={'/חיפה'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         חיפה
-      </p>
-      <p onClick={() => onCityClick('קריות') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+      </Link>
+      <Link to={'/קריות'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         קריות
-      </p>
-      <p onClick={() => onCityClick('טירת הכרמל') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,marginLeft:4}}>
+      </Link>
+      <Link to={'/טירת הכרמל'}style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         טירת הכרמל
-      </p>
-      <p onClick={() => onCityClick('נשר') } style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue}}>
+      </Link>
+      <Link to={'/נשר'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         נשר
-      </p>
+      </Link>
     </div>
   )
 }
 
 const AboutUs = () => {
 
-  const [city] = useGlobalState('city')
-
-  if (city)
-    return null
   return(
     <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'center'}}>
       <div>
         <div style={{
           borderRadius:50,
           boxShadow:'0px 0px 3px 4px grey',
-          width:300,
-          height:300,
+          width:250,
+          height:250,
           backgroundImage:`url(${bigLogo})`,
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -66,13 +48,13 @@ const AboutUs = () => {
       <Hidden xsDown>
         <div style={{flex:.1}}/>
       </Hidden>
-      <div style={{maxWidth:320}}>
+      <div style={{maxWidth:470}}>
         <div style={{display:'flex',flexDirection:'column'}}>
           <div style={{
             width:'100%',
-            height:80,
+            height:50,
             backgroundImage:`url(${Only_Text})`,
-            backgroundPosition: 'right',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize:'contain'
           }}/>
@@ -85,58 +67,17 @@ const AboutUs = () => {
   )
 }
 
-const Main = ({id,dev}) => {
+const Main = () => {
 
-  const [isLoading] = useGlobalState('loading')
-  const setHeaderHeight = val => setGlobalState('headerHeight',val)
-  const [city] = useGlobalState('city')
-
-  const handleScroll = (e) => setHeaderHeight(118 - (e.currentTarget.scrollY > 36 ? 36 : e.currentTarget.scrollY))
-
-  if (dev && !city){
-    onCityClick('חיפה')
-  }
-
-  useEffect(() => {
-    window.addEventListener("resize",resize);
-    window.addEventListener('scroll',handleScroll)
-
-    if (id)
-      showSingleProperty(id)
-
-    resize()
-
-    return () => {
-      window.removeEventListener('resize', resize)
-      window.removeEventListener('scroll', handleScroll)
-    }
-  },[])
-
-  console.log('root rendered')
+  console.log('main rendered ')
   return (
 
-    <Layout>
-      <Header/>
-      <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly',position:'relative'}}>
-        {
-          isLoading ?
-            <MainSpinner/> :
-            <div style={{display:'flex',flexDirection:'column'}}>
-              <CitySelection/>
-              <AboutUs/>
-              <Hidden xsDown>
-                <FiltersBar/>
-              </Hidden>
-              {
-                dev ? <Dev/>: null
-              }
-              <PropertyList />
-            </div>
-        }
+    <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly',position:'relative'}}>
+      <div style={{display:'flex',flexDirection:'column'}}>
+        <CitySelection/>
+        <AboutUs/>
       </div>
-      <Footer/>
-      <Modals/>
-    </Layout>
+    </div>
 
   )
 }

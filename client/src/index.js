@@ -3,28 +3,68 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Main from './components/Main/Main';
 import * as serviceWorker from './serviceWorker';
-import {useRoutes} from 'hookrouter';
 import {validateId} from "./dataHandler";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import Header from "./components/Header";
+import Layout from "./components/Layout";
+import Footer from "./components/Footer";
+import Modals from "./components/Modals";
+import CityView from "./components/CityView";
+import ScrollResizeHandler from "./components/ScrollResizeHandler";
+import ChatBot from "./components/ChatBot";
+import SideMenu from "./components/SideMenu";
 
-const NotFound = () => (
-  <div>
-    <h1>404 - Not Found!</h1>
-    <a href="/">
-      Go Home
-    </a>
-  </div>
-);
+const NotFound = () => {
+  console.log(useLocation())
+  return(
+    <div style={{width:'100%',display:'flex',flexGrow:1,flexDirection:'column',justifyContent:'space-evenly',position:'relative'}}>
+      <h1 style={{margin:'auto'}}>404 - העמוד לא קיים !</h1>
+    </div>
+  )};
 
-
-const routes = {
-  '/': () => <Main />,
-  '/dev': () => <Main dev/>,
-  '/:id': ({id}) => (validateId((id)) ? <Main id={id}/> : <NotFound/>),
-};
 
 const Root = () => {
-  const routeResult = useRoutes(routes);
-  return routeResult || <NotFound />;
+
+  return (
+    <Layout>
+      <Router>
+        <ScrollResizeHandler/>
+        <ChatBot/>
+        <SideMenu/>
+        <Header/>
+        <Modals/>
+        <Switch>
+          <Route path="/חיפה">
+            <CityView/>
+          </Route>
+          <Route path="/קריות">
+            <CityView/>
+          </Route>
+          <Route path="/טירת הכרמל">
+            <CityView/>
+          </Route>
+          <Route path="/נשר">
+            <CityView/>
+          </Route>
+          <Route path="/:id" component={
+            ({id}) => (validateId((id)) ? <Main id={id}/> :  <NotFound/>)
+          }/>
+          <Route path="/">
+            <Main/>
+          </Route>
+          <Route path="*">
+            <NotFound/>
+          </Route>
+        </Switch>
+        <Footer/>
+      </Router>
+    </Layout>
+  );
 }
 
 

@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
-import { IconButton } from '@material-ui/core';
-import { AccountCircleOutlined, TuneOutlined, Hotel, Sync, Weekend } from '@material-ui/icons';
+import React from 'react'
+import { Hotel, Weekend } from '@material-ui/icons';
 import {useGlobalState, setGlobalState} from '../globalState';
 import {IoIosConstruct, IoIosResize} from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { FaShekelSign, FaHeart } from 'react-icons/fa';
 import {constants, getValueByDevice} from './Utilities'
-import WindowedSelect from "react-windowed-select";
-import {clearFilterStyle, searchStyle} from '../styles';
+import {clearFilterStyle} from '../styles';
 import {colors} from "../colors";
-import {changeFilters, setProperties} from "../dataHandler";
+import {changeFilters} from "../dataHandler";
 import DropDownTree from "./DropDownTree";
 
 const {

@@ -1,9 +1,9 @@
 import React from 'react'
-import {Grid, Input, InputAdornment} from '@material-ui/core';
-import {useGlobalState, setGlobalState} from '../globalState';
+import {Input, InputAdornment} from '@material-ui/core';
+import {useGlobalState} from '../globalState';
 import StyledMenu from './Main/StyledMenu'
 import {Range} from 'rc-slider';
-import {constants, FurnitureTypes, renovationDescription, renovationTypes, switchFilters} from './Utilities'
+import {constants, FurnitureTypes, renovationDescription, renovationTypes} from './Utilities'
 import 'rc-slider/assets/index.css';
 import {filterBoxStyle} from '../styles';
 import {changeFilters, handleCloseFilter} from "../dataHandler";
@@ -34,7 +34,7 @@ export const FiltersBarContent = ({mobile}) => {
 
   const [addressesData] = useGlobalState('addresses');
   const [filters, setFilters] = useGlobalState('filters');
-  const [currentFilter, setCurrentFilter] = useGlobalState('currentFilter');
+  const [currentFilter] = useGlobalState('currentFilter');
 
   let {
     renovations,
@@ -92,7 +92,7 @@ export const FiltersBarContent = ({mobile}) => {
                   style={{position:'relative'}}
                   value={filters.budgetTo}
                   startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                  endAdornment={filters.budgetTo == constants.MaxPrice && <InputAdornment position="start">+</InputAdornment>}
+                  endAdornment={filters.budgetTo === constants.MaxPrice && <InputAdornment position="start">+</InputAdornment>}
                 />
               </div>
               <div style={filterBoxStyle}>
@@ -114,8 +114,8 @@ export const FiltersBarContent = ({mobile}) => {
                   {
                     [1,2,3,4,5,6].map(num =>
                       <div key={num} onClick={() => setFilters({...filters,roomsFrom:num})}
-                           style={{backgroundColor:filters.roomsFrom == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                        {num != constants.MaxRooms ? num: `${constants.MaxRooms}+`}
+                           style={{backgroundColor:filters.roomsFrom === num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
+                        {num !== constants.MaxRooms ? num: `${constants.MaxRooms}+`}
                       </div>
                     )
                   }
@@ -127,8 +127,8 @@ export const FiltersBarContent = ({mobile}) => {
                   {
                     [1,2,3,4,5,6].map(num =>
                       <div key={num} onClick={() => setFilters({...filters,roomsTo:num})}
-                           style={{backgroundColor:filters.roomsTo == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                        {num != constants.MaxRooms ? num: `${constants.MaxRooms}+`}
+                           style={{backgroundColor:filters.roomsTo === num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
+                        {num !== constants.MaxRooms ? num: `${constants.MaxRooms}+`}
                       </div>
                     )
                   }
@@ -194,13 +194,13 @@ export const FiltersBarContent = ({mobile}) => {
                                   }
                                   else {
                                     furnitureTypes = furnitureTypes.concat(type)
-                                    if (type == FurnitureTypes.FULL){
+                                    if (type === FurnitureTypes.FULL){
                                       furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
                                     }
-                                    if (type == FurnitureTypes.PARTIAL){
+                                    if (type === FurnitureTypes.PARTIAL){
                                       furnitureTypes = furnitureTypes.concat(FurnitureTypes.FULL)
                                     }
-                                    if (type == FurnitureTypes.NONE){
+                                    if (type === FurnitureTypes.NONE){
                                       furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
                                     }
                                   }
@@ -230,7 +230,7 @@ export const FiltersBarContent = ({mobile}) => {
                       <div style={{padding:20}}>
                         <Range
                           step={5}
-                          min={0}
+                          min={MinMetres}
                           max={MaxMetres}
                           onChange={(newVal) => setFilters({...filters,metresFrom:newVal[0],metresTo:newVal[1]})}
                           value={[filters.metresFrom,filters.metresTo]}
@@ -263,7 +263,7 @@ export const FiltersBarContent = ({mobile}) => {
                           }}
                           value={filters.metresTo}
                           startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                          endAdornment={filters.metresTo == constants.MaxMetres && <InputAdornment position="start">+</InputAdornment>}
+                          endAdornment={filters.metresTo === constants.MaxMetres && <InputAdornment position="start">+</InputAdornment>}
                         />
                       </div>
                       <div style={filterBoxStyle}>
@@ -316,7 +316,7 @@ export const FiltersBarContent = ({mobile}) => {
                             }}
                             value={filters.floorTo}
                             startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                            endAdornment={filters.floorTo == constants.MaxFloor && <InputAdornment position="start">+</InputAdornment>}
+                            endAdornment={filters.floorTo === constants.MaxFloor && <InputAdornment position="start">+</InputAdornment>}
                           />
                         </div>
                         <div style={filterBoxStyle}>
@@ -330,7 +330,7 @@ export const FiltersBarContent = ({mobile}) => {
                         </div>
                       </div>
                     </div>:
-                    currentFilterName == 'attributes' ?
+                    currentFilterName === 'attributes' ?
                       <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',outline:'none'}}>
                         <div style={{display:'flex',flexDirection:'column'}}>
 
@@ -393,7 +393,7 @@ export const FiltersBarContent = ({mobile}) => {
                 style={{position:'relative'}}
                 value={filters.budgetTo}
                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                endAdornment={filters.budgetTo == constants.MaxPrice && <InputAdornment position="start">+</InputAdornment>}
+                endAdornment={filters.budgetTo === constants.MaxPrice && <InputAdornment position="start">+</InputAdornment>}
               />
             </div>
             <div style={filterBoxStyle}>
@@ -415,8 +415,8 @@ export const FiltersBarContent = ({mobile}) => {
               {
                 [1,2,3,4,5,6].map(num =>
                   <div key={num} onClick={() => setFilters({...filters,roomsFrom:num})}
-                       style={{backgroundColor:filters.roomsFrom == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                    {num != 6 ? num: '6+'}
+                       style={{backgroundColor:filters.roomsFrom === num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
+                    {num !== 6 ? num: '6+'}
                   </div>
                 )
               }
@@ -428,8 +428,8 @@ export const FiltersBarContent = ({mobile}) => {
               {
                 [1,2,3,4,5,6].map(num =>
                   <div key={num} onClick={() => setFilters({...filters,roomsTo:num})}
-                       style={{backgroundColor:filters.roomsTo == num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
-                    {num != 6 ? num: '6+'}
+                       style={{backgroundColor:filters.roomsTo === num ? colors.darkblue: '',display:'flex',width:30,height:30,justifyContent:'center',alignItems:'center',border:'1px solid black',borderRadius:100,cursor:'pointer'}}>
+                    {num !== 6 ? num: '6+'}
                   </div>
                 )
               }
@@ -495,13 +495,13 @@ export const FiltersBarContent = ({mobile}) => {
                           }
                           else {
                             furnitureTypes = furnitureTypes.concat(type)
-                            if (type == FurnitureTypes.FULL){
+                            if (type === FurnitureTypes.FULL){
                               furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
                             }
-                            if (type == FurnitureTypes.PARTIAL){
+                            if (type === FurnitureTypes.PARTIAL){
                               furnitureTypes = furnitureTypes.concat(FurnitureTypes.FULL)
                             }
-                            if (type == FurnitureTypes.NONE){
+                            if (type === FurnitureTypes.NONE){
                               furnitureTypes = furnitureTypes.concat(FurnitureTypes.PARTIAL)
                             }
                           }
@@ -564,7 +564,7 @@ export const FiltersBarContent = ({mobile}) => {
                 }}
                 value={filters.metresTo}
                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                endAdornment={filters.metresTo == constants.MaxMetres && <InputAdornment position="start">+</InputAdornment>}
+                endAdornment={filters.metresTo === constants.MaxMetres && <InputAdornment position="start">+</InputAdornment>}
               />
             </div>
             <div style={filterBoxStyle}>
@@ -617,7 +617,7 @@ export const FiltersBarContent = ({mobile}) => {
                 }}
                 value={filters.floorTo}
                 startAdornment={<InputAdornment position="end">עד</InputAdornment>}
-                endAdornment={filters.floorTo == constants.MaxFloor && <InputAdornment position="start">+</InputAdornment>}
+                endAdornment={filters.floorTo === constants.MaxFloor && <InputAdornment position="start">+</InputAdornment>}
               />
             </div>
             <div style={filterBoxStyle}>
@@ -631,7 +631,7 @@ export const FiltersBarContent = ({mobile}) => {
             </div>
           </div>
         </div>:
-        currentFilterName == 'attributes' ?
+        currentFilterName === 'attributes' ?
         <div style={{direction:'rtl',display:'flex',flexWrap:'wrap',outline:'none'}}>
           <div style={{display:'flex',flexDirection:'column'}}>
 

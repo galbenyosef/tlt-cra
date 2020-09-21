@@ -1,24 +1,22 @@
 
 import React, { useEffect } from 'react'
-import {useGlobalState, setGlobalState, ListDisplays} from '../../globalState';
+import {useGlobalState, setGlobalState} from '../../globalState';
 import { Grid } from '@material-ui/core';
-import { FiGrid,FiList } from "react-icons/fi";
 import {colors} from "../../colors";
 import PropertyViewList from "./PropertyViewList";
 import PropertyViewGrid from "./PropertyViewGrid";
 import Pagination from '@material-ui/lab/Pagination';
-import {devices} from "../Utilities";
+import {ListDisplays} from "../Utilities";
 
 const PropertyList = () => {
 
-  const [propertiesData,setPropertiesData] = useGlobalState('properties');
-  const [listDisplay,setListDisplay] = useGlobalState('listDisplay')
+  const [propertiesData] = useGlobalState('properties');
+  const [listDisplay] = useGlobalState('listDisplay')
   const [totalFiltered] = useGlobalState('totalFiltered')
   const [totalCityCount] = useGlobalState('totalCityCount')
   const [city] = useGlobalState('city')
-  const [perPage,setPerPage] = useGlobalState('perPage')
+  const [perPage] = useGlobalState('perPage')
   const [page,setPage] = useGlobalState('page')
-  const [device] = useGlobalState('device')
 
   const listRef = React.useRef(null)
 
@@ -72,7 +70,7 @@ const PropertyList = () => {
           </div>
         </div>
         {
-          listDisplay == ListDisplays.List ?
+          listDisplay === ListDisplays.List ?
             <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 properties.map((prop,idx) =>

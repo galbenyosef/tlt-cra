@@ -17,6 +17,16 @@ const devices = {
   Desktop:3
 }
 
+export const MediaModalTypes = {
+  Images: 1,
+  Videos: 2,
+}
+
+export const ListDisplays = {
+  List:1,
+  Grid:2,
+}
+
 const constants = {
   MinPrice: 1000,
   MaxPrice: 25000,
@@ -24,7 +34,7 @@ const constants = {
   MaxRooms: 6,
   MinRenovation:1,
   MaxRenovation:4,
-  MinMetres:1,
+  MinMetres:0,
   MaxMetres:300,
   MinFloor:0,
   MaxFloor:50,
@@ -69,19 +79,10 @@ const FurnitureTypes = {
   FULL: 'ריהוט מלא',
 }
 
-/*const propertyTypes = {
-  Apartment:'דירה',
-  Unit:'יחידת דיור',
-  Garden:'דירת גן',
-  Dou:'דו משפחתי',
-  Penthouse:'דירה',
-  Villa:'דירה',
-}*/
-
 export const getValueByDevice = (desktop,tablet,mobile) => {
-  if (window.innerWidth < 560)
+  if (window.innerWidth < 600)
       return mobile
-  if (window.innerWidth < 1200)
+  if (window.innerWidth < 1280)
       return tablet
   return desktop
 }

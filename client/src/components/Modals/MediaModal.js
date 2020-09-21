@@ -1,8 +1,8 @@
 import ImageGallery from "react-image-gallery";
 import React from "react";
 import {Modal} from "@material-ui/core";
-import {MediaModalTypes, useGlobalState} from "../../globalState";
-import {devices} from "../Utilities";
+import {useGlobalState} from "../../globalState";
+import {devices, MediaModalTypes} from "../Utilities";
 import "../image-gallery.css";
 
 
@@ -15,17 +15,17 @@ export default () => {
   const {opened,images,videos} = mediaModal
 
   const handleClick = () => {
-    if (mediaModal.type == MediaModalTypes.Images)
+    if (mediaModal.type === MediaModalTypes.Images)
       setMediaModalType(MediaModalTypes.Videos)
     else
       setMediaModalType(MediaModalTypes.Images)
   }
 
-  let isVideos = mediaModal.type == MediaModalTypes.Videos
+  let isVideos = mediaModal.type === MediaModalTypes.Videos
 
   const _renderCustomControls = () => {
     if (mediaModal.videos.length)
-      return <a style={{backgroundColor:'white',position:'absolute',left:0,padding:20,zIndex:5}} onClick={handleClick}>{isVideos? 'תמונות':'וידאו'}</a>
+      return <button style={{backgroundColor:'white',position:'absolute',left:0,padding:20,zIndex:5}} onClick={handleClick}>{isVideos? 'תמונות':'וידאו'}</button>
   }
 
   let items = []

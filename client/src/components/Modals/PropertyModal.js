@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import { Modal,Grid } from '@material-ui/core'
 import { useGlobalState } from '../../globalState'
 
@@ -27,39 +27,12 @@ export const PropertyModal = () => {
     tax,
     requirements,
     video__url,
-    coordinates,
-    alternatives,
-    pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
-    pic_view__url
+    pictures
   } = property
-
-  let pictures = [pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
-    pic_view__url].filter(img => !!img)
-
-  let propertyImages = pictures.map(image => ({
-    original:`https://tlt.kala-crm.co.il/${image}`,
-    thumbnail:`https://tlt.kala-crm.co.il/${image}`,
-  }))
 
   if (video__url){
     console.log('detected video url')
-    propertyImages.unshift({
+    pictures.unshift({
       original:'',
       renderItem:() => (<div>
         <video ref={videoRef} onClick={(e) => {if (e.target.paused)e.target.play();else e.target.pause()}} muted className={"image-gallery-image"}>
@@ -73,7 +46,7 @@ export const PropertyModal = () => {
   console.log(property)
 
   return (
-    <Modal open={!!property} style={{direction:'rtl',overflow:device == devices.Mobile?'auto':'none',maxHeight:device == devices.Mobile?'':'calc(100vh)'}} onBackdropClick={() => setProperty(null)}>
+    <Modal open={!!property} style={{direction:'rtl',overflow:device === devices.Mobile?'auto':'none',maxHeight:device === devices.Mobile?'':'calc(100vh)'}} onBackdropClick={() => setProperty(null)}>
       <Grid container style={{
         right: '50%',
         maxWidth:'900px',
@@ -124,14 +97,14 @@ export const PropertyModal = () => {
                 {`${metres} מ"ר`}
               </p>
             </Grid>
-            <Grid item xs={12} style={{paddingBottom:15}}
+            <Grid item xs={12}
               style={{display:'flex',justifyContent:'space-around'}}>
               <p>ועד בית</p>
               <p>{`${committee? committee.toLocaleString(): 0} ₪`}</p>
               <p>ארנונה דו חודשית</p>
               <p>{`${tax?.toLocaleString()} ₪`}</p>
             </Grid>
-            <Grid item xs={12} style={{paddingBottom:15}}
+            <Grid item xs={12}
               style={{display:'flex',justifyContent:'space-around'}}>
             <p>שכר דירה</p>
               <p>{`${price? price.toLocaleString() : ''} ₪`}</p>
@@ -141,8 +114,14 @@ export const PropertyModal = () => {
             <PropertyDetailGrid {...property}/>
           </div>
           <div style={{width:320}}>
-            <ImageGallery onSlide={(index) => {if (index && videoRef.current){videoRef.current.pause();videoRef.current.currentTime = 0}} }
-            showThumbnails={false} showIndex showBullets isRTL items={propertyImages} />
+            <ImageGallery onSlide={index => {
+              if (index && videoRef.current){
+                let {current:{pause},current} = videoRef
+                current && pause()
+                current.currentTime = 0
+              }
+            }}
+            showThumbnails={false} showIndex showBullets isRTL items={pictures} />
           </div>
         </Grid>
         <div style={{maxWidth:320,margin:'auto'}}>

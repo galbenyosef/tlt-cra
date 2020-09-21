@@ -1,6 +1,6 @@
-import React, {Suspense} from "react";
-import {devices} from "./Utilities";
-import {ListDisplays, useGlobalState} from "../globalState";
+import React from "react";
+import {devices, ListDisplays} from "./Utilities";
+import { useGlobalState} from "../globalState";
 import {PropertyModal} from "./Modals/PropertyModal";
 import {LeadModal} from "./Modals/LeadModal";
 import {FiltersBarContent} from "./FiltersBarContent";
@@ -28,9 +28,9 @@ export default () => {
         <FiltersModal/>
       }
       {
-        (device >= devices.Tablet && listDisplay == ListDisplays.List) ?
+        (device >= devices.Tablet && listDisplay === ListDisplays.List) ?
           null:
-          (device > devices.Mobile && listDisplay == ListDisplays.Grid) ?
+          (device > devices.Mobile && listDisplay === ListDisplays.Grid) ?
             <PropertyModal/>
             :
             <NewPropertyModal/>

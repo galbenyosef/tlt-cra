@@ -1,13 +1,12 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useRef} from 'react'
 import {Modal} from "@material-ui/core";
-import {MediaModalTypes, setGlobalState, useGlobalState} from "../../globalState";
+import {setGlobalState, useGlobalState} from "../../globalState";
 import {
   createPropertyDescription,
   fetchCoordinates,
   getAgentById,
-  onExploreClicked,
   setLeadModal,
-  setMapModal, setMediaModal,
+  setMapModal,
 } from "../../dataHandler";
 import {PropertyDetailGrid} from "../PropertyDetailGrid";
 import {
@@ -24,6 +23,8 @@ import WhatsappIcon from "react-share/es/WhatsappIcon";
 import EmailIcon from "react-share/es/EmailIcon";
 import FacebookMessengerShareButton from "react-share/es/FacebookMessengerShareButton";
 import FacebookMessengerIcon from "react-share/es/FacebookMessengerIcon";
+import {MediaModalTypes} from "../Utilities";
+import '../noScrollBar.css'
 
 export default () => {
 
@@ -39,19 +40,8 @@ export default () => {
 
   let {
     id,
-    thumb_file,
     agent_id,
-    pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
     description,
-    pic_view__url,
     video__url,
     propertytype,
     city_id,
@@ -66,40 +56,20 @@ export default () => {
     furniture_items,
     tax,
     committee,
-    custom_id
+    custom_id,
+    pictures,
+    modified
   } = property
-
 
   const agent = getAgentById(agents,agent_id)
   const agentName = agent && [agent.first_name,agent.last_name].join(' ')
   const propertyName = [city_id,neighborhood_name,street_name].join(', ')
   const agentPhone = agent && agent.phone
 
-  let pictures =[]
-
   let getPropertyUrl = () => `https://tlt-israel.herkouapp.com/${id}`
 
-  if (thumb_file)
-    pictures.push(`/common/assets/748/724/${thumb_file.sm}`)
-
-  pictures = pictures.concat([pic_living_room__url,
-    pic_living_room2__url,
-    pic_balcony__url,
-    pic_kitchen__url,
-    pic_kitchen2__url,
-    pic_main_bedroom__url,
-    pic_bedroom__url,
-    pic_bathroom__url,
-    pic_bathroom2__url,
-    pic_view__url]).filter(img => !!img)
-
-  let propertyImages = pictures.map(image => ({
-    original:`https://tlt.kala-crm.co.il/${image}`,
-    thumbnail:`https://tlt.kala-crm.co.il/${image}`,
-  }))
-
   let media = {
-    images:propertyImages,
+    images:pictures,
     videos:[]
   }
 
@@ -115,7 +85,7 @@ export default () => {
   }
 
   const onExploreClicked = async () => {
-    let myPromise = () => new Promise((resolve,reject) => {
+    const myPromise = () => new Promise((resolve) => {
       setMediaModal({
         type:MediaModalTypes.Videos,
         opened:true,
@@ -125,7 +95,8 @@ export default () => {
     })
 
     await myPromise()
-    videoRef.current && videoRef.current.play()
+    const {current:{play},current} = videoRef
+    current && play()
 
   }
 
@@ -133,7 +104,7 @@ export default () => {
 
   let innerH = window.innerHeight
   entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
-  console.log(property)
+  console.log('rendered property modal: '+ property)
   return (
     <Modal
       hideBackdrop
@@ -156,16 +127,21 @@ export default () => {
           borderRadius: 100,
           height: 32,
           width: 32}}>X</div>
-        <div style={{maxHeight:`calc(${innerH}px - ${top}px - 60px)`,overflow:'auto'}}>
+        <div className={'noScrollBar'} style={{maxHeight:`calc(${innerH}px - ${top}px - 60px)`,overflow:'auto'}}>
+          <span>{`נכס מספר ${custom_id}`}</span>
           <div>
             <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center'}}>
               <span>{`${propertytype} להשכרה ב${city_id}`}</span>
-              <span>עודכן היום</span>
+              <span>
+                {
+                  `עודכן לאחרונה ב- ${moment(new Date(modified * 1000)).format('DD/MM')}`
+                }
+              </span>
             </div>
             <div onClick={() => setMediaModal({...media,opened:true,type:MediaModalTypes.Images})} style={{
               width:'100%',
               height:'calc(90vw * 3 / 4)',
-              backgroundImage:`url(${propertyImages[0] ? propertyImages[0].original : ''})`,
+              backgroundImage:`url(${pictures[0].original})`,
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               backgroundSize:'90%',

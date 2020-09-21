@@ -9,16 +9,13 @@ import {IoIosConstruct, IoIosResize} from "react-icons/io";
 import {constants, devices} from "../Utilities";
 import {changeFilters} from "../../dataHandler";
 import {FiltersBarContent} from "../FiltersBarContent";
+import '../noScrollBar.css'
 
 const {
   MinPrice,
   MaxPrice,
   MinRooms,
   MaxRooms,
-  MinRenovation,
-  MaxRenovation,
-  MinFurniture,
-  MaxFurniture,
   MinMetres,
   MaxMetres,
   MinFloor,
@@ -50,7 +47,7 @@ export default () => {
     position:'relative'
   }
 
-  const isSelectedBackground = name => name == currentFilterName ? {backgroundColor:colors.darkblue} : null
+  const isSelectedBackground = name => name === currentFilterName ? {backgroundColor:colors.darkblue} : null
 
   const {
     //default values
@@ -156,8 +153,8 @@ export default () => {
           </div>
 
         </div>
-        <div style={{borderTop:'2px dotted lightgrey',overflow:'scroll'}}>
-          <FiltersBarContent mobile={device != devices.Desktop}/>
+        <div className={'noScrollBar'} style={{borderTop:'2px dotted lightgrey',overflow:'scroll'}}>
+          <FiltersBarContent mobile={device !== devices.Desktop}/>
         </div>
       </div>
     </Modal>

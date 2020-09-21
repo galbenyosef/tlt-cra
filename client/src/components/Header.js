@@ -7,8 +7,6 @@ import {
   FaGooglePlusG,
   FaHeart,
   FaInstagram,
-  FaPhoneAlt,
-  FaSearch,
   FaTwitter,
   FaWhatsapp,
   FaFilter
@@ -16,21 +14,12 @@ import {
 import smallLogo from "../assets/YellowLogoSideTextTrans_TLT.png";
 import {IoLogoWhatsapp} from "react-icons/io";
 import {GiHamburgerMenu} from "react-icons/gi";
-import {getValueByDevice} from "./Utilities";
-import React, {useRef, useState} from "react";
-import {useGlobalState} from "../globalState";
-import {changeFilters, setProperties} from "../dataHandler";
-import WindowedSelect, { components } from "react-windowed-select";
-import {newSearchStyle} from "../styles";
+import React from "react";
+import {setGlobalState, useGlobalState} from "../globalState";
+import {setProperties} from "../dataHandler";
 import DropDownTree from "./DropDownTree";
+import {Link} from "react-router-dom";
 
-const customFilterOption = (option, rawInput) => {
-  const words = rawInput.split(' ');
-  return words.reduce(
-    (acc, cur) => acc && option.label.toLowerCase().includes(cur.toLowerCase()),
-    true,
-  );
-};
 
 export default () => {
 
@@ -38,13 +27,8 @@ export default () => {
   const [filters,setFilters] = useGlobalState('filters')
   const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
   const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
-  const {modalOpened:filtersModalOpened} = filters
-  const [addressesData] = useGlobalState('addresses');
-  const selectRef = useRef(0)
-  const [inputValue,setInputValue] = useState('')
-  const {address} = filters
-  const [propertiesNumbers] = useGlobalState('propertiesNumbers')
   const [properties] = useGlobalState('properties')
+  const openSideMenu = () => setGlobalState('sideMenuOpened',true)
 
   let filteredCount = 0
 
@@ -58,16 +42,16 @@ export default () => {
       <Hidden only={'xs'}>
         <Grid item sm={7}>
           <div style={{display:'flex',justifyContent:'center'}}>
-            <div style={{display:'flex',padding:10}}>
-              <AiFillPhone/>
+            <div style={{display:'flex',padding:10,alignItems:'center'}}>
+              <a  rel="noopener noreferrer" target="_blank" href={'tel:0543338879'}><AiFillPhone/></a>
               <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-333-8879</p>
             </div>
-            <div style={{display:'flex',padding:10}}>
-              <BsEnvelope/>
+            <div style={{display:'flex',padding:10,alignItems:'center'}}>
+              <a rel="noopener noreferrer" target="_blank" href={'mailto:tlthaifa@gmail.com'}><BsEnvelope/></a>
               <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>tlthaifa@gmail.com</p>
             </div>
-            <div style={{display:'flex',padding:10}}>
-              <FaWhatsapp/>
+            <div style={{display:'flex',padding:10,alignItems:'center'}}>
+              <a  rel="noopener noreferrer" target="_blank" href={'https://wa.me/0543338879'}><FaWhatsapp/></a>
               <p style={{fontFamily:'Assistant',whiteSpace:'nowrap',fontSize:12,paddingRight:10}}>054-333-8879</p>
             </div>
           </div>
@@ -77,7 +61,7 @@ export default () => {
 
         <Grid item xs={12} sm={5}>
           <div style={{display:'flex',justifyContent:'center'}}>
-            <FaFacebookF style={{padding:10}}/>
+            <a rel="noopener noreferrer"   target="_blank" href={'https://www.facebook.com/groups/TLTisrael/'}><FaFacebookF style={{padding:10}}/></a>
             <FaTwitter style={{padding:10}}/>
             <FaGooglePlusG style={{padding:10}}/>
             <FaInstagram style={{padding:10}}/>
@@ -108,29 +92,24 @@ export default () => {
             backgroundSize:'100%'
           }}/>
         </div>
-        <Hidden smDown>
-          <div style={{display:'flex',flexWrap:'wrap'}}>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>ראשי</p>
+        <Hidden xsDown>
+          <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center'}}>
+            <Link to={'/'} style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>ראשי</Link>
             <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
-            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>אודות</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>לקוחות ממליצים</p>
+            <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>בעלי המשרד</p>
             <p style={{whiteSpace:'nowrap',padding:10,fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>צור קשר</p>
           </div>
           <div style={{display:'flex',alignItems:'center'}}>
-            <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10}}>
-              <p style={{textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>התקשר</p>
-              <FaPhoneAlt style={{paddingRight:10}}/>
-            </div>
             <div style={{display:'flex',backgroundColor:colors.darkblue,padding:10,marginRight:10}}>
-              <p style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח לווטסאפ</p>
+              <a rel="noopener noreferrer" target="_blank" href={'https://wa.me/0543338879'} style={{whiteSpace:'nowrap',textAlign:'center',fontSize:14,fontWeight:'bold',fontFamily:'Assistant'}}>שלח הודעה בוואטספ</a>
               <IoLogoWhatsapp style={{color:'greenlime',paddingRight:10}}/>
             </div>
           </div>
         </Hidden>
-        <Hidden mdUp>
+        <Hidden smUp>
           <div>
-            <GiHamburgerMenu onClick={()=>console.log('menu clicked')} size={40}/>
+            <GiHamburgerMenu  onClick={()=>{console.log('menu clicked');openSideMenu()}} size={40}/>
           </div>
         </Hidden>
       </div>
@@ -138,40 +117,6 @@ export default () => {
         city &&
         <Hidden smUp>
           <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
-            {/*<WindowedSelect
-              filterOption={customFilterOption}
-              styles={newSearchStyle}
-              ref={selectRef}
-              isClearable={true}
-              isRtl={true}
-              closeMenuOnSelect={false}
-              isMulti={false}
-              menuIsOpen={!!inputValue}
-              openMenuOnFocus={false}
-              openMenuOnClick={true}
-              getOptionValue={e => e}
-              getOptionLabel={e => e}
-              inputValue={inputValue}
-              components={{ SingleValue: () => <div>{`מוצגים ${filteredCount} פריטים`}</div>}}
-              onInputChange={e => setInputValue(e)}
-              options={Number.isInteger(parseInt(inputValue)) ? propertiesNumbers : addressesData}
-              placeholder="הקש כתובת/ מספר נכס"
-              value={filters.propertyNumber.length ? [`נכס מספר #${filters.propertyNumber[0]}`] : [filters.address[0]]}
-              onChange={e => {
-                console.log(e)
-                if (!e)
-                  changeFilters({address:[],addresses:[],addressesActive:0,propertyNumber:[]})
-                else if(!Number.isInteger(parseInt(e))){
-                  if (address.includes(e))
-                    changeFilters({address:address.filter(addr => addr !== e),addresses:[],addressesActive:0,propertyNumber:[]})
-                  else
-                    changeFilters({address:address.concat(e),addresses:[],addressesActive:0,propertyNumber:[]})
-                }
-                else{
-                  changeFilters({propertyNumber:e ? [e] : [],addresses:[],addressesActive:0,address:''})
-                }
-              }}
-            />*/}
             <DropDownTree/>
             <div style={{display:'flex',alignItems:'center',width:150,justifyContent:'space-evenly'}}>
               {
@@ -196,10 +141,7 @@ export default () => {
                     let favourites = JSON.parse(localStorage.getItem('favourites')) || []
                     let newProperties = [...properties]
                     for (let property of newProperties){
-                      if (favourites.includes(property.id))
-                        property.isFiltered = true
-                      else
-                        property.isFiltered = false
+                      property.isFiltered = favourites.includes(property.id);
                     }
                     setIsFavouriteView(true)
                     return newProperties})

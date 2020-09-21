@@ -63,16 +63,16 @@
 .react-dropdown-tree-select .dropdown .dropdown-trigger{max-height:200px;}
 /*problem zone end*/
 
-.react-dropdown-tree-select .dropdown .dropdown-trigger.arrow{cursor:pointer;outline:none;white-space: pre}
+.react-dropdown-tree-select .dropdown .dropdown-trigger.arrow{cursor:pointer;outline:none;white-space: pre;display:block}
 
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.bottom:after{
   content:"\25BC";vertical-align:middle;color:#3c3c3c;
-  font-size: 17px;
+  font-size: 17px;padding:10px
 
 }
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.top:after{
   content:"\25B2";vertical-align:middle;color:#3c3c3c;
-  font-size: 17px;
+  font-size: 17px;padding:10px
 }
 
 
@@ -132,7 +132,7 @@
 .mdl-demo .toggle {
   font: normal normal normal 18px/1 "Material Icons";
   color: #555;
-  white-space: pre;
+  white-space: prepre;
   margin-right: 4px;
 }
 
