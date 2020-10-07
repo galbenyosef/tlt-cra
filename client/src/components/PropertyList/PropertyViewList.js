@@ -22,7 +22,7 @@ import WhatsappIcon from "react-share/es/WhatsappIcon";
 import EmailIcon from "react-share/es/EmailIcon";
 import {FaHeart} from "react-icons/fa";
 import {FiHeart} from "react-icons/fi";
-
+import {Link} from 'react-router-dom'
 /*
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 */
@@ -47,8 +47,8 @@ export default React.memo(({property,property:{
   tax,
   furniture_items,
   committee,
+  isCollapsed,
   totalfloors,
-  isCollapsedOut,
   requirements,
   agent_id,
   pictures
@@ -56,7 +56,6 @@ export default React.memo(({property,property:{
 }}) => {
 
   const [device] = useGlobalState('device')
-  const [isCollapsed,setIsCollapsed] = useState(isCollapsedOut || false)
   const [isFavourite,setIsFavourite] = useState(isFavouriteOut || false)
   const [agentPhone,setAgentPhone] = useState('')
   const [agents] = useGlobalState('agents')
@@ -113,6 +112,7 @@ export default React.memo(({property,property:{
   console.log('card render')
 
   return (
+
     <Grid container
           onMouseEnter={() => device === devices.Desktop && setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -123,108 +123,111 @@ export default React.memo(({property,property:{
             borderBottom: '2px solid lightgrey',
             justifyContent: 'space-between'
           }}
-          onClick={() => {console.log(property);(device < devices.Tablet) ? onPropertyClicked(id) : setIsCollapsed(isCollapsed => !isCollapsed)}}
+          onClick={() => onPropertyClicked(property)}
     >
-      <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setMediaModal({
-              opened: true,
-              type: MediaModalTypes.Images,
-              ...media
-            })
-          }
-          }
-          style={{
-            borderRadius: 10,
+      <Link style={{width:'100%',alignItems:'center'}} to={`/${isCollapsed ? city_id:id}`}>
+        <Grid item xs={8} sm={5} style={{display: 'flex', alignItems: 'center'}}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setMediaModal({
+                opened: true,
+                type: MediaModalTypes.Images,
+                ...media
+              })
+            }
+            }
+            style={{
+              borderRadius: 10,
+              display: 'flex',
+              height: 66,
+              minWidth: 110,
+              backgroundImage: `url(${media.images[0]?.original})`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundColor: 'white',
+              position:'relative',
+              cursor:'pointer',
+            }}>
+            {
+              isFavourite ?
+                <FaHeart onClick={(event) => {onHeartClicked();event.stopPropagation();event.preventDefault()}} size={26} color={'red'} style={{zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+                :
+                <FiHeart onClick={(event) => {onHeartClicked();event.stopPropagation();event.preventDefault()}} size={26} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
+            }
+            {
+              isHovered ?
+                <div style={{
+                  width: 45,
+                  backgroundColor: 'white',
+                  borderRadius: 20,
+                  margin:'auto',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 35
+                }}>
+                  {`+${pictures.length}`}
+                </div>
+                :
+                null
+            }
+          </div>
+          <div style={{
             display: 'flex',
-            height: 66,
-            minWidth: 110,
-            backgroundImage: `url(${media.images[0]?.original})`,
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundColor: 'white',
-            position:'relative',
-            cursor:'pointer',
+            flexDirection: 'column',
+            paddingRight: getValueByDevice(20, 10, 5),
+            width: '100%'
           }}>
-          {
-            isFavourite ?
-              <FaHeart onClick={(event) => {onHeartClicked();event.stopPropagation()}} size={26} color={'red'} style={{zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
-              :
-              <FiHeart onClick={(event) => {onHeartClicked();event.stopPropagation()}} size={26} color={'white'} style={{backgroundColor:'rgba(0,0,0,0.05)',zIndex:1,position:'absolute',top:0,right:5,cursor:'pointer'}}/>
-          }
-          {
-            isHovered ?
-              <div style={{
-                width: 45,
-                backgroundColor: 'white',
-                borderRadius: 20,
-                margin:'auto',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 35
-              }}>
-                {`+${pictures.length}`}
-              </div>
-              :
-              null
-          }
-        </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          paddingRight: getValueByDevice(20, 10, 5),
-          width: '100%'
-        }}>
-          <Hidden smUp>
+            <Hidden smUp>
             <span style={{fontSize: 16, textAlign: 'left', marginRight: 'auto', backgroundColor: 'blanchedalmond'}}>
               {`${price.toLocaleString()} ₪`}
             </span>
-          </Hidden>
-          <span style={{fontSize: 16}}>{street_name}</span>
-          <span style={{fontSize: 14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
-        </div>
-      </Grid>
-      <Grid item xs={4} sm={4} style={{
-        textAlign: 'center',
-        justifyContent: "space-around",
-        alignItems: 'center',
-        display: 'flex',
-        height: '100%',
-        borderLeft: '1px solid rgba(0,0,0,.1)',
-        borderRight: '1px solid rgba(0,0,0,.1)'
-      }}>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <span style={{fontSize: 16}}>{rooms}</span>
-          <span style={{fontSize: 14}}>חדרים</span>
-        </div>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <span style={{fontSize: 16}}>{floor ? floor : 'קרקע'}</span>
-          <span style={{fontSize: 14}}>קומה</span>
-        </div>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <span style={{fontSize: 16}}>{metres}</span>
-          <span style={{fontSize: 14}}>מ"ר</span>
-        </div>
-      </Grid>
-      <Hidden only={'xs'}>
-        <Grid item sm={3} style={{display: 'flex', flexDirection: 'column', paddingLeft: 20}}>
+            </Hidden>
+            <span style={{fontSize: 16}}>{street_name}</span>
+            <span style={{fontSize: 14}}>{`${propertytype}, ${neighborhood_name}, ${city_id}`}</span>
+          </div>
+        </Grid>
+        <Grid item xs={4} sm={4} style={{
+          textAlign: 'center',
+          justifyContent: "space-around",
+          alignItems: 'center',
+          display: 'flex',
+          height: '100%',
+          borderLeft: '1px solid rgba(0,0,0,.1)',
+          borderRight: '1px solid rgba(0,0,0,.1)'
+        }}>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span style={{fontSize: 16}}>{rooms}</span>
+            <span style={{fontSize: 14}}>חדרים</span>
+          </div>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span style={{fontSize: 16}}>{floor ? floor : 'קרקע'}</span>
+            <span style={{fontSize: 14}}>קומה</span>
+          </div>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span style={{fontSize: 16}}>{metres}</span>
+            <span style={{fontSize: 14}}>מ"ר</span>
+          </div>
+        </Grid>
+        <Hidden only={'xs'}>
+          <Grid item sm={3} style={{display: 'flex', flexDirection: 'column', paddingLeft: 20}}>
           <span style={{textAlign: 'left'}}>
             {`${price.toLocaleString()} ₪`}
           </span>
-          <span style={{fontSize: 10, textAlign: 'left'}}>
+            <span style={{fontSize: 10, textAlign: 'left'}}>
             {isNew ? 'חדש' : ''}
           </span>
-        </Grid>
-      </Hidden>
+          </Grid>
+        </Hidden>
+      </Link>
+
       <Hidden only={'xs'}>
         {
           isCollapsed ?
-            <Grid container onClick={e => e.stopPropagation()} style={{display: 'flex', backgroundColor: 'white'}}>
+            <Grid container onClick={e => e.stopPropagation()} style={{display: 'flex', backgroundColor: 'white',cursor:'default'}}>
               <Grid item xs={8} sm={5} style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -373,6 +376,7 @@ export default React.memo(({property,property:{
         }
       </Hidden>
     </Grid>
+
   )
 
 

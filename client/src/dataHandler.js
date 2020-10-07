@@ -4,9 +4,7 @@ import {constants, devices, renovationTypes, switchFilters} from "./components/U
 
 export const setProperties = (val) => setGlobalState('properties',val)
 export const setAddresses = (val) => setGlobalState('addresses',val)
-export const setPropertiesNumbers = (val) => setGlobalState('propertiesNumbers',val)
 export const setIsLoading = (val) => setGlobalState('loading',val)
-export const setProperty = val => setGlobalState('property',val)
 export const setCity = val => setGlobalState('city',val)
 export const setFilters = val => setGlobalState('filters',val)
 export const setAgents = val => setGlobalState('agents',val)
@@ -24,7 +22,7 @@ export const setAddressMap = (val) => setGlobalState('addressMap',val)
 export const setHeaderHeight = val => setGlobalState('headerHeight',val)
 export const setDevice = (val) => {setGlobalState('device',val)}
 export const setFeedback = (val) => {setGlobalState('feedback',val)}
-
+export const setPropertyModal = val => setGlobalState('property',val)
 
 export const toggleFavourite = id => {
 
@@ -137,7 +135,7 @@ export const filterProperties = (properties,filters) => {
     addresses,
     addressesActive,
     address,
-    propertyNumber,
+    propertyIds,
     furnitureTypes,
     metresFrom,
     metresTo,
@@ -165,8 +163,8 @@ export const filterProperties = (properties,filters) => {
       return false
     })
   }
-  else if (propertyNumber.length) {
-    primeFilters = primeFilters.filter(({custom_id}) => propertyNumber.some(num => custom_id === num))
+  else if (propertyIds.length) {
+    primeFilters = primeFilters.filter(({custom_id}) => propertyIds.some(num => custom_id === num))
   }
 
   let filtered = primeFilters
@@ -206,17 +204,22 @@ export const filterProperties = (properties,filters) => {
   return retVal.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 }
 
-export const validateId = id => {console.log(id);return (id && Number.isInteger(parseInt(id)) && id.length === 5)}
+export const validateId = id => (id && Number.isInteger(parseInt(id)) && id.length === 5)
 
 
-export const onPropertyClicked = async (id) => {
+export const onPropertyClicked = (property) => {
 
-  let property = await fetchProperty(id)
+  const {custom_id,isCollapsed} = property
 
+  console.log(property)
+  setProperties(properties => properties.map(prop => prop.custom_id === custom_id ? ({...prop, isCollapsed: !prop.isCollapsed}) : prop))
+  if (!isCollapsed)
+    setPropertyModal({...property,isCollapsed:true})
+  else
+    setPropertyModal(null)
+/*
   let alternatives = getAlternatives(property)
-  setProperty({...property,alternatives})
-
-  return property
+*/
 }
 
 export const resize = () => {
@@ -258,29 +261,25 @@ export const fetchProperty = async (id) => {
 export const onCityClick = async city => {
   setIsLoading(true)
   setCity(city)
-  await fetchProperties(city)
+  let properties = await fetchProperties(city)
+  setProperties(properties)
   setIsLoading(false)
 }
 
-export const showSingleProperty = async (propertyId) => {
+export const initProperty = async (propertyId,currentCity) => {
 
   setIsLoading(true)
-  let property = await onPropertyClicked(propertyId)
 
-  let {city_id:city,custom_id} = property
+  let property = await fetchProperty(propertyId)
+  let {city_id: city, custom_id} = property
+  let properties = await fetchProperties(city)
+
+  console.log('setting new city from current city: ' + currentCity, ' propertyCity: ' + city)
   setCity(city)
-  await fetchProperties(city)
-
-  let _filters
-
-  setFilters(filters => {_filters=filters;return ({...filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})})
-  setProperties(
-    properties => {
-      let selectedProperty = filterProperties(properties,{..._filters,propertyNumber:[custom_id],addresses:[],addressesActive:0,address:''})
-      return selectedProperty.map(prop => prop.custom_id === custom_id ? ({...prop,isCollapsedOut:true}) : prop)
-    }
-  )
+  setProperties(properties.map(prop => prop.custom_id === custom_id ? ({...prop,isCollapsed:!prop.isCollapsed}) : prop).sort((a,b) => { return a.custom_id === custom_id ? -1 : b.custom_id === custom_id ? 1 : 0; }))
+  setPropertyModal({...property,isCollapsed:true})
   setIsLoading(false)
+
 }
 
 export const fetchProperties = async (city) => {
@@ -290,7 +289,6 @@ export const fetchProperties = async (city) => {
   const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
   let addressesMap = {}
-  let propertiesNumbers = []
 
   let favouritesString = localStorage.getItem('favourites')
   let favourites = (favouritesString && JSON.parse(favouritesString)) || []
@@ -343,7 +341,6 @@ export const fetchProperties = async (city) => {
 
 
     if (custom_id) {
-      propertiesNumbers.push(property.custom_id + '')
       newAddressMap[area][neighborhood_name][street_name].push(custom_id)
       dropdownData.push({
         id:custom_id,
@@ -373,9 +370,9 @@ export const fetchProperties = async (city) => {
 
   setAgents(agents)
   setAddresses(addresses)
-  setProperties(properties)
-  setPropertiesNumbers(propertiesNumbers)
+  console.log('city data loaded')
 
+  return properties
 
 }
 

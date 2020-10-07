@@ -22,6 +22,8 @@ export default () => {
 
     if (!timer)
         return null
+    console.log('render feedback')
+
     if (timer) {
 
         return (

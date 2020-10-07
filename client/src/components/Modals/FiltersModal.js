@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Modal} from "@material-ui/core";
 import {setGlobalState, useGlobalState} from "../../globalState";
 import {colors} from "../../colors";
@@ -49,6 +49,8 @@ export default () => {
 
   const isSelectedBackground = name => name === currentFilterName ? {backgroundColor:colors.darkblue} : null
 
+  useEffect(() => {console.log('render Filters modal')})
+
   const {
     //default values
     budgetActive,
@@ -59,6 +61,7 @@ export default () => {
     metresActive,
     attributesActive
   } = filters
+
 
   return (
     <Modal

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Main from './components/Main/Main';
 import * as serviceWorker from './serviceWorker';
-import {validateId} from "./dataHandler";
+import {initProperty, validateId} from "./dataHandler";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,6 +18,10 @@ import CityView from "./components/CityView";
 import ScrollResizeHandler from "./components/ScrollResizeHandler";
 import ChatBot from "./components/ChatBot";
 import SideMenu from "./components/SideMenu";
+import whyDidYouRender from '@welldone-software/why-did-you-render'
+whyDidYouRender(React, {
+  trackAllPureComponents: true,
+});
 
 const NotFound = () => {
   console.log(useLocation())
@@ -40,20 +44,18 @@ const Root = () => {
         <Modals/>
         <Switch>
           <Route path="/חיפה">
-            <CityView/>
+            <CityView city={"חיפה"}/>
           </Route>
           <Route path="/קריות">
-            <CityView/>
+            <CityView city={"קריות"}/>
           </Route>
           <Route path="/טירת הכרמל">
-            <CityView/>
+            <CityView city={"טירת הכרמל"}/>
           </Route>
           <Route path="/נשר">
-            <CityView/>
+            <CityView city={"נשר"}/>
           </Route>
-          <Route path="/:id">
-            <CityView/>
-          </Route>
+          <Route path="/:id" render={({match:{params:{id}}}) => <CityView id={id}/>}/>
           <Route path="/">
             <Main/>
           </Route>

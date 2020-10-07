@@ -16,6 +16,7 @@ export default () => {
   const [device] = useGlobalState('device')
   const [listDisplay] = useGlobalState('listDisplay')
 
+  console.log('modals rendered')
   return (
     <>
       <ActionFeedbackModal/>

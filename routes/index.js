@@ -339,6 +339,7 @@ router.get('/properties/', async (req,res) => {
       created,
       title,
       thumb_file,
+      modified,
       attributes:{
         video__url,
         neighborhood_name,
@@ -439,6 +440,7 @@ router.get('/properties/', async (req,res) => {
       entrance,
       committee,
       totalfloors,
+      modified,
       pictures:[
         thumb_file ? `/common/assets/748/724/${thumb_file.sm}` : null,
         pic_living_room__url,

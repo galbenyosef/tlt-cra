@@ -5,6 +5,7 @@ import Only_Text from '../../assets/old/Only_Text_Trans.png'
 import {aboutUsText} from "./aboutUsText";
 import {colors} from "../../colors";
 import {Link} from "react-router-dom";
+import {onCityClick} from "../../dataHandler";
 
 export const CitySelection = () => {
 
@@ -13,16 +14,16 @@ export const CitySelection = () => {
       <p style={{padding:'0px 10px',width:'100%'}}>
         בחר עיר מבוקשת:
       </p>
-      <Link to={'/חיפה'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
+      <Link to={'/חיפה'} onClick={() => onCityClick('חיפה')} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         חיפה
       </Link>
-      <Link to={'/קריות'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
+      <Link to={'/קריות'} onClick={() => onCityClick('קריות')} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         קריות
       </Link>
-      <Link to={'/טירת הכרמל'}style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
+      <Link to={'/טירת הכרמל'} onClick={() => onCityClick('טירת הכרמל')} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         טירת הכרמל
       </Link>
-      <Link to={'/נשר'} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
+      <Link to={'/נשר'} onClick={() => onCityClick('נשר')} style={{padding:'0px 8px',cursor:'pointer',backgroundColor:colors.darkblue,margin:6}}>
         נשר
       </Link>
     </div>

@@ -32,7 +32,7 @@ const initialState = {
         addresses:[],
         addressesActive:0,
         address:[],
-        propertyNumber:[],
+        propertyIds:[],
         //furniture default values
         furnitureTypes:[],
         furnitureActive:0,
@@ -70,12 +70,10 @@ const initialState = {
         currentFilterName:'',
         currentFilterElement:'',
     },
-    isFavouritesView: false,
-    property: null,
+
     //data
     agents:[],
     properties:[],
-    propertiesNumbers:[],
     addresses: [],
     city:null,
     page:1,
@@ -86,6 +84,7 @@ const initialState = {
     addressMap:{},
 
     //elementary
+    isFavouritesView: false,
     listRef: null,
     loading: false,
     device:null,
@@ -96,6 +95,7 @@ const initialState = {
     sideMenuOpened:false,
 
     //modals
+    property: null,
     media:{
         images:[],
         videos:[],

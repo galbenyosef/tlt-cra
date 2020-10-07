@@ -74,14 +74,14 @@ const PropertyList = () => {
             <div style={{maxWidth:800,fontFamily:'Rubik,sans-serif',border:'1px solid rgba(0,0,0,.1)',backgroundColor:colors.darkblue,width:'100%'}}>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewList index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewList key={prop.id} property={prop}/>
                 )
               }
             </div>:
             <Grid spacing={4} ref={listRef}  style={{width:'100%',overflow:'auto',justifyContent:'center'}} container>
               {
                 properties.map((prop,idx) =>
-                  <PropertyViewGrid index={idx} key={prop.id} property={prop}/>
+                  <PropertyViewGrid key={prop.id} property={prop}/>
                 )
               }
             </Grid>

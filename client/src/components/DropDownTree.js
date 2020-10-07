@@ -87,7 +87,7 @@ let TheTree = React.memo(() => {
       data={addressTree}
       searchPredicate={searchPredicate}
       onChange={(a,b) => {
-        changeFilters({propertyNumber:getLeafNodes(b),addresses:[],addressesActive:0,address:''})
+        changeFilters({propertyIds:getLeafNodes(b),addresses:[],addressesActive:0,address:''})
       }}
       texts={{
         placeholder:'חיפוש חופשי',

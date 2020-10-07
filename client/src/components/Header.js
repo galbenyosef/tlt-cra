@@ -23,18 +23,12 @@ import {Link} from "react-router-dom";
 
 export default () => {
 
-  const [city] = useGlobalState('city')
   const [filters,setFilters] = useGlobalState('filters')
   const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
   const setFiltersModal = (val) => setFilters({...filters,modalOpened:val})
-  const [properties] = useGlobalState('properties')
   const openSideMenu = () => setGlobalState('sideMenuOpened',true)
 
-  let filteredCount = 0
-
-  for (let property of properties){
-    property.isFiltered && ++filteredCount
-  }
+  console.log('Header rendered')
 
   return (
     <>
@@ -114,47 +108,46 @@ export default () => {
         </Hidden>
       </div>
       {
-        city &&
         <Hidden smUp>
-          <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+          <div style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
             <DropDownTree/>
-            <div style={{display:'flex',alignItems:'center',width:150,justifyContent:'space-evenly'}}>
+            <div style={{display: 'flex', alignItems: 'center', width: 150, justifyContent: 'space-evenly'}}>
               {
                 filters.modalOpened ?
-                  <FaFilter color={'forestgreen'} onClick={() => setFiltersModal(false)} size={30} />
+                  <FaFilter color={'forestgreen'} onClick={() => setFiltersModal(false)} size={30}/>
                   :
-                  <FaFilter onClick={() => setFiltersModal(true)} size={30} color={'black'} />
+                  <FaFilter onClick={() => setFiltersModal(true)} size={30} color={'black'}/>
               }
-              <div onClick={() =>  {
-                if (isFavouritesView){
+              <div onClick={() => {
+                if (isFavouritesView) {
                   setProperties(properties => {
                     let newProperties = [...properties]
-                    for (let property of newProperties){
+                    for (let property of newProperties) {
                       property.isFiltered = true
                     }
                     setIsFavouriteView(false)
                     return newProperties
                   })
-                }
-                else{
+                } else {
                   setProperties(properties => {
                     let favourites = JSON.parse(localStorage.getItem('favourites')) || []
                     let newProperties = [...properties]
-                    for (let property of newProperties){
+                    for (let property of newProperties) {
                       property.isFiltered = favourites.includes(property.id);
                     }
                     setIsFavouriteView(true)
-                    return newProperties})
+                    return newProperties
+                  })
                 }
               }}>
 
 
-              {
-                isFavouritesView ?
-                  <FaHeart size={30} color={'red'}  />
-                  :
-                  <FaHeart size={30}  />
-              }
+                {
+                  isFavouritesView ?
+                    <FaHeart size={30} color={'red'}/>
+                    :
+                    <FaHeart size={30}/>
+                }
               </div>
             </div>
           </div>

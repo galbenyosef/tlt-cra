@@ -10,9 +10,6 @@ export default () => {
     window.addEventListener("resize",resize);
     window.addEventListener('scroll',handleScroll)
 
- /*   if (id)
-      showSingleProperty(id)*/
-
     resize()
 
     return () => {
@@ -20,14 +17,6 @@ export default () => {
       window.removeEventListener('scroll', handleScroll)
     }
   },[])
-
-  let location = useLocation()
-  let pathname = location.pathname
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  },[pathname])
-
 
   return null
 

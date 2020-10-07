@@ -83,6 +83,7 @@
   color:#b9b9b9
 }
 .react-dropdown-tree-select .dropdown .dropdown-content{
+  margin-top:6px;
   z-index:2;position:absolute;width:100vw;max-width:400px;background:#fff;border-top:1px solid rgba(0,0,0,.05);-webkit-box-shadow:0 5px 8px rgba(0,0,0,.15);box-shadow:0 5px 8px rgba(0,0,0,.15)
 }
 .react-dropdown-tree-select .dropdown .dropdown-content ul{

@@ -4,7 +4,7 @@ import {setGlobalState, useGlobalState} from "../../globalState";
 import {
   createPropertyDescription,
   fetchCoordinates,
-  getAgentById,
+  getAgentById, onPropertyClicked,
   setLeadModal,
   setMapModal,
 } from "../../dataHandler";
@@ -25,6 +25,7 @@ import FacebookMessengerShareButton from "react-share/es/FacebookMessengerShareB
 import FacebookMessengerIcon from "react-share/es/FacebookMessengerIcon";
 import {MediaModalTypes} from "../Utilities";
 import '../noScrollBar.css'
+import {Link} from "react-router-dom";
 
 export default () => {
 
@@ -58,7 +59,7 @@ export default () => {
     committee,
     custom_id,
     pictures,
-    modified
+    modified,
   } = property
 
   const agent = getAgentById(agents,agent_id)
@@ -104,29 +105,27 @@ export default () => {
 
   let innerH = window.innerHeight
   entrance = entrance ? (moment(entrance,"DD-MM-YYYY").isBefore(moment().add(1, 'days')) ? 'מיידי':entrance.slice(0,-5)) : 'מיידי'
-  console.log('rendered property modal: '+ property)
+
   return (
     <Modal
       hideBackdrop
       BackdropProps={{style:{top:150}}}
       open={true} style={{direction:'rtl',backgroundColor:'white',top:headerHeight,fontFamily:'Rubik'}}>
       <div style={{position:'relative',display:'flex',flexDirection:'column',padding:'0px 10px',paddingTop:30,outline:'none'}}>
-        <div onClick={
-          () => setProperty(null)
-        } style={{fontSize: 32,
-          fontWeight: 'bold',
-          cursor:'pointer',
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          position: 'absolute',
-          top: -18,
-          right: 0,
-          backgroundColor: 'white',
-          textAlign: 'center',
-          borderRadius: 100,
-          height: 32,
-          width: 32}}>X</div>
+        <Link to={`/${city_id}`} onClick={() => onPropertyClicked(property)}
+             style={{fontSize: 32,
+               fontWeight: 'bold',
+               cursor:'pointer',
+               alignItems: 'center',
+               justifyContent: 'center',
+               position: 'absolute',
+               top: -18,
+               right: 0,
+               backgroundColor: 'white',
+               textAlign: 'center',
+               borderRadius: 100,
+               height: 32,
+               width: 32}}>X</Link>
         <div className={'noScrollBar'} style={{maxHeight:`calc(${innerH}px - ${top}px - 60px)`,overflow:'auto'}}>
           <span>{`נכס מספר ${custom_id}`}</span>
           <div>
@@ -218,7 +217,7 @@ export default () => {
 
             <FacebookMessengerShareButton title={'messnger'} url={getPropertyUrl()}>
               <FacebookMessengerIcon round
-                size={40}
+                                     size={40}
               />
             </FacebookMessengerShareButton>
 

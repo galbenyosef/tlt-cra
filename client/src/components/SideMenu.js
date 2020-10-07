@@ -9,6 +9,7 @@ export default () => {
 
   const [sideMenuOpened,setOpened] = useGlobalState('sideMenuOpened')
 
+  console.log('side menu rendered')
   return (
     <Drawer
       anchor={'right'}
