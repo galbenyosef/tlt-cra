@@ -32,7 +32,9 @@ let getPropertiesUrl = city => {
     'page_attributes[rooms][1]':99,
     'page_attributes[__operators][renovation]':'between',
     'page_attributes[renovation][0]':1,
-    'page_attributes[renovation][1]':4
+    'page_attributes[renovation][1]':4,
+
+
   }))
 };
 

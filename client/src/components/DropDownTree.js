@@ -40,7 +40,6 @@ let TheTree = React.memo(() => {
   function getLeafNodes(nodes){
 
     let node_children = []
-
     for (let node of nodes) {
       //is Area
       if (!node.parent_id) {
@@ -62,7 +61,7 @@ let TheTree = React.memo(() => {
         let street = node.id
         let neighborhood = node.neighborhood_name
         let area = node.area
-        node_children = node_children.concat(addressMap[area][neighborhood][street])
+        node_children = node_children.concat(addressMap[area][neighborhood+'n'][street])
         continue
       }
       //is neighborhood

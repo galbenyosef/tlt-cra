@@ -292,7 +292,7 @@ export default React.memo(({property,property:{
                           kala_property_id,
                           propertyName,
                           agentName,
-                          agentPhone: agent.phone
+                          agentPhone: agent && agent.phone
                         }
                       })
                     })

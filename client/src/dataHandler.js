@@ -288,8 +288,6 @@ export const fetchProperties = async (city) => {
   const agents = await fetchAgents()
   const properties = data.sort(({created:createdA},{created:createdB}) => createdB - createdA)
 
-  let addressesMap = {}
-
   let favouritesString = localStorage.getItem('favourites')
   let favourites = (favouritesString && JSON.parse(favouritesString)) || []
 
@@ -308,8 +306,7 @@ export const fetchProperties = async (city) => {
     property.isFiltered = true
     if (favourites && favourites.includes(property.id))
       property.isFavouriteOut = true
-    if (!addressesMap[area]) {
-      addressesMap[area] = {}
+    if (!newAddressMap[area]) {
       newAddressMap[area] = {}
       dropdownData.push({
         id:area,
@@ -317,59 +314,43 @@ export const fetchProperties = async (city) => {
         value:area,
       })
     }
-    if (!addressesMap[area][neighborhood_name]) {
-      addressesMap[area][neighborhood_name] = []
-      newAddressMap[area][neighborhood_name] = []
+    if (!newAddressMap[area][neighborhood_name+'n']) {
+      newAddressMap[area][neighborhood_name+'n'] = []
       dropdownData.push({
         area,
-        id:neighborhood_name,
+        id:neighborhood_name+'n',
         label:neighborhood_name,
         parent_id:area,
       })
     }
-    if (!addressesMap[area][neighborhood_name].includes(street_name)) {
-      addressesMap[area][neighborhood_name].push(street_name)
-      newAddressMap[area][neighborhood_name][street_name] = []
+    if (!newAddressMap[area][neighborhood_name+'n'].includes(street_name+'s')) {
+      newAddressMap[area][neighborhood_name+'n'][street_name+'s'] = []
       dropdownData.push({
         area,
         neighborhood_name,
-        id:street_name,
+        id:street_name+'s',
         label:street_name,
-        parent_id:neighborhood_name,
+        parent_id:neighborhood_name+'n',
       })
     }
 
 
     if (custom_id) {
-      newAddressMap[area][neighborhood_name][street_name].push(custom_id)
+      newAddressMap[area][neighborhood_name+'n'][street_name+'s'].push(custom_id)
       dropdownData.push({
         id:custom_id,
         label:`נכס מספר ${custom_id}`,
-        parent_id:street_name
+        parent_id:street_name+'s'
       })
     }
 
   }
-
   setAddressMap(newAddressMap)
   setAddressTree(unflatten(dropdownData))
   setTotalCityCount(properties.length)
   setTotalFiltered(properties.length)
 
-  let addresses = []
-  let areas = Object.keys(addressesMap).sort()
-  for (let _area of areas){
-    addresses.push(_area)
-    let neighborhoods =  Object.keys(addressesMap[_area]).sort()
-    for (let neighb of neighborhoods){
-      addresses.push(neighb)
-      for (let street of addressesMap[_area][neighb])
-        addresses.push(`${neighb}, ${street}`)
-    }
-  }
-
   setAgents(agents)
-  setAddresses(addresses)
   console.log('city data loaded')
 
   return properties
@@ -377,6 +358,22 @@ export const fetchProperties = async (city) => {
 }
 
 function unflatten(arr) {
+
+  //addon for same neighborhood-street name (Vardiya ex.)
+/*  for (let i =0;i< arr.length;i++){
+    let obj = arr[i]
+    for (let j =i+1;j< arr.length;j++) {
+      if (obj.id == arr[j].id){
+        obj.id += '*'
+        for (let k =0;k< arr.length;k++){
+          if (arr[k].parent_id == arr[j].id && arr[k].neighborhood_name){
+            arr[k].parent_id += '*'
+          }
+        }
+      }
+    }
+  }*/
+
   let tree = [],
     mappedArr = {},
     arrElem,
@@ -388,7 +385,6 @@ function unflatten(arr) {
     mappedArr[arrElem.id] = arrElem;
     mappedArr[arrElem.id]['children'] = [];
   }
-
 
   for (let id in mappedArr) {
     if (mappedArr.hasOwnProperty(id)) {
@@ -403,6 +399,7 @@ function unflatten(arr) {
       }
     }
   }
+
   return tree;
 }
 

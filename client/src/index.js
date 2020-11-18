@@ -19,9 +19,9 @@ import ScrollResizeHandler from "./components/ScrollResizeHandler";
 import ChatBot from "./components/ChatBot";
 import SideMenu from "./components/SideMenu";
 import whyDidYouRender from '@welldone-software/why-did-you-render'
-whyDidYouRender(React, {
+/*whyDidYouRender(React, {
   trackAllPureComponents: true,
-});
+});*/
 
 const NotFound = () => {
   console.log(useLocation())

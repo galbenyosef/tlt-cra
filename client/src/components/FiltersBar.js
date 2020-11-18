@@ -29,7 +29,6 @@ const filterLabelStyle = {fontFamily:'Assistant',fontSize:'1rem',fontWeight:'bol
 
 const FiltersBar = () => {
 
-  const [addressesData] = useGlobalState('addresses');
   const [filters] = useGlobalState('filters');
 
   const [isFavouritesView,setIsFavouriteView] = useGlobalState('isFavouritesView')
@@ -48,10 +47,6 @@ const FiltersBar = () => {
     metresActive,
     attributesActive
   } = filters
-
-  if (!addressesData.length){
-    return null
-  }
 
   console.log('render filter bar')
 
