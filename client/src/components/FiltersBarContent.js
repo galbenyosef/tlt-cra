@@ -32,7 +32,6 @@ const cancelButtonStyle = {
 
 export const FiltersBarContent = ({mobile}) => {
 
-  const [addressesData] = useGlobalState('addresses');
   const [filters, setFilters] = useGlobalState('filters');
   const [currentFilter] = useGlobalState('currentFilter');
 
@@ -41,9 +40,6 @@ export const FiltersBarContent = ({mobile}) => {
     furnitureTypes
   } = filters
 
-  if (!addressesData.length){
-    return null
-  }
 
 
   console.log('render filter bar content')
