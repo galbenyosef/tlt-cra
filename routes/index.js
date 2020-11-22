@@ -33,6 +33,10 @@ let getPropertiesUrl = city => {
     'page_attributes[__operators][renovation]':'between',
     'page_attributes[renovation][0]':1,
     'page_attributes[renovation][1]':4,
+    'page_attributes[renovation][1]':4,
+/*
+    'page_attributes[street_name]':'שמשון',
+*/
 
 
   }))

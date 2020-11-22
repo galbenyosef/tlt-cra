@@ -323,7 +323,7 @@ export const fetchProperties = async (city) => {
         parent_id:area,
       })
     }
-    if (!newAddressMap[area][neighborhood_name+'n'].includes(street_name+'s')) {
+    if (!newAddressMap[area][neighborhood_name+'n'][street_name+'s']) {
       newAddressMap[area][neighborhood_name+'n'][street_name+'s'] = []
       dropdownData.push({
         area,
