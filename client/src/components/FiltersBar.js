@@ -54,6 +54,61 @@ const FiltersBar = () => {
     setCurrentFilter({currentFilterName:event.currentTarget.id,currentFilterElement:event.currentTarget})
   };
 
+  const resetAllFilters = () => {
+    setCurrentFilter({currentFilterName:'',currentFilterElement:''})
+    changeFilters({
+      budgetFrom:MinPrice,
+        budgetTo:MaxPrice,
+        budgetActive:0,
+        //rooms default values
+        roomsFrom:MinRooms,
+        roomsTo:MaxRooms,
+        roomsActive:0,
+        //renovation default values
+        renovations:[],
+        renovationActive:0,
+        //free search default values
+        addresses:[],
+        addressesActive:0,
+        address:[],
+        propertyIds:[],
+        //furniture default values
+        furnitureTypes:[],
+        furnitureActive:0,
+
+        //metres default values
+        metresFrom:MinMetres,
+        metresTo:MaxMetres,
+        metresActive:0,
+        //floor default values
+        floorFrom:MinFloor,
+        floorTo:MaxFloor,
+        floorActive:0,
+        //extended grid default values
+        attributesActive:0,
+        attributes:{
+            terrace:false,
+            bathtub:false,
+            landscape:false,
+            airconditioner:false,
+            parking:false,
+            boiler:false,
+            elevator:false,
+            warehouse:false,
+            garden:false,
+            accessibility:false,
+            saferoom:false,
+            bars:false,
+            nets:false,
+            electricshutters:false,
+            parentsunit:false
+        },
+        propertyIds:[],addresses:[],addressesActive:0,address:''
+    })
+
+
+  }
+
   return (
     <div
       style={{
@@ -80,6 +135,13 @@ const FiltersBar = () => {
           gap:15,
           flexWrap:'wrap'
         }}>
+
+
+            <div onClick={(e) => {
+              resetAllFilters()
+              e.stopPropagation()} }
+                 style={{display:'flex',height:30,width:30,borderRadius:100,cursor:'pointer',border:'1px solid black',justifyContent:'center',alignItems:'center',fontWeight:'bold',backgroundColor:'red',color:'white'}}>X</div>
+          
 
         <div style={{width:'200px',borderBottom: '2px solid rgb(253, 209, 5)'}}>
           {/* <WindowedSelect

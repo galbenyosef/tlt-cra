@@ -26,7 +26,9 @@ import {Link} from 'react-router-dom'
 /*
 const imageUrl = "https://tlt.kala-crm.co.il/common/assets/748/724/"
 */
-
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 export default React.memo(({property,property:{
 
   id,
@@ -330,7 +332,7 @@ export default React.memo(({property,property:{
                   cursor: 'pointer',
                   fontSize: agentPhone ? 12 : ''
                 }} onClick={() => setAgentPhone(agent.phone)}
-                >{agentPhone || 'צור קשר'}</span>
+                >{agentPhone ? agentPhone + ' ' + capitalizeFirstLetter(agentName) : 'צור קשר'}</span>
                 <span style={{
                   display: 'flex',
                   justifyContent: 'center',
