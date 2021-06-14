@@ -120,7 +120,7 @@ export const createPropertyDescription = property => {
   return `${propertytype} ${renovationTypes[renovation]} בשכונת ${neighborhood_name}, רחוב ${street_name}, ${city_id}
 ${first.join(' ')}
 ${test.join(', ')}
-${furniture}${structure !== 'ישן' ? ` בבניין ${structure}` : ``} במחיר של ${price.toLocaleString()} ₪
+${furniture} במחיר של ${price.toLocaleString()} ₪
   `
 }
 
